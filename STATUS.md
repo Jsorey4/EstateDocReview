@@ -3,7 +3,14 @@
 Update this file at the end of every work session.
 
 ## Current phase
-Project setup. Scaffold files and logging hooks created. Firm chosen: Raymond James. No product code yet.
+Project setup. Scaffold files and logging hooks created. Firm chosen: Raymond James. Git repo created and pushed (private). No product code yet.
+
+## Repo setup (2026-10-25)
+- GitHub: https://github.com/Jsorey4/EstateDocReview, **private** until the user decides to take it public. GitHub Pages on a free account needs a public repo, so flip visibility before publishing the site.
+- First commit `073193b` on `main`; `origin` tracks `origin/main`. `gh` is authenticated as Jsorey4.
+- Tracked: `CLAUDE.md`, `Project_Details.md`, `STATUS.md`, `.gitignore`, `.claude/` (settings, logging hook, red-team agent), `ai_log/LOG.md`, `ai_log/compile_log.py`, `ai_log/log_check.py`.
+- Gitignored (local only): `ai_log/*.jsonl`, `ai_log/hook_errors.log`, `ai_log/LOG_DRAFT.md`, `.env*`, `.claude/settings.local.json`. The raw hook logs are the source for the one-page AI log PDF, so back them up outside git.
+- Not committed: `AI_in_Finance_Case_Competition.docx` (competition brief, kept local).
 
 ## Next steps
 1. Raymond James fact sheet: scale (10-K), services and fees (Form ADV Part 2A via SEC IAPD), advisor and client counts, estate-planning offering, AI announcements. Cite every item.
@@ -32,7 +39,9 @@ Project setup. Scaffold files and logging hooks created. Firm chosen: Raymond Ja
 - [ ] Confirm the disclaimer appears on the dashboard, packet, and in the video.
 - [ ] Confirm "hypothetical" labels on the $22M scenario everywhere it appears.
 - [ ] Check FUNSD and RVL-CDIP license terms; cite every dataset used.
-- [ ] Confirm `git` history shows work started after Oct 25, 10 AM.
+- [ ] Confirm `git` history shows work started after Oct 25, 10 AM (first commit `073193b` made Oct 25, 2026).
+- [ ] Back up `ai_log/*.jsonl` (gitignored) before compiling the AI log PDF.
+- [ ] Make the repo public before enabling GitHub Pages; confirm no API key or raw logs in the public tree.
 - [ ] Video 5 minutes or less, in your own voice, uploaded to OneDrive.
 - [ ] One-page AI log PDF: decision fields completed by you, at least two checks shown.
 - [ ] Files named `Last_First_RaymondJames_Video/Deliverable/AILog`, shared with `jsomfinlab@utdallas.edu`, links tested, Microsoft Form submitted before 11:59 PM.
