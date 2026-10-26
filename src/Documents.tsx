@@ -57,7 +57,7 @@ export default function Documents({
         packet = parsePacket(raw);
       } catch {
         throw new Error(
-          "The file does not match the review format. Include schemaVersion 1, verifiedBy “verify_quotes.py”, source pages, and facts. Public documents need a source URL. See the import guide.",
+          "The file does not match the review format. Include schemaVersion 1 or 2, verifiedBy “verify_quotes.py”, source pages, and facts. Public documents need a source URL. See the import guide.",
         );
       }
       if (!packet.documents.length)
@@ -283,7 +283,7 @@ export default function Documents({
               <div className="evidence-quote" key={f.id}>
                 <div>
                   <strong>
-                    {f.field}: {f.value}
+                    {f.backendField || f.field}: {f.value || "(blank field)"}
                   </strong>
                   <Badge
                     tone={facts.some((v) => v.id === f.id) ? "green" : "amber"}
@@ -294,6 +294,18 @@ export default function Documents({
                   </Badge>
                 </div>
                 <blockquote>“{f.quote}”</blockquote>
+                {f.detail && <p className="field-hint">Context: {f.detail}</p>}
+                {f.backendVerification && (
+                  <p className="field-hint">
+                    Backend verifier: {f.backendVerification.status} ·{" "}
+                    {f.backendVerification.method ||
+                      f.backendVerification.reason ||
+                      "no match"}
+                    {f.backendVerification.score !== null
+                      ? ` · score ${f.backendVerification.score}`
+                      : ""}
+                  </p>
+                )}
                 <span>
                   Page {f.page} · Subject:{" "}
                   {w.questionnaire.assets.find((a) => a.id === f.subjectId)
@@ -362,8 +374,10 @@ export default function Documents({
             <li>
               <strong>Capture household assets first</strong>
               <p>
-                Use each asset’s evidence reference as the fact’s subjectId. Use
-                “household” for executor, trustee, or financial agent facts.
+                Set each asset’s governing document ID to its extraction file
+                name without the extension. Export a workspace backup; the
+                exporter links those documents to the correct assets. Executor
+                and successor-trustee facts use the household subject.
               </p>
             </li>
             <li>
@@ -377,7 +391,11 @@ export default function Documents({
             <li>
               <strong>Verify quotes before import</strong>
               <p>
-                Run <code>python3 verify_quotes.py input.json review.json</code>
+                Run{" "}
+                <code>
+                  python3 export_review.py --workspace workspace.json --facts
+                  runs/household/facts --out review.json
+                </code>
                 . The format is documented in README.md. No sample estate
                 documents are generated.
               </p>
@@ -385,8 +403,10 @@ export default function Documents({
             <li>
               <strong>Import and inspect</strong>
               <p>
-                Quotes must match the specified page. Scanned text with
-                uncertain OCR remains unverified and needs manual review.
+                Version 2 packets retain the backend verifier’s exact, compact,
+                and fuzzy OCR results. Import only packets produced by your
+                trusted extraction workflow. These metadata are not a digital
+                signature.
               </p>
             </li>
           </ol>
@@ -401,6 +421,7 @@ export default function Documents({
                     assets: w.questionnaire.assets.map((a) => ({
                       subjectId: a.id,
                       name: a.name,
+                      governing_document: a.governing_document,
                     })),
                   },
                   null,

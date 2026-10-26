@@ -3,7 +3,7 @@
 Update this file at the end of every work session.
 
 ## Current phase
-Extraction, quote verifier and mutation script built and unit-tested (75 tests, API faked). Not yet run against real inputs: no API key is configured, and Household B doesn't exist yet. Next: user authors Household B (`households/README.md`), then reconciliation and `run_eval.py`.
+Frontend and extraction backend reconciled. A static export/import bridge connects freshly verified backend records to source pages, estate flow, and advisor comparisons. Questionnaire fields export to the backend YAML contract. Live API extraction, a server/upload endpoint, complete reconciliation, and user-sourced product evaluation remain outstanding.
 
 ## Session 2026-10-25 (evening): tasks 3 and 4
 - `extract.py`: one strict tool call per document (`record_estate_facts`, `strict: true`, `tool_choice: auto` plus an explicit instruction, one retry if no tool call). Streams with `max_tokens` 64000 and no `eager_input_streaming`, which would switch off server-side strict validation. Server-side refusal fallback is on (`fallbacks: "default"`, beta `server-side-fallback-2026-07-01`); `model_served` and `fallback_used` are recorded. Refuses any document without a SYNTHETIC label unless `--public-dataset NAME` is given. Caches by document hash plus model, effort, prompt and schema version, so unchanged documents across variants are not re-sent.
@@ -66,3 +66,14 @@ Extraction, quote verifier and mutation script built and unit-tested (75 tests, 
 - No estate test documents, answer keys, tax thresholds, legal citations, or user accept/reject decisions were generated.
 - Commands and review-data contract are documented in README.md. Publication and backend integration remain separate work.
 - Validation: clean `npm ci` and production build passed; 13 frontend unit tests, 10 browser tests (including six automated accessibility scans), and five Python verifier checks passed. Desktop and mobile views were inspected. These are interface/protocol checks, not a product evaluation.
+
+
+## Integration session (2026-10-26)
+- Merged backend commit `fcea6b0` with the React frontend, preserving both histories and resolving `.gitignore`/`STATUS.md` conflicts.
+- Root `verify_quotes.py` is the backend authority. The old frontend-format helper is isolated at `scripts/verify_review_packet.py` for version-1 compatibility.
+- `export_review.py` re-verifies extraction records from unchanged source files, links assets through `governing_document`, embeds source pages, and preserves native field names and verification/provenance metadata in a version-2 packet.
+- `export_household_inputs.py` exports user-entered questionnaire and asset answers using the backend YAML vocabulary; no documents, gold facts, or answer keys are produced.
+- Added client/as-of fields, dated marriage history, intended shares, available documents, property character, governing document IDs, and 401(k)/IRA differentiation. Initial trustees, successor trustees, primary beneficiaries, and contingent beneficiaries are kept distinct. Removed unsupported financial-agent comparison.
+- Shared frontend vocabulary is generated from `edr/schema.py` and `edr/issues.py`, with a drift check. Native backend results remain inspectable even when no frontend comparison rule exists.
+- Version-2 imports use trusted backend verification metadata; the browser does not rerun RapidFuzz or authenticate those metadata. Legacy version-1 packets retain their browser checks.
+- Validation: 85 Python tests, 16 frontend unit tests, 11 browser tests (including Python export → actual UI import and six accessibility scans), vocabulary drift check, and production build. API calls are faked; live model extraction and real household evaluation are unrun.

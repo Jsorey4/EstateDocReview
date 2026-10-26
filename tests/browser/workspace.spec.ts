@@ -52,13 +52,11 @@ test("rejects invalid review data without inventing findings", async ({
   page,
 }) => {
   await page.goto("/#documents");
-  await page
-    .getByLabel("Import review JSON")
-    .setInputFiles({
-      name: "invalid.json",
-      mimeType: "application/json",
-      buffer: Buffer.from('{"documents":[]}'),
-    });
+  await page.getByLabel("Import review JSON").setInputFiles({
+    name: "invalid.json",
+    mimeType: "application/json",
+    buffer: Buffer.from('{"documents":[]}'),
+  });
   await expect(page.getByRole("alert")).toContainText(
     "does not match the review format",
   );
@@ -104,13 +102,11 @@ test("import verifies protocol tokens and exposes comparison evidence", async ({
       },
     ],
   };
-  await page
-    .getByLabel("Import review JSON")
-    .setInputFiles({
-      name: "protocol.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(JSON.stringify(packet)),
-    });
+  await page.getByLabel("Import review JSON").setInputFiles({
+    name: "protocol.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(packet)),
+  });
   await page.getByRole("button", { name: /Protocol token/ }).click();
   await expect(page.getByRole("dialog")).toContainText("Quote verified");
   await page.getByText("Page 1", { exact: true }).click();
@@ -162,4 +158,39 @@ test("mobile navigation and layout fit the screen", async ({ page }) => {
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).toHaveCount(0);
+});
+
+test("actual Python extraction export imports with verified and rejected facts", async ({
+  page,
+}) => {
+  const { execFileSync } = await import("node:child_process");
+  const buffer = execFileSync(
+    process.env.PYTHON_EXECUTABLE || ".venv/bin/python",
+    ["tests/build_backend_packet.py"],
+  );
+  await page.goto("/#questionnaire");
+  await page.getByRole("button", { name: "Wishes & roles" }).click();
+  await page.getByLabel("Intended executor").fill("Client intention");
+  await page.getByRole("link", { name: "Documents", exact: true }).click();
+  await page
+    .getByLabel("Import review JSON")
+    .setInputFiles({
+      name: "backend.json",
+      mimeType: "application/json",
+      buffer,
+    });
+  await page.locator(".document-row").first().click();
+  await expect(page.getByRole("dialog")).toContainText(
+    "Backend verifier: verified",
+  );
+  await expect(page.getByRole("dialog")).toContainText(
+    "Backend verifier: unverified",
+  );
+  await page.getByRole("button", { name: "Close dialog" }).click();
+  await page.getByRole("link", { name: "Review queue" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Executor differs from questionnaire" }),
+  ).toBeVisible();
+  await expect(page.locator(".finding-card")).toContainText("Person Gamma");
+  await expect(page.locator(".finding-card")).not.toContainText("Person Omega");
 });

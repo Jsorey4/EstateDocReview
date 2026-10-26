@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { BACKEND_FIELDS, BACKEND_DOCUMENT_TYPES } from "./backendContract";
 
 export const personSchema = z.object({
   id: z.string().min(1),
@@ -18,6 +19,9 @@ export const assetSchema = z.object({
     "Business interest",
     "Other",
   ]),
+  character: z.enum(["community", "separate", "unknown"]).default("unknown"),
+  governing_document: z.string().default(""),
+  retirementKind: z.enum(["retirement_401k", "ira"]).default("retirement_401k"),
   value: z.number().finite().nonnegative(),
   owner: z.string(),
   beneficiary: z.string(),
@@ -30,6 +34,22 @@ export const assetSchema = z.object({
   ]),
 });
 export const questionnaireSchema = z.object({
+  clientName: z.string().default(""),
+  asOf: z.string().default(""),
+  marriages: z
+    .array(
+      z.object({
+        spouse: z.string(),
+        married: z.string(),
+        ended: z.string(),
+        how_ended: z.enum(["", "divorce", "death"]),
+      }),
+    )
+    .default([]),
+  intended_beneficiaries: z
+    .array(z.object({ name: z.string(), share: z.string() }))
+    .default([]),
+  documents_available: z.array(z.enum(BACKEND_DOCUMENT_TYPES)).default([]),
   household: z.string(),
   respondent: z.string(),
   maritalStatus: z.string(),
@@ -47,7 +67,7 @@ export const questionnaireSchema = z.object({
 });
 const pageSchema = z.object({
   page: z.number().int().positive(),
-  text: z.string().min(1).max(200000),
+  text: z.string().max(200000),
 });
 export const documentSchema = z.object({
   id: z.string().min(1),
@@ -62,6 +82,14 @@ export const documentSchema = z.object({
     "Other",
   ]),
   date: z.string(),
+  backendVerifier: z.record(z.string(), z.unknown()).optional(),
+  extraction: z.record(z.string(), z.unknown()).optional(),
+  unreadablePages: z.array(z.number().int().positive()).optional(),
+  extractionSource: z.enum(["digital", "scanned"]).optional(),
+  sha256: z
+    .string()
+    .regex(/^[a-f0-9]{64}$/)
+    .optional(),
   source: z.enum(["synthetic", "public"]),
   sourceUrl: z
     .string()
@@ -74,15 +102,28 @@ export const factSchema = z.object({
   id: z.string().min(1),
   documentId: z.string().min(1),
   subjectId: z.string().min(1),
-  field: z.enum(["beneficiary", "owner", "executor", "trustee", "agent"]),
-  value: z.string().min(1),
-  quote: z.string().min(1),
+  field: z.enum([...BACKEND_FIELDS, "owner", "agent"]),
+  detail: z.string().optional(),
+  backendField: z.enum(BACKEND_FIELDS).optional(),
+  backendVerification: z
+    .object({
+      status: z.enum(["verified", "unverified"]),
+      method: z.enum(["exact", "exact_compact", "fuzzy"]).nullable(),
+      score: z.number().nullable(),
+      page_checked: z.number().int().nullable(),
+      found_on_pages: z.array(z.number().int()),
+      value_supported: z.boolean().nullable(),
+      reason: z.string().nullable(),
+    })
+    .optional(),
+  value: z.string(),
+  quote: z.string(),
   page: z.number().int().positive(),
   verification: z.enum(["verified", "unverified"]),
 });
 export const packetSchema = z
   .object({
-    schemaVersion: z.literal(1),
+    schemaVersion: z.union([z.literal(1), z.literal(2)]),
     verifiedBy: z.literal("verify_quotes.py"),
     documents: z.array(documentSchema).max(100),
     facts: z.array(factSchema).max(10000),
@@ -106,6 +147,26 @@ export const packetSchema = z
           code: "custom",
           message: `A public source URL is required for ${d.title}`,
         });
+    }
+    if (p.schemaVersion === 2) {
+      for (const d of p.documents)
+        if (!d.sha256 || !d.extractionSource)
+          ctx.addIssue({
+            code: "custom",
+            message:
+              "Backend packets require document hashes and extraction sources",
+          });
+      for (const f of p.facts)
+        if (
+          !f.backendField ||
+          f.field !== f.backendField ||
+          !f.backendVerification ||
+          f.verification !== f.backendVerification.status
+        )
+          ctx.addIssue({
+            code: "custom",
+            message: "Backend verification metadata is missing or inconsistent",
+          });
     }
     for (const f of p.facts)
       if (!p.documents.some((d) => d.id === f.documentId))
@@ -140,6 +201,11 @@ export const workspaceSchema = z.object({
 });
 export type Workspace = z.infer<typeof workspaceSchema>;
 export const emptyQuestionnaire: Questionnaire = {
+  clientName: "",
+  asOf: "",
+  marriages: [],
+  intended_beneficiaries: [],
+  documents_available: [],
   household: "",
   respondent: "",
   maritalStatus: "",
@@ -173,18 +239,26 @@ export const quoteMatches = (fact: Fact, document?: ReviewDocument) => {
     squash(page.text).includes(squash(fact.quote))
   );
 };
-export function verifiedFacts(packet: Packet | null): Fact[] {
+function evidenceVerified(f: Fact, packet: Packet): boolean {
+  const doc = packet.documents.find((d) => d.id === f.documentId);
+  if (packet.schemaVersion === 1)
+    return f.verification === "verified" && quoteMatches(f, doc);
+  const v = f.backendVerification;
+  // V2 is a trusted, precomputed result from export_review.py, not browser-side OCR verification.
   return (
-    packet?.facts.filter(
-      (f) =>
-        f.verification === "verified" &&
-        quoteMatches(
-          f,
-          packet.documents.find((d) => d.id === f.documentId),
-        ),
-    ) ?? []
+    f.verification === "verified" &&
+    v?.status === "verified" &&
+    v.value_supported !== false &&
+    v.page_checked === f.page &&
+    !!v.method &&
+    !!doc?.pages.some((p) => p.page === f.page) &&
+    (v.method !== "fuzzy" || doc.extractionSource === "scanned")
   );
 }
+export function verifiedFacts(packet: Packet | null): Fact[] {
+  return packet?.facts.filter((f) => evidenceVerified(f, packet)) ?? [];
+}
+
 export function parsePacket(input: unknown): Packet {
   const packet = packetSchema.parse(input);
   return {
@@ -192,13 +266,11 @@ export function parsePacket(input: unknown): Packet {
     facts: packet.facts.map((f) => ({
       ...f,
       verification:
-        f.verification === "verified" &&
-        quoteMatches(
-          f,
-          packet.documents.find((d) => d.id === f.documentId),
-        )
-          ? "verified"
-          : "unverified",
+        packet.schemaVersion === 2
+          ? f.verification
+          : evidenceVerified(f, packet)
+            ? "verified"
+            : "unverified",
     })),
   };
 }
@@ -233,7 +305,7 @@ export function reconcile(q: Questionnaire, packet: Packet | null): Finding[] {
         expected: a[field],
       })),
     ),
-    ...(["executor", "trustee", "agent"] as const).map((field) => ({
+    ...(["executor", "trustee"] as const).map((field) => ({
       id: "household",
       label: "Household",
       field,
@@ -243,7 +315,17 @@ export function reconcile(q: Questionnaire, packet: Packet | null): Finding[] {
   const findings: Finding[] = [];
   for (const subject of subjects) {
     const evidence = facts.filter(
-      (f) => f.subjectId === subject.id && f.field === subject.field,
+      (f) =>
+        f.subjectId === subject.id &&
+        (packet?.schemaVersion === 2
+          ? subject.field === "beneficiary"
+            ? ["beneficiary", "primary_beneficiary"].includes(f.field)
+            : subject.field === "owner"
+              ? f.field === "titled_owner"
+              : subject.field === "trustee"
+                ? f.field === "successor_trustee"
+                : f.field === subject.field
+          : f.field === subject.field),
     );
     if (!evidence.length) continue;
     const distinct = new Set(evidence.map((f) => normalize(f.value)));
@@ -273,7 +355,7 @@ export function reconcile(q: Questionnaire, packet: Packet | null): Finding[] {
         ? `${subject.label} has different ${subject.field} names in the supplied records.`
         : `${subject.label} names “${evidence[0].value}” in the document; the questionnaire names “${subject.expected}”.`,
       uncertainty: ambiguous
-        ? "Document precedence has not been established. Neither record is assumed to supersede the other."
+        ? "Multiple names may reflect co-appointments, shares, conditions, or different document versions. Confirm the role and document precedence; no record is assumed to supersede another."
         : `A name difference may reflect aliases, incomplete records, or a deliberate choice.${dead ? " The questionnaire also reports this person as deceased." : ""} Legal effect has not been determined.`,
       question: `Confirm the current ${subject.field} record and the client’s intention. Which record is in effect? Refer questions about legal effect to an estate attorney.`,
       facts: evidence,

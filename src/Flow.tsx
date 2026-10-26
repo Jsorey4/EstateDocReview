@@ -67,8 +67,8 @@ export default function Flow({
                   const flag = findings.some((f) =>
                     f.facts.some((e) => e.subjectId === a.id),
                   );
-                  const beneficiaryEvidence = evidence.filter(
-                    (f) => f.field === "beneficiary",
+                  const beneficiaryEvidence = evidence.filter((f) =>
+                    ["beneficiary", "primary_beneficiary"].includes(f.field),
                   );
                   const names = [
                     ...new Set(beneficiaryEvidence.map((f) => f.value)),

@@ -275,7 +275,7 @@ export default function App() {
               onImport={(packet) => {
                 setWorkspace((w) => ({ ...w, packet, dispositions: {} }));
                 setMessage(
-                  "Review data imported. Evidence was rechecked against the supplied pages.",
+                  "Review data imported. Source pages and verification results are ready to inspect.",
                 );
               }}
               go={go}

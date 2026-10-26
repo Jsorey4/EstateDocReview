@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Verify supplied page quotes for the static advisor UI. Never extracts or invents facts.
 
-Usage: python3 verify_quotes.py input.json review.json
+Legacy format only. Usage: python3 scripts/verify_review_packet.py input.json review.json
 Only supplied public or synthetic source text is accepted. OCR that does not
 match conservatively remains unverified. This verifies text presence, not the
 accuracy of an extracted value, legal effect, or document precedence.

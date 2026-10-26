@@ -8,6 +8,7 @@ import {
   quoteMatches,
   reconcile,
   workspaceSchema,
+  verifiedFacts,
 } from "../src/domain";
 import type { Fact, Packet } from "../src/domain";
 // Protocol-level token fixtures only. These are not estate documents or an evaluation answer key.
@@ -148,5 +149,55 @@ describe("draft persistence", () => {
       false,
       false,
     ]);
+  });
+});
+
+describe("backend packet boundary", () => {
+  const native = (): Packet => {
+    const p = packet();
+    p.schemaVersion = 2;
+    p.documents[0].sha256 = "a".repeat(64);
+    p.documents[0].extractionSource = "digital";
+    p.facts[0].backendField = "executor";
+    p.facts[0].backendVerification = {
+      status: "verified",
+      method: "exact",
+      score: 100,
+      page_checked: 1,
+      found_on_pages: [],
+      value_supported: true,
+      reason: null,
+    };
+    return p;
+  };
+  it("requires native field names and consistent verification metadata", () => {
+    const p = native();
+    p.facts[0].backendField = "successor_trustee";
+    expect(() => parsePacket(p)).toThrow();
+    p.facts[0].backendField = "executor";
+    p.facts[0].backendVerification!.status = "unverified";
+    expect(() => parsePacket(p)).toThrow();
+  });
+  it("preserves backend OCR verification only for scanned sources", () => {
+    const p = native();
+    p.facts[0].backendVerification!.method = "fuzzy";
+    p.facts[0].backendVerification!.score = 95;
+    expect(verifiedFacts(parsePacket(p))).toHaveLength(0);
+    p.documents[0].extractionSource = "scanned";
+    expect(verifiedFacts(parsePacket(p))).toHaveLength(1);
+    expect(parsePacket(p).facts[0].backendVerification!.score).toBe(95);
+    p.facts[0].backendVerification!.value_supported = false;
+    expect(verifiedFacts(parsePacket(p))).toHaveLength(0);
+  });
+  it("does not confuse initial and successor trustees", () => {
+    const p = native();
+    const q = emptyWorkspace().questionnaire;
+    q.trustee = "A";
+    p.facts[0].field = "trustee";
+    p.facts[0].backendField = "trustee";
+    expect(reconcile(q, p)).toEqual([]);
+    p.facts[0].field = "successor_trustee";
+    p.facts[0].backendField = "successor_trustee";
+    expect(reconcile(q, p)).toHaveLength(1);
   });
 });

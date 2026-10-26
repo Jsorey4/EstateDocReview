@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { BACKEND_DOCUMENT_TYPES } from "./backendContract";
 import {
   ArrowLeft,
   ArrowRight,
@@ -106,6 +107,19 @@ export default function Questionnaire({
                     placeholder="Name or role"
                   />
                 </Field>
+                <Field label="Client name (backend client.name)">
+                  <input
+                    value={q.clientName}
+                    onChange={(e) => update({ clientName: e.target.value })}
+                  />
+                </Field>
+                <Field label="Questionnaire as-of date">
+                  <input
+                    type="date"
+                    value={q.asOf}
+                    onChange={(e) => update({ asOf: e.target.value })}
+                  />
+                </Field>
                 <Field label="State of residence">
                   <select value="Texas" disabled>
                     <option>Texas</option>
@@ -138,6 +152,103 @@ export default function Questionnaire({
                     />
                   </Field>
                 )}
+              </div>
+              <div className="field-group">
+                <h3>Marriage history</h3>
+                <p className="muted">
+                  Record each marriage, oldest first. Leave the end date and
+                  ending blank for a current marriage.
+                </p>
+                {q.marriages.map((m, i) => (
+                  <div className="repeater" key={i}>
+                    <div className="form-grid">
+                      <Field label={`Marriage ${i + 1}: spouse`}>
+                        <input
+                          value={m.spouse}
+                          onChange={(e) =>
+                            update({
+                              marriages: q.marriages.map((r, j) =>
+                                j === i ? { ...r, spouse: e.target.value } : r,
+                              ),
+                            })
+                          }
+                        />
+                      </Field>
+                      <Field label={`Marriage ${i + 1}: married date`}>
+                        <input
+                          type="date"
+                          value={m.married}
+                          onChange={(e) =>
+                            update({
+                              marriages: q.marriages.map((r, j) =>
+                                j === i ? { ...r, married: e.target.value } : r,
+                              ),
+                            })
+                          }
+                        />
+                      </Field>
+                      <Field label={`Marriage ${i + 1}: ended date`}>
+                        <input
+                          type="date"
+                          value={m.ended}
+                          onChange={(e) =>
+                            update({
+                              marriages: q.marriages.map((r, j) =>
+                                j === i ? { ...r, ended: e.target.value } : r,
+                              ),
+                            })
+                          }
+                        />
+                      </Field>
+                      <Field label={`Marriage ${i + 1}: how ended`}>
+                        <select
+                          value={m.how_ended}
+                          onChange={(e) =>
+                            update({
+                              marriages: q.marriages.map((r, j) =>
+                                j === i
+                                  ? {
+                                      ...r,
+                                      how_ended: e.target
+                                        .value as typeof m.how_ended,
+                                    }
+                                  : r,
+                              ),
+                            })
+                          }
+                        >
+                          <option value="">Current / not ended</option>
+                          <option value="divorce">Divorce</option>
+                          <option value="death">Death</option>
+                        </select>
+                      </Field>
+                    </div>
+                    <button
+                      className="button ghost"
+                      onClick={() =>
+                        update({
+                          marriages: q.marriages.filter((_, j) => j !== i),
+                        })
+                      }
+                    >
+                      Remove marriage {i + 1}
+                    </button>
+                  </div>
+                ))}
+                <button
+                  className="button secondary"
+                  onClick={() =>
+                    update({
+                      marriages: [
+                        ...q.marriages,
+                        { spouse: "", married: "", ended: "", how_ended: "" },
+                      ],
+                    })
+                  }
+                >
+                  <Plus size={16} />
+                  Add marriage
+                </button>
               </div>
               <div className="field-group">
                 <h3>Has anything changed?</h3>
@@ -322,6 +433,9 @@ export default function Questionnaire({
                         name: "",
                         type: "Investment account",
                         value: 0,
+                        character: "unknown",
+                        governing_document: "",
+                        retirementKind: "retirement_401k",
                         owner: "",
                         beneficiary: "",
                         route: "Unknown",
@@ -348,13 +462,99 @@ export default function Questionnaire({
                   placeholder="Capture the client’s goals, intended beneficiaries, and any important priorities."
                 />
               </Field>
+              <h3 className="field-group">Intended beneficiaries and shares</h3>
+              <p className="muted">
+                Household-level intentions, as distinct from account-specific
+                designations.
+              </p>
+              {q.intended_beneficiaries.map((b, i) => (
+                <div className="repeater" key={i}>
+                  <div className="form-grid">
+                    <Field label={`Beneficiary ${i + 1}: name`}>
+                      <input
+                        value={b.name}
+                        onChange={(e) =>
+                          update({
+                            intended_beneficiaries:
+                              q.intended_beneficiaries.map((r, j) =>
+                                j === i ? { ...r, name: e.target.value } : r,
+                              ),
+                          })
+                        }
+                      />
+                    </Field>
+                    <Field label={`Beneficiary ${i + 1}: share`}>
+                      <input
+                        value={b.share}
+                        placeholder="Percentage or description"
+                        onChange={(e) =>
+                          update({
+                            intended_beneficiaries:
+                              q.intended_beneficiaries.map((r, j) =>
+                                j === i ? { ...r, share: e.target.value } : r,
+                              ),
+                          })
+                        }
+                      />
+                    </Field>
+                  </div>
+                  <button
+                    className="button ghost"
+                    onClick={() =>
+                      update({
+                        intended_beneficiaries: q.intended_beneficiaries.filter(
+                          (_, j) => j !== i,
+                        ),
+                      })
+                    }
+                  >
+                    Remove beneficiary {i + 1}
+                  </button>
+                </div>
+              ))}
+              <button
+                className="button secondary"
+                onClick={() =>
+                  update({
+                    intended_beneficiaries: [
+                      ...q.intended_beneficiaries,
+                      { name: "", share: "" },
+                    ],
+                  })
+                }
+              >
+                Add intended beneficiary
+              </button>
+              <h3 className="field-group">Documents available</h3>
+              <div className="choice-chips">
+                {BACKEND_DOCUMENT_TYPES.map((kind) => (
+                  <button
+                    key={kind}
+                    aria-pressed={q.documents_available.includes(kind)}
+                    className={
+                      q.documents_available.includes(kind) ? "chosen" : ""
+                    }
+                    onClick={() =>
+                      update({
+                        documents_available: q.documents_available.includes(
+                          kind,
+                        )
+                          ? q.documents_available.filter((k) => k !== kind)
+                          : [...q.documents_available, kind],
+                      })
+                    }
+                  >
+                    {kind.replaceAll("_", " ")}
+                  </button>
+                ))}
+              </div>
               <h3 className="field-group">Who do they intend to act?</h3>
               <p className="muted">
                 Record names as the client understands them. Leave unknown roles
                 blank.
               </p>
               <div className="form-grid">
-                {(["executor", "trustee", "agent"] as const).map((role) => (
+                {(["executor", "trustee"] as const).map((role) => (
                   <Field
                     key={role}
                     label={
@@ -581,6 +781,40 @@ function AssetForm({
             placeholder="0"
           />
         </Field>
+        <Field label="Property character">
+          <select
+            value={a.character}
+            onChange={(e) =>
+              change({ character: e.target.value as Asset["character"] })
+            }
+          >
+            <option value="unknown">Unknown</option>
+            <option value="community">Community</option>
+            <option value="separate">Separate</option>
+          </select>
+        </Field>
+        <Field label="Governing document ID">
+          <input
+            value={a.governing_document}
+            onChange={(e) => change({ governing_document: e.target.value })}
+            placeholder="Extraction document ID (file name without extension)"
+          />
+        </Field>
+        {a.type === "Retirement account" && (
+          <Field label="Retirement account kind">
+            <select
+              value={a.retirementKind}
+              onChange={(e) =>
+                change({
+                  retirementKind: e.target.value as Asset["retirementKind"],
+                })
+              }
+            >
+              <option value="retirement_401k">401(k)</option>
+              <option value="ira">IRA</option>
+            </select>
+          </Field>
+        )}
         <Field label="Reported owner / title">
           <input
             value={a.owner}
