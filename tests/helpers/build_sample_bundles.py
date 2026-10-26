@@ -7,13 +7,12 @@ import json
 import sys
 import tempfile
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from conftest import FIXTURE_DOCS, FIXTURE_MANIFEST, FIXTURE_QUESTIONNAIRE, FIXTURE_ASSETS, write
-from test_build_samples import simulate_run
-import build_samples
-import mutate_household as mh
-import run_eval
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from tests.conftest import FIXTURE_DOCS, FIXTURE_MANIFEST, FIXTURE_QUESTIONNAIRE, FIXTURE_ASSETS, write
+from tests.test_build_samples import simulate_run
+from bridge import build_replay_samples
+from evaluation import mutate_household as mh
+from evaluation import run_eval
 
 with tempfile.TemporaryDirectory() as directory:
     root = Path(directory)
@@ -30,7 +29,7 @@ with tempfile.TemporaryDirectory() as directory:
         mh.main([str(household), "--out", str(variants)])
         simulate_run(household, variants, run)
         run_eval.main(["--variants", str(variants), "--run", str(run)])
-        build_samples.main(["--variants", str(variants), "--run", str(run), "--out", str(out)])
+        build_replay_samples.main(["--variants", str(variants), "--run", str(run), "--out", str(out)])
     finally:
         sys.stdout = stdout
     print(json.dumps({"files": {p.name: p.read_text() for p in sorted(out.glob("*.json"))}}))

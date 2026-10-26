@@ -19,8 +19,8 @@ label, public with --public-dataset NAME, otherwise user_supplied). No document 
 lacking a label; you are responsible for sending only synthetic or public data (CLAUDE.md rule 1).
 
 Usage:
-  python extract.py households/variants/B_clean/input/docs --out runs/B_clean/facts
-  python extract.py scans/will_scan.pdf --source scanned --out runs/scans/facts
+  python -m pipeline.extract households/variants/B_clean/input/docs --out runs/B_clean/facts
+  python -m pipeline.extract scans/will_scan.pdf --source scanned --out runs/scans/facts
 """
 import argparse
 import base64
@@ -31,7 +31,7 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-import verify_quotes as vq
+from pipeline import verify_quotes as vq
 from edr.pages import detect_source, file_sha256, list_documents, load_pages
 from edr.schema import SCHEMA_VERSION, TOOL_NAME, tool_definition, validate_tool_input
 from edr.textnorm import normalize

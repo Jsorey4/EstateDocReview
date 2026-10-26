@@ -167,7 +167,7 @@ test("actual Python extraction export imports with verified and rejected facts",
   const { execFileSync } = await import("node:child_process");
   const buffer = execFileSync(
     process.env.PYTHON_EXECUTABLE || ".venv/bin/python",
-    ["tests/build_backend_packet.py"],
+    ["tests/helpers/build_backend_packet.py"],
   );
   await page.goto("/#questionnaire");
   await page.getByRole("button", { name: "Wishes & roles" }).click();

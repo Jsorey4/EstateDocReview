@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BACKEND_DOCUMENT_TYPES } from "./backendContract";
+import { BACKEND_DOCUMENT_TYPES } from "./backendContract.generated";
 import {
   ArrowLeft,
   ArrowRight,

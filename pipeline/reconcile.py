@@ -23,7 +23,7 @@ says a provision is void, invalid or unenforceable. No statute or case is cited:
 pack (rules/) does not exist yet, so rule_refs is empty and rule_pack_status says so.
 
 Usage:
-  python reconcile.py --facts runs/<run>/facts --inputs households/variants/<v>/input --out runs/<run>/findings.json
+  python -m pipeline.reconcile --facts runs/<run>/facts --inputs households/variants/<v>/input --out runs/<run>/findings.json
 """
 import argparse
 import json

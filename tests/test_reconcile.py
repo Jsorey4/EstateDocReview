@@ -4,7 +4,7 @@ import textwrap
 
 import yaml
 
-import reconcile
+from pipeline import reconcile
 from tests.conftest import FIXTURE_ASSETS, FIXTURE_QUESTIONNAIRE
 
 

@@ -22,7 +22,7 @@ Metrics (each reported overall; extraction and citations also split digital vs s
                     <run>/<variant>/timing.json holds {"extraction_seconds": n}
 
 Usage:
-  python run_eval.py --variants households/variants --run runs/<run> [--out runs/<run>/eval.json]
+  python -m evaluation.run_eval --variants households/variants --run runs/<run> [--out runs/<run>/eval.json]
 """
 import argparse
 import json
@@ -31,7 +31,7 @@ import time
 from collections import defaultdict
 from pathlib import Path
 
-import reconcile
+from pipeline import reconcile
 from edr.textnorm import normalize, same_person
 
 EVAL_VERSION = "1"

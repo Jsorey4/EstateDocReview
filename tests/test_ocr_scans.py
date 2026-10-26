@@ -2,7 +2,7 @@
 import json
 from types import SimpleNamespace
 
-import ocr_scans
+from pipeline import ocr_scans
 
 GOOD = "I appoint Person Gamma as Independent Executor of this will, signed on March 14, 2019 in Fixture County."
 GARBAGE = "lI|1i ƒ§Æ ,,. ;;; xkqz 11|l |||| ttt zzzp qwrt ~~~~ ---- rnrnrn crcr vvvv"

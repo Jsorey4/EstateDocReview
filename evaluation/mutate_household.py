@@ -14,9 +14,9 @@ Output layout (the product reads only input/; answer_key.json is for run_eval.py
   <out>/A01_<mutation>__<target>/answer_key.json
 
 Usage:
-  python mutate_household.py households/B --check                      # validate, list targets
-  python mutate_household.py households/B --out households/variants    # one variant per target
-  python mutate_household.py households/B --out households/variants --plan households/plan.yaml --force
+  python -m evaluation.mutate_household households/B --check                      # validate, list targets
+  python -m evaluation.mutate_household households/B --out households/variants    # one variant per target
+  python -m evaluation.mutate_household households/B --out households/variants --plan households/plan.yaml --force
 """
 import argparse
 import copy

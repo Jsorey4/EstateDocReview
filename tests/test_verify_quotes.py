@@ -1,8 +1,9 @@
 import json
+from pathlib import Path
 
 import pytest
 
-import verify_quotes as vq
+from pipeline import verify_quotes as vq
 from edr.pages import file_sha256
 
 PAGES = [
@@ -137,6 +138,21 @@ def test_verify_record_and_verified_facts(tmp_path):
     vq.verify_record(record)
     assert [f["value"] for f in vq.verified_facts(record)] == ["Person Gamma"]
     assert record["verifier"]["fuzzy_allowed"] is False
+
+
+def test_saved_repo_relative_record_survives_package_move(tmp_path, monkeypatch):
+    # Existing records store paths relative to the repo, not the verifier's new package.
+    # Use existing repository text; no estate document or evaluation data is generated.
+    source = Path(__file__).resolve().parents[1] / "README.md"
+    quote = source.read_text(encoding="utf-8").splitlines()[0]
+    record = {
+        "document": {"id": "readme", "path": "README.md", "sha256": file_sha256(source), "source": "digital"},
+        "facts": [fact("document_title", quote, quote, 1)],
+    }
+    monkeypatch.chdir(tmp_path)
+    vq.verify_record(record)
+    assert len(vq.verified_facts(record)) == 1
+    assert vq.display_path(source) == "README.md"
 
 
 def test_changed_document_fails_every_fact(tmp_path):

@@ -135,7 +135,7 @@ describe("sample loader", () => {
   });
   it("rejects a manifest in the wrong format or with unsafe file names", async () => {
     await expect(fetchManifest(respond(200, "{}"))).rejects.toThrow(
-      "build_samples.py",
+      "bridge/build_replay_samples.py",
     );
     const manifest = {
       bundleVersion: 1,

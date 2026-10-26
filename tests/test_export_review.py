@@ -1,10 +1,10 @@
 """Integration with the backend's existing placeholder fixtures; no new document corpus."""
 import copy
 import pytest
-import extract
-from export_review import build_packet
-from export_household_inputs import build_inputs
-from test_extract import FakeClient, message, tool_call, GOOD_FACTS
+from pipeline import extract
+from bridge.facts_to_review_packet import build_packet
+from bridge.workspace_to_inputs import build_inputs
+from tests.test_extract import FakeClient, message, tool_call, GOOD_FACTS
 
 
 def record(household_dir, tmp_path):

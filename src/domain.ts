@@ -3,7 +3,7 @@ import {
   BACKEND_FIELDS,
   BACKEND_DOCUMENT_TYPES,
   BACKEND_ISSUE_TYPES,
-} from "./backendContract";
+} from "./backendContract.generated";
 
 export const RELATIONSHIP_KINDS = [
   "parent",
@@ -198,7 +198,7 @@ export const packetSchema = z
         });
   });
 const count = z.number().int().nonnegative();
-// Output of reconcile.py (Python rules over verified facts), as packaged by build_samples.py.
+// Output of reconcile.py (Python rules over verified facts), as packaged by bridge/build_replay_samples.py.
 const evidenceSchema = z.discriminatedUnion("source", [
   z.object({
     source: z.literal("document"),
@@ -349,7 +349,7 @@ function evidenceVerified(f: Fact, packet: Packet): boolean {
   if (packet.schemaVersion === 1)
     return f.verification === "verified" && quoteMatches(f, doc);
   const v = f.backendVerification;
-  // V2 is a trusted, precomputed result from export_review.py, not browser-side OCR verification.
+  // V2 is a trusted, precomputed result from bridge/facts_to_review_packet.py, not browser-side OCR verification.
   return (
     f.verification === "verified" &&
     v?.status === "verified" &&

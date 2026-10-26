@@ -3,7 +3,7 @@ import json
 import pytest
 import yaml
 
-import mutate_household as mh
+from evaluation import mutate_household as mh
 from edr.household import HouseholdError, load_household
 from edr.pages import load_pages
 

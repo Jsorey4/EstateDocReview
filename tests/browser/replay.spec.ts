@@ -3,12 +3,12 @@ import type { Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { execFileSync } from "node:child_process";
 
-// Bundles come from build_samples.py run on the placeholder unit-test fixture; nothing is written to public/.
+// Bundles come from bridge/build_replay_samples.py run on the placeholder unit-test fixture; nothing is written to public/.
 let files: Record<string, string> = {};
 test.beforeAll(() => {
   files = JSON.parse(
     execFileSync(process.env.PYTHON_EXECUTABLE || ".venv/bin/python", [
-      "tests/build_sample_bundles.py",
+      "tests/helpers/build_sample_bundles.py",
     ]).toString(),
   ).files;
 });

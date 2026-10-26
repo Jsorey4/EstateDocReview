@@ -1,10 +1,10 @@
 """Protocol-level verifier checks; no estate documents or answer keys."""
 import copy
 import unittest
-from scripts.verify_review_packet import normalize, verify
+from legacy.verify_review_packet_v1 import normalize, verify
 
 
-class QuoteVerifierTests(unittest.TestCase):
+class ReviewPacketV1VerifierTests(unittest.TestCase):
     def packet(self):
         return {"schemaVersion": 1, "documents": [{"id": "d", "source": "synthetic", "pages": [{"page": 1, "text": "A B"}]}], "facts": [{"id": "f", "documentId": "d", "quote": "B", "page": 1}]}
 

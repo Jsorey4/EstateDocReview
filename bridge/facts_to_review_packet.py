@@ -9,7 +9,7 @@ import copy
 import json
 from pathlib import Path
 
-import verify_quotes as vq
+from pipeline import verify_quotes as vq
 from edr.pages import load_pages, file_sha256
 from edr.schema import DOCUMENT_TYPES, FIELDS
 

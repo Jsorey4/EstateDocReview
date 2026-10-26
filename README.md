@@ -6,6 +6,8 @@ A Texas estate-document review prototype with a React/TypeScript frontend and Py
 
 Node.js 22.12+ and Python 3.12 are supported in the validated cloud environment.
 
+Run commands from the repository root. Python command-line tools use `python -m package.module` so their package imports resolve; `-m` still depends on running from the root. Use the virtual environment's Python for the installed dependencies.
+
 ```sh
 npm ci
 python3 -m venv .venv
@@ -17,15 +19,37 @@ npm run dev
 
 The browser performs no API calls. Fonts are local. Household answers, imported source text, and review notes stay in browser storage. Export a workspace backup before moving devices or clearing browser data. No authentication, tenant isolation, encryption-at-rest, or live upload service is included.
 
+## Repository layout
+
+```text
+pipeline/       OCR → extract → verify → reconcile (Python package)
+bridge/         backend/frontend conversion and replay packaging (Python package)
+evaluation/     household mutation and scoring (Python package)
+edr/            shared schemas, pages, dates, household loading, and text utilities
+legacy/         version-1 review-packet compatibility (Python package)
+src/            React advisor workspace and generated backend vocabulary
+docs/           project brief, Raymond James research, local competition instructions
+tests/helpers/  executable integration helpers; tests/browser/ contains Playwright checks
+households/     user-authored household inputs and their mutation variants
+public/samples/ published replay bundles, when built
+ai_log/         existing logging tools and append-only raw logs
+```
+
+The competition instructions at `docs/competition_instructions.docx` are local and gitignored. The local `Estate_Test_Cases/` PDFs remain in place pending a provenance review. **Fixtures** means automated-test placeholder data; **cases** means evaluation inputs with established provenance; **variants** means mutations of user-authored households; **replay bundles** means packaged demo runs.
+
+The bridge names express direction: `workspace_to_inputs` converts frontend answers into backend YAML; `facts_to_review_packet` packages backend facts for the frontend; `build_replay_samples` packages replay bundles. Run them with `.venv/bin/python -m bridge.<module>`. The old top-level script paths are retired; existing packet versions and the `verifiedBy: "verify_quotes.py"` protocol identifier are unchanged.
+
+Project context: [brief](docs/project_brief.md), [Raymond James fact sheet](docs/raymond_james_fact_sheet.md), and [current status](STATUS.md).
+
 ## Connected workflow
 
 1. **Questionnaire:** record the household, client name, as-of date, people and statuses, marriage history, intended beneficiaries/shares, available documents, assets, property character, and intended executor/successor trustee. A life-event chip is context; it does not replace dated marriage history.
-2. **Asset links:** set each asset's **Governing document ID** to its source file name without the extension, matching `extract.py`'s document ID. Retain the stable frontend asset ID.
+2. **Asset links:** set each asset's **Governing document ID** to its source file name without the extension, matching `pipeline/extract.py`'s document ID. Retain the stable frontend asset ID.
 3. **Workspace backup:** use Workspace settings → Download workspace backup or Review packet → Export data. This supplies the bridge with asset IDs and questionnaire answers.
 4. **Backend inputs:** export the user's answers to the backend's exact YAML vocabulary:
 
    ```sh
-   .venv/bin/python export_household_inputs.py --workspace /path/to/workspace.json --out /path/to/new-inputs
+   .venv/bin/python -m bridge.workspace_to_inputs --workspace /path/to/workspace.json --out /path/to/new-inputs
    ```
 
    This writes `questionnaire.yaml` and `assets.yaml`, refusing an existing output directory. It requires a client name, valid as-of date, known person statuses, and consistent marriage dates. It does **not** create `household.yaml`, document text, or an answer key. The household inputs are explicitly synthetic. User-sourced evaluation authoring remains documented in [households/README.md](households/README.md).
@@ -33,19 +57,19 @@ The browser performs no API calls. Fonts are local. Household answers, imported 
 5. **Extract:** supply `ANTHROPIC_API_KEY` securely on the server, then run the existing backend against user-sourced documents:
 
    ```sh
-   .venv/bin/python extract.py /path/to/docs --out runs/household/facts
+   .venv/bin/python -m pipeline.extract /path/to/docs --out runs/household/facts
    ```
 
    The extraction backend records the data label (synthetic, public, or user_supplied) and the actual served model. For public data use `--public-dataset NAME`; for scans, run OCR separately and use `--source scanned`. No API key goes into Vite, browser code, or committed files.
 
-6. **Verify and package:** use the backend's authoritative `verify_quotes.py` to recheck extraction records, or let the bridge do it automatically:
+6. **Verify and package:** use the backend's authoritative `pipeline/verify_quotes.py` to recheck extraction records, or let the bridge do it automatically:
 
    ```sh
-   .venv/bin/python verify_quotes.py runs/household/facts
-   .venv/bin/python export_review.py --workspace /path/to/workspace.json --facts runs/household/facts --out /path/to/review.json
+   .venv/bin/python -m pipeline.verify_quotes runs/household/facts
+   .venv/bin/python -m bridge.facts_to_review_packet --workspace /path/to/workspace.json --facts runs/household/facts --out /path/to/review.json
    ```
 
-   `export_review.py` refuses changed/missing source files, extraction errors, duplicate document IDs, and an existing output path. It re-verifies quotes and values from the original files, embeds source pages, and preserves backend verification method, score, reason, page, value-support result, source hash, verifier configuration, and extraction provenance. Public records additionally require `--public-sources /path/to/source-urls.json`, a JSON object mapping each document ID to its original HTTP(S) source URL.
+   `bridge/facts_to_review_packet.py` refuses changed/missing source files, extraction errors, duplicate document IDs, and an existing output path. It re-verifies quotes and values from the original files, embeds source pages, and preserves backend verification method, score, reason, page, value-support result, source hash, verifier configuration, and extraction provenance. Public records additionally require `--public-sources /path/to/source-urls.json`, a JSON object mapping each document ID to its original HTTP(S) source URL.
 
 7. **Import:** open Documents → Import review data and select `review.json`. Inspect source pages, verification results, and unverified facts. The estate map uses questionnaire routes and verified beneficiary evidence; routes are not legal conclusions. Review supported name differences and record follow-up notes. Print the review packet or save it as PDF.
 
@@ -58,23 +82,23 @@ The **Sample replay** page steps through one precomputed pipeline run per househ
 Samples are static files in `public/samples/`, built after a real extraction run:
 
 ```sh
-.venv/bin/python run_eval.py --variants households/variants --run runs/<run>
-.venv/bin/python build_samples.py --variants households/variants --run runs/<run> --out public/samples
+.venv/bin/python -m evaluation.run_eval --variants households/variants --run runs/<run>
+.venv/bin/python -m bridge.build_replay_samples --variants households/variants --run runs/<run> --out public/samples
 ```
 
-`build_samples.py` packages, per variant with extraction records: the questionnaire in the frontend's shape, a version-2 review packet (`export_review.build_packet`, which re-verifies every quote against the unchanged source file), the reconciliation output (re-run on the re-verified records), and that variant's evaluation counts from `eval.json`. It never reads `answer_key.json` or `household.yaml`; from `eval.json` it copies counts only, never missed-issue or field-miss detail. It refuses documents not labeled synthetic or public, bundles over 8 MB, and a non-empty `--out` unless `--force` is given. Client-reported routes, the intended owner and beneficiary per asset, and the intended executor are not in the YAML inputs, so they stay blank or "Unknown" in the loaded workspace.
+`bridge/build_replay_samples.py` packages, per variant with extraction records: the questionnaire in the frontend's shape, a version-2 review packet (`bridge.facts_to_review_packet.build_packet`, which re-verifies every quote against the unchanged source file), the reconciliation output (re-run on the re-verified records), and that variant's evaluation counts from `eval.json`. It never reads `answer_key.json` or `household.yaml`; from `eval.json` it copies counts only, never missed-issue or field-miss detail. It refuses documents not labeled synthetic or public, bundles over 8 MB, and a non-empty `--out` unless `--force` is given. Client-reported routes, the intended owner and beneficiary per asset, and the intended executor are not in the YAML inputs, so they stay blank or "Unknown" in the loaded workspace.
 
 The page fetches `samples/index.json` and the selected bundle from the same origin; it makes no API call. A finding is shown only if every document quote it cites is a verified fact in the bundle's packet. With no `public/samples/`, the page explains how to publish samples.
 
-Opening a sample stores its reconciliation output in the workspace (`backend`: the source, the questionnaire it was computed against, and the `reconcile.py` result). The Review queue, review packet, Overview counts and Estate flow flags then list those findings first, followed by the browser's own name comparisons, with the same follow-up statuses and notes. Each finding is re-checked against the current packet and withheld if any cited quote is not a verified fact. Importing new review data clears the stored findings. Editing the questionnaire keeps them but shows a notice that they reflect the answers as packaged; the browser does not re-run `reconcile.py`. Older workspace backups without the field still load.
+Opening a sample stores its reconciliation output in the workspace (`backend`: the source, the questionnaire it was computed against, and the `pipeline/reconcile.py` result). The Review queue, review packet, Overview counts and Estate flow flags then list those findings first, followed by the browser's own name comparisons, with the same follow-up statuses and notes. Each finding is re-checked against the current packet and withheld if any cited quote is not a verified fact. Importing new review data clears the stored findings. Editing the questionnaire keeps them but shows a notice that they reflect the answers as packaged; the browser does not re-run `pipeline/reconcile.py`. Older workspace backups without the field still load.
 
 ## Shared vocabulary and data contracts
 
-The authoritative vocabulary is `edr/schema.py` and `edr/issues.py`. `src/backendContract.ts` is generated from those files:
+The authoritative vocabulary is `edr/schema.py` and `edr/issues.py`. `src/backendContract.generated.ts` is generated from those files:
 
 ```sh
-python3 scripts/sync_backend_contract.py
-python3 scripts/sync_backend_contract.py --check
+.venv/bin/python -m bridge.sync_backend_contract
+.venv/bin/python -m bridge.sync_backend_contract --check
 ```
 
 Frontend view-model names are converted explicitly at the boundary:
@@ -100,7 +124,7 @@ The exporter writes `{schemaVersion: 2, verifiedBy: "verify_quotes.py", document
 
 The browser validates the structure, page availability, verification consistency, and scanned-only use of fuzzy matching. It uses the trusted Python pipeline's verification result; it does **not** rerun RapidFuzz or authenticate signed documents. Import only results from your own trusted pipeline. Verification metadata are not a cryptographic attestation. Unverified facts remain inspectable and cannot produce findings.
 
-Version 1 prepared packets and existing workspace backups remain supported. Legacy packets use browser-side exact quote checking. The old standalone frontend helper is now `scripts/verify_review_packet.py`; it is only for the legacy packet format, not extraction records. The root `verify_quotes.py` is the backend implementation.
+Version 1 prepared packets and existing workspace backups remain supported. Legacy packets use browser-side exact quote checking. `legacy/verify_review_packet_v1.py` is only for the legacy packet format, not extraction records; invoke it as `.venv/bin/python -m legacy.verify_review_packet_v1 input.json review.json`. `pipeline/verify_quotes.py` is the authoritative backend implementation.
 
 Limits: 8 MB/import, 100 documents, 1,000 pages/document, and 10,000 facts. Imports replace evidence and clear old follow-up notes after confirmation. Questionnaire edits reopen its review confirmation. Unlinked facts remain in the library but cannot generate asset-specific comparisons.
 
@@ -108,13 +132,15 @@ Limits: 8 MB/import, 100 documents, 1,000 pages/document, and 10,000 facts. Impo
 
 The frontend currently compares names for matched assets and household executor/successor-trustee roles. Multiple names remain unresolved, since they may represent co-appointments, shares, conditions, or competing document versions. Legal effect and precedence are not inferred. Document age alone is not a finding.
 
-The backend defines future reconciliation issue codes in `edr/issues.py`; its complete reconciliation engine and `run_eval.py` are still outstanding. This integration does not claim those rules are implemented. The mutation script and gold household files are evaluation tooling, never runtime product evidence. Tax/legal rule packs and live upload/API service remain separate work.
+The backend implements six deterministic rule families in `pipeline/reconcile.py`, covering seven issue codes from `edr/issues.py`: former-spouse beneficiary, deceased fiduciary or beneficiary, document predating the current marriage, asset outside the trust, intended beneficiary not named, and an undated amendment. `evaluation/run_eval.py` scores extraction and reconciliation against mutation answer keys. The mutation script and gold household files are evaluation tooling, never runtime product evidence. Tax/legal rule packs and a live upload/API service remain separate work.
+
+The pipeline and frontend pass fixture-based checks, but this checkout has no completed household variants, live extraction runs, or published samples. Known review follow-ups include double-counted exposure across overlapping findings, intent-mismatch findings caused by missing verified evidence, and stale/withheld-result warnings omitted from the printable packet. See [STATUS.md](STATUS.md) for the current project snapshot, validation results, and remaining work; older session entries there are historical.
 
 ## Validation
 
 ```sh
 .venv/bin/python -m pytest -q
-python3 scripts/sync_backend_contract.py --check
+.venv/bin/python -m bridge.sync_backend_contract --check
 npm test
 npm run build
 npm run test:e2e

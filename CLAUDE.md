@@ -8,7 +8,7 @@ Product promise: "Turn a client's estate documents into an evidence-backed advis
 **Deadline: Mon Oct 26, 2026, 11:59 PM. Late entries are not judged.** Required: a video of 5 minutes or less (own voice or face, no AI voice), a deliverable, and a one-page AI log PDF. All go on OneDrive, shared (view) with jsomfinlab@utdallas.edu. File names: `Last_First_RaymondJames_Video`, `_Deliverable`, `_AILog`.
 
 ## Hard rules
-1. **No finding without verified evidence.** Every extracted fact carries a verbatim `quote` and a `page`. `verify_quotes.py` must confirm the quote appears on that page (fuzzy match for OCR'd scans). A fact that fails verification is flagged unverified and never shown as a finding.
+1. **No finding without verified evidence.** Every extracted fact carries a verbatim `quote` and a `page`. `pipeline/verify_quotes.py` must confirm the quote appears on that page (fuzzy match for OCR'd scans). A fact that fails verification is flagged unverified and never shown as a finding.
 2. **Preserve uncertainty.** Ambiguous precedence between documents stays unresolved: show both passages and ask. Document age alone is never a finding. The clean household must produce zero material findings; never manufacture problems.
 3. **No legal advice (UPL boundary).** The tool talks to the advisor, never the client. It offers observations, quantified tax or financial consequences, and attorney-referral questions. See Output rules.
 4. **Never invent** statutes, cases, citations, numbers, or sources. A rule-pack entry needs a source and a "last verified" date. When unsure, write "unverified".
@@ -41,7 +41,7 @@ Never write that a provision is void, invalid or unenforceable. Never draft clau
 1. **Extract:** a strict tool schema (`quote` and `page` per fact), then the deterministic quote verifier. Per the Claude API docs, native PDF citations cannot be combined with structured outputs, and forced `tool_choice` returns a 400 on `claude-sonnet-5-5` and `claude-opus-5-5`. Use `strict: true` tools with `tool_choice: auto` and an explicit instruction. Choose the product model deliberately and log the choice.
 2. **Reconcile:** Python rules over the extracted JSON, with the LLM only for semantic comparison of provisions.
 3. **Present:** advisor dashboard, Mermaid flowchart (assets to instruments to beneficiaries, probate and non-probate lanes, status colors confirmed, flagged, unresolved), review packet, "Advisor discussion prompts" panel, disclaimer. Static site for GitHub Pages: precomputed results only, no live uploads, no API key in the page.
-4. **Evaluate:** `run_eval.py` scores output against the answer key for field accuracy, issues caught, false alarms, citation pass rate, and time. Report digital and scanned pass rates separately.
+4. **Evaluate:** `evaluation/run_eval.py` scores output against the answer key for field accuracy, issues caught, false alarms, citation pass rate, and time. Report digital and scanned pass rates separately.
 
 On demand: the `red-team` subagent, only when the user asks.
 
@@ -53,6 +53,13 @@ Out (roadmap slide only): comprehensive estate-tax calculations, insurance recom
 ## Test data
 User-sourced, never AI-generated. Layer 1 (OCR and extraction): public datasets and the user's own scans. Layer 2 (reconciliation): a clean Household B authored by the user, plus Household A variants produced by a mutation script, with the answer key coming from the script. Everything labeled SYNTHETIC. Cite every dataset used.
 
+Use these terms consistently in code, documentation, and UI:
+- **Fixtures:** placeholder data used by automated tests; never product-evaluation evidence.
+- **Cases:** evaluation inputs whose provenance and intended use have been established. Do not assume the local `Estate_Test_Cases/` PDFs qualify until their source is confirmed.
+- **Variants:** deterministic mutations of a user-authored household, produced by the mutation tooling.
+- **Replay bundles:** precomputed pipeline results packaged for the Sample replay page by `bridge/build_replay_samples.py`.
+- Executable test support belongs in `tests/helpers/`; it is not fixture data.
+
 ## Positioning
 Position as an Estate Document Review layer for advisors. Document analysis is not novel: Wealth.com (Ester), Vanilla, Luminary and Trust & Will analyze estate documents, and RightCapital draws estate flow charts. The claim is the quality of the focused workflow (cross-source reconciliation, uncertainty-first output, measured false alarms). Demonstrate it with the eval; do not assert it.
 
@@ -60,20 +67,33 @@ Position as an Estate Document Review layer for advisors. Document analysis is n
 AI Deployment; Analysis & Evidence; Business Value & Feasibility; Innovation & Creativity; Presentation & Deliverable. "One well-supported idea will score higher than several thin ones."
 
 ## Files
-- `Project_Details.md`: project background and decisions
+- `docs/project_brief.md`: project background and decisions
+- `docs/raymond_james_fact_sheet.md`: firm research with verified/unverified source labels
 - `STATUS.md`: session log and final checklist; update at the end of every work session
-- `AI_in_Finance_Case_Competition.docx`: competition instructions
+- `docs/competition_instructions.docx`: competition-owned instructions (local only, gitignored)
 - `ai_log/`: hook-written logs (do not edit)
 - `households/README.md`: authoring format for Household B and the mutation catalog
 - `edr/`: shared code (page loading, normalization, dates, extraction schema, issue types, household loader)
+- `pipeline/`: OCR, extraction, quote verification, and reconciliation; Extract → Reconcile
+- `bridge/`: frontend/backend input conversion, review-packet export, replay packaging, and frontend contract generation; Present
+- `evaluation/`: household mutations and pipeline scoring; Evaluate
+- `legacy/verify_review_packet_v1.py`: version-1 packet compatibility helper, distinct from the authoritative `pipeline/verify_quotes.py`
+- `src/backendContract.generated.ts`: generated vocabulary; edit its Python authorities and regenerate, never hand-edit
+- `tests/helpers/`: executable browser-test helpers; `tests/browser/`: Playwright checks
 
 ## Commands
+Run all commands from the repository root. Python tools are packages invoked with `-m`; direct execution of their file paths is not the supported entry point.
+
 Setup: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`
 - Tests: `.venv/bin/python -m pytest -q` (no network; the API is faked)
-- Extract + verify: `.venv/bin/python extract.py <docs or dir> --out runs/<run>/facts` (needs `ANTHROPIC_API_KEY`; `--source scanned` for OCR'd scans; cached by document hash in `.cache/`)
-- Re-verify: `.venv/bin/python verify_quotes.py runs/<run>/facts` (appends to `ai_log/checks.jsonl`; `--no-log` to skip)
-- Mutations: `.venv/bin/python mutate_household.py households/B --check`, then `--out households/variants`
-- OCR scans: `.venv/bin/python ocr_scans.py scans/ --out scans_ocr/` (needs `brew install ocrmypdf tesseract`; writes `ocr_report.json` with weak pages; then `extract.py --source scanned`)
-- Reconcile: `.venv/bin/python reconcile.py --facts runs/<run>/facts --inputs households/variants/<v>/input --out runs/<run>/findings.json`
-- Eval: `.venv/bin/python run_eval.py --variants households/variants --run runs/<run>` (expects `runs/<run>/<variant>/facts/*.json`; writes `eval.json`)
-- Demo samples: `.venv/bin/python build_samples.py --variants households/variants --run runs/<run> --out public/samples` (after `run_eval.py`; feeds the Sample replay page; never reads answer keys)
+- Extract + verify: `.venv/bin/python -m pipeline.extract <docs or dir> --out runs/<run>/facts` (needs `ANTHROPIC_API_KEY`; `--source scanned` for OCR'd scans; cached by document hash in `.cache/`)
+- Re-verify: `.venv/bin/python -m pipeline.verify_quotes runs/<run>/facts` (appends to `ai_log/checks.jsonl`; `--no-log` to skip)
+- Mutations: `.venv/bin/python -m evaluation.mutate_household households/B --check`, then `--out households/variants`
+- OCR scans: `.venv/bin/python -m pipeline.ocr_scans scans/ --out scans_ocr/` (needs `brew install ocrmypdf tesseract`; writes `ocr_report.json` with weak pages; then use `pipeline.extract` with `--source scanned`)
+- Reconcile: `.venv/bin/python -m pipeline.reconcile --facts runs/<run>/facts --inputs households/variants/<v>/input --out runs/<run>/findings.json`
+- Eval: `.venv/bin/python -m evaluation.run_eval --variants households/variants --run runs/<run>` (expects `runs/<run>/<variant>/facts/*.json`; writes `eval.json`)
+- Demo samples: `.venv/bin/python -m bridge.build_replay_samples --variants households/variants --run runs/<run> --out public/samples` (after `evaluation/run_eval.py`; feeds the Sample replay page; never reads answer keys)
+- Workspace → backend inputs: `.venv/bin/python -m bridge.workspace_to_inputs --workspace workspace.json --out inputs/`
+- Facts → review packet: `.venv/bin/python -m bridge.facts_to_review_packet --workspace workspace.json --facts runs/<run>/facts --out review.json`
+- Regenerate frontend vocabulary: `.venv/bin/python -m bridge.sync_backend_contract`; append `--check` to check for drift without writing
+- Legacy v1 packet verification: `.venv/bin/python -m legacy.verify_review_packet_v1 input.json review.json`

@@ -3,7 +3,7 @@
 
 For each variant that has extraction records under <run>/<variant>/facts, one bundle holds:
   questionnaire   the variant's questionnaire.yaml and assets.yaml in the frontend's shape
-  packet          the version-2 review packet (export_review.build_packet), which re-verifies
+  packet          the version-2 review packet (facts_to_review_packet.build_packet), which re-verifies
                   every quote against the unchanged source file
   reconciliation  reconcile.reconcile, re-run here on the re-verified records so it matches the
                   current rules
@@ -14,7 +14,7 @@ issues and field misses come from the answer key and stay out of the site. Only 
 labeled synthetic or public are packaged, because the output is published.
 
 Usage:
-  python build_samples.py --variants households/variants --run runs/<run> --out public/samples
+  python -m bridge.build_replay_samples --variants households/variants --run runs/<run> --out public/samples
 """
 import argparse
 import copy
@@ -24,16 +24,16 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-import export_household_inputs
-import export_review
-import reconcile
-import verify_quotes as vq
+from bridge import workspace_to_inputs
+from bridge import facts_to_review_packet
+from pipeline import reconcile
+from pipeline import verify_quotes as vq
 from edr.schema import DOCUMENT_TYPES
 
 BUNDLE_VERSION = 1
 MAX_BYTES = 8_000_000  # same limit as the browser importer
 PUBLISHABLE = ("synthetic", "public")
-FRONTEND_TYPES = {v: k for k, v in export_household_inputs.TYPES.items()}
+FRONTEND_TYPES = {v: k for k, v in workspace_to_inputs.TYPES.items()}
 RETIREMENT = ("retirement_401k", "ira")
 CHARACTERS = ("community", "separate", "unknown")
 
@@ -43,7 +43,7 @@ def text(value):
 
 
 def frontend_questionnaire(questionnaire, assets, variant):
-    """Inverse of export_household_inputs.build_inputs. Fields the YAML inputs do not carry
+    """Inverse of workspace_to_inputs.build_inputs. Fields the YAML inputs do not carry
     (respondent, client-reported routes, intended owner and beneficiary per asset, intended
     executor) stay blank or "Unknown" rather than being guessed."""
     if questionnaire.get("synthetic") is not True or (assets and assets.get("synthetic") is not True):
@@ -139,7 +139,7 @@ def build_sample(variant_dir, run_dir, eval_result=None, public_sources=None):
                              f"only synthetic or public documents can be published")
     questionnaire, assets = reconcile.load_inputs(variant_dir / "input")
     view = frontend_questionnaire(questionnaire, assets, variant)
-    packet = export_review.build_packet(records, {"questionnaire": view}, public_sources)
+    packet = facts_to_review_packet.build_packet(records, {"questionnaire": view}, public_sources)
     # Reconcile what the packet shows: records re-verified against the current source files.
     verified = [vq.verify_record(copy.deepcopy(r)) for r in records]
     started = time.perf_counter()
@@ -216,7 +216,7 @@ def main(argv=None):
         (args.out / "index.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
                                              encoding="utf-8")
     except (OSError, ValueError, KeyError, TypeError) as exc:
-        print(f"build_samples failed: {exc}", file=sys.stderr)
+        print(f"build_replay_samples failed: {exc}", file=sys.stderr)
         return 1
     print(f"Wrote {len(bundles)} samples to {args.out}"
           + (f"; no extraction for {', '.join(skipped)}" if skipped else ""))

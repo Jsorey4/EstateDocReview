@@ -16,8 +16,8 @@ quote matches (fuzzy for scans), so nothing weak turns into a finding without ev
 
 Setup (not in requirements.txt; these are system tools):  brew install ocrmypdf tesseract
 Usage:
-  python ocr_scans.py scans/ --out scans_ocr/        # every *.pdf in the directory
-  python ocr_scans.py scan.pdf --out scans_ocr/ --lang eng
+  python -m pipeline.ocr_scans scans/ --out scans_ocr/        # every *.pdf in the directory
+  python -m pipeline.ocr_scans scan.pdf --out scans_ocr/ --lang eng
 Outputs per input: <out>/<name>.pdf (searchable), <out>/<name>.txt (sidecar), and one
 <out>/ocr_report.json. Feed the PDFs to extract.py with --source scanned.
 """

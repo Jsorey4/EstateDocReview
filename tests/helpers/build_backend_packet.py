@@ -3,11 +3,11 @@ import json
 import sys
 import tempfile
 from pathlib import Path
-sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from conftest import FIXTURE_DOCS, write
-from test_extract import FakeClient, message, tool_call, GOOD_FACTS
-import extract
-from export_review import build_packet
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from tests.conftest import FIXTURE_DOCS, write
+from tests.test_extract import FakeClient, message, tool_call, GOOD_FACTS
+from pipeline import extract
+from bridge.facts_to_review_packet import build_packet
 
 with tempfile.TemporaryDirectory() as directory:
     root=Path(directory)

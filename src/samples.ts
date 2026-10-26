@@ -10,7 +10,7 @@ import {
 } from "./domain";
 import type { BackendFinding, Fact, Packet } from "./domain";
 
-// Precomputed runs written by build_samples.py into public/samples/. Same-origin static files only.
+// Precomputed runs written by bridge/build_replay_samples.py into public/samples/. Same-origin static files only.
 export const SAMPLES_BASE = "samples/";
 const MAX_BYTES = 8_000_000;
 const count = z.number().int().nonnegative();
@@ -119,7 +119,7 @@ export async function fetchManifest(
   const parsed = manifestSchema.safeParse(raw);
   if (!parsed.success)
     throw new SampleError(
-      "samples/index.json does not match the format written by build_samples.py.",
+      "samples/index.json does not match the format written by bridge/build_replay_samples.py.",
     );
   return parsed.data;
 }
@@ -128,7 +128,7 @@ export function parseBundle(raw: unknown, entry?: SampleEntry): SampleBundle {
   const parsed = bundleSchema.safeParse(raw);
   if (!parsed.success)
     throw new SampleError(
-      "This sample does not match the format written by build_samples.py.",
+      "This sample does not match the format written by bridge/build_replay_samples.py.",
     );
   if (entry && parsed.data.id !== entry.id)
     throw new SampleError("This sample's ID does not match the manifest.");

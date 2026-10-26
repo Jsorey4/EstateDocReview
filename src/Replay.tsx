@@ -190,11 +190,12 @@ export default function Replay({
           >
             Samples are precomputed pipeline runs on synthetic households. Run
             extraction and reconciliation on the variants, then package them
-            with <code>build_samples.py</code> into <code>public/samples/</code>
-            . The page reads those files and makes no API call.
+            with <code>bridge/build_replay_samples.py</code> into{" "}
+            <code>public/samples/</code>. The page reads those files and makes no
+            API call.
           </Empty>
           <pre className="replay-command">
-            .venv/bin/python build_samples.py --variants households/variants
+            .venv/bin/python -m bridge.build_replay_samples --variants households/variants
             --run runs/&lt;run&gt; --out public/samples
           </pre>
         </section>

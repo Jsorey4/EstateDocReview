@@ -15,8 +15,8 @@ Value check: every word of the value appears in the matched text (dates: the quo
 date expression equal to the ISO value). Scanned documents allow near-matches per word.
 
 Usage:
-  python verify_quotes.py runs/<run>/facts/           # re-verify records in place, log the check
-  python verify_quotes.py runs/<run>/facts/will.json --no-log
+  python -m pipeline.verify_quotes runs/<run>/facts/           # re-verify records in place, log the check
+  python -m pipeline.verify_quotes runs/<run>/facts/will.json --no-log
 """
 import argparse
 import json
@@ -37,7 +37,7 @@ FUZZY_THRESHOLD = 90.0
 FUZZY_MIN_CHARS = 20
 TOKEN_FUZZY_THRESHOLD = 80.0
 TOKEN_FUZZY_MIN_LEN = 4
-REPO_ROOT = Path(__file__).resolve().parent
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 _OCR_ZERO = re.compile(r"(?<=\d)o|o(?=\d)")
 _OCR_ONE = re.compile(r"(?<=\d)[li|]|[li|](?=\d)")

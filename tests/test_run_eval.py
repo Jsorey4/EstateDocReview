@@ -7,8 +7,8 @@ import json
 
 import yaml
 
-import mutate_household as mh
-import run_eval
+from evaluation import mutate_household as mh
+from evaluation import run_eval
 
 
 def perfect_run(household_dir, variants, run_dir, drop=None, scanned=False):

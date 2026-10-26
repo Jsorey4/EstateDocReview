@@ -393,7 +393,7 @@ export default function Documents({
               <p>
                 Run{" "}
                 <code>
-                  python3 export_review.py --workspace workspace.json --facts
+                  python3 -m bridge.facts_to_review_packet --workspace workspace.json --facts
                   runs/household/facts --out review.json
                 </code>
                 . The format is documented in README.md. No sample estate

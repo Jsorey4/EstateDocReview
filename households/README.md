@@ -1,7 +1,7 @@
 # Households: authoring format
 
 Layer 2 of the test set (CLAUDE.md, Test data). You write the clean **Household B** by hand.
-`mutate_household.py` copies it into **Household A** variants, each with one planted issue, and
+`evaluation/mutate_household.py` copies it into **Household A** variants, each with one planted issue, and
 writes each variant's answer key. No model writes documents or answer keys.
 
 Everything here is SYNTHETIC. Dollar values are hypothetical. Texas only.
@@ -22,8 +22,8 @@ households/B/
 ## Documents (`docs/*.txt` or `*.md`)
 
 - Plain UTF-8 text. The mutation script edits text, so author in text, not Word or PDF.
-- Each document must contain the word **SYNTHETIC** (a header line is enough). `extract.py`
-  refuses to send a document without it.
+- Each document must contain the word **SYNTHETIC** (a header line is enough). The extractor
+  labels unlabeled documents `user_supplied`; the public replay builder rejects that label.
 - Separate pages with a line that reads `--- page break ---`. Page numbers in answer keys and
   extraction records count these pages from 1.
 - The file name without the extension is the document id (`docs/bd_401k.txt` is `bd_401k`).
@@ -123,10 +123,12 @@ target a trust date explicitly; the answer key then carries a warning.
 
 ## Commands
 
+Run from the repository root using the evaluation package:
+
 ```
-.venv/bin/python mutate_household.py households/B --check                    # validate, list targets
-.venv/bin/python mutate_household.py households/B --out households/variants  # one variant per target, plus B_clean
-.venv/bin/python mutate_household.py households/B --out households/variants --plan households/plan.yaml --force
+.venv/bin/python -m evaluation.mutate_household households/B --check                    # validate, list targets
+.venv/bin/python -m evaluation.mutate_household households/B --out households/variants  # one variant per target, plus B_clean
+.venv/bin/python -m evaluation.mutate_household households/B --out households/variants --plan households/plan.yaml --force
 ```
 
 A plan file adds multi-mutation variants, such as the headline scenario with the former spouse on
@@ -141,5 +143,5 @@ variants:
       - {type: former_spouse_designation, target: <fact id>}
 ```
 
-Each variant gets `input/` (what the product reads) and `answer_key.json` (what `run_eval.py`
+Each variant gets `input/` (what the product reads) and `answer_key.json` (what `evaluation/run_eval.py`
 scores against). `B_clean` is the control with zero expected issues.

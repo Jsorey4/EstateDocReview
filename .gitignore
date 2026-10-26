@@ -26,3 +26,6 @@ test-results/
 .pytest_cache/
 # Extraction cache (model outputs keyed by document hash); results worth publishing go in runs/
 .cache/
+
+# Competition-owned instructions: keep the local reference out of the public repo.
+/docs/competition_instructions.docx

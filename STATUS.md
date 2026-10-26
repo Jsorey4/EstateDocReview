@@ -3,7 +3,38 @@
 Update this file at the end of every work session.
 
 ## Current phase
-Frontend and extraction backend reconciled. A static export/import bridge connects freshly verified backend records to source pages, estate flow, and advisor comparisons. Questionnaire fields export to the backend YAML contract. Live API extraction, a server/upload endpoint, complete reconciliation, and user-sourced product evaluation remain outstanding.
+As of 2026-10-26, the static advisor workspace and offline Python pipeline are implemented and pass the checks below. Extraction, quote verification, six deterministic reconciliation rules (seven issue types), evaluation, OCR orchestration, version-2 review-packet export/import, sample packaging/replay, estate flow, and the printable review packet exist. Questionnaire usability improvements are implemented. The project is at the **validated-software / unvalidated-demo stage**: live extraction, real-scan OCR, user-sourced evaluation, and published replay data have not been demonstrated in this checkout.
+
+### Current project memory (refreshed 2026-10-26)
+- Repository: `https://github.com/Jsorey4/EstateDocReview`; working branch `main`. Fetch and `git pull --ff-only origin main` completed successfully and reported **Already up to date**. GitHub `origin/main` is `982c83e`; local HEAD is `7cc07ca07f2b3153647873c9cb4eb4a9859a2206`, **one commit ahead**. That local commit changes 37 files (+4,922 / -279). No push was performed. Repository visibility/deployment were not rechecked remotely.
+- Existing untracked inputs were preserved: `AI_in_Finance_Case_Competition.docx` and seven PDFs in `Estate_Test_Cases/` (five case numbers; cases 2 and 3 each have two documents). Their contents/provenance were not audited in this sync review. Do not confuse their presence with a completed evaluation dataset.
+- No `households/B`, `households/variants`, `runs/`, `public/samples/`, or `rules/` exists in this checkout. `households/` currently contains only its authoring README. The replay page therefore has an empty state; browser tests supply temporary placeholder bundles, not publishable demo evidence.
+- Product: Texas-only, advisor-facing Estate Document Review for the Raymond James competition entry. Static React/TypeScript/Vite frontend, Python CLI backend, browser-local workspace persistence; no live upload/API endpoint. Keep hypothetical amounts, uncertainty, quote/page evidence, and attorney-referral wording. Do not generate the user's evaluation documents or answer keys. Raw AI logs remain append-only; user decisions remain PENDING.
+- Backend: `extract.py` records model/effort/fallback provenance and caches extraction; `verify_quotes.py` is authoritative. `reconcile.py` compares verified facts with questionnaire/assets. `run_eval.py` scores gold-field recall, issue recall/status, false alarms, citation verification and timing, with digital/scanned splits. `ocr_scans.py` wraps OCRmyPDF with quality scoring and a heavier retry. Neither `ocrmypdf` nor `tesseract` is installed here.
+- **Data-label behavior changed in `7cc07ca`:** unlabeled extraction inputs are now sent as `user_supplied`; `--synthetic-confirmed` was removed. Review export, legacy packet verification and frontend import accept that label. `build_samples.py` still rejects it and publishes only synthetic/public documents with synthetic questionnaire inputs. Earlier session notes describing an extraction-time refusal are historical, not current enforcement; synthetic/public-only demo policy still applies.
+- Backend findings enter the workspace through Sample replay's **Open in workspace** action (or a backup with the optional `backend` object). Importing an ordinary review packet clears backend findings and dispositions; it does not run the Python rules. `reviewItems()` combines stored backend findings with browser name comparisons for Overview, Review, Estate flow and Report. Version-1 backups remain supported. Version-2 verification metadata are trusted pipeline output, not cryptographic attestation.
+- Replay: five stages plus an optional sixth evaluation stage; variant selection, six-second autoplay, keyboard navigation, page/quote inspection, and workspace loading. The sample builder re-verifies sources, reruns reconciliation, copies evaluation counts, and excludes answer-key details. Scores still depend on the supplied `eval.json` matching the run.
+- Questionnaire: explicit relationship choices with opt-in synonym suggestions; percentages, share-total warnings and legacy-share preservation; notes on people/assets/beneficiaries; completion checklists and field highlighting. Notes persist in workspace/report and are omitted from backend YAML inputs.
+- `RJ_Fact_Sheet.md` remains a draft. Its V/U labels reflect earlier research; this repository review did not independently re-verify external facts. Texas citation pack, tax-option calculator, business-case/time study, public deployment, video and one-page AI log remain outstanding or unconfirmed.
+
+### Validation at local HEAD `7cc07ca`
+- `.venv/bin/python -m pytest -q`: **117 passed**.
+- `.venv/bin/python scripts/sync_backend_contract.py --check`: **passed**.
+- `npm test`: **30 passed** across two files.
+- `npm run build`: **passed** (non-blocking third-party Zod annotation warnings).
+- `CHROMIUM_PATH='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' npm run test:e2e`: **17 passed**, including accessibility and Python-to-browser integration checks. Required sandbox permission to bind the local test-server port.
+- These use fake model/OCR runners and placeholder fixtures. They do not establish live model accuracy, legal correctness, real-scan performance, or measured advisor time savings.
+
+### Review follow-ups (identified, not fixed)
+1. **Asset exposure is double-counted across findings** (`reconcile.py`, summary aggregation). Reusing the existing placeholder fixture, a deceased former spouse on the same $100 account produces two flagged findings and a $200 summary. Aggregate unique affected assets before presenting total exposure.
+2. **Missing verified beneficiary evidence can become a finding** (`reconcile.py`, `rule_intent_mismatch`). With other verified beneficiaries present, an intended person's fact rejected as `wrong_page` still produces `intent_mismatch` supported only by the questionnaire. Both frontend evidence gates permit questionnaire-only findings. Distinguish incomplete/failed extraction from a supported discrepancy before claiming missing facts never create findings.
+3. **Printed report omits stale/withheld warnings** (`src/Report.tsx` versus `src/Review.tsx`). Editing a loaded sample's questionnaire leaves the original backend findings in place; Review warns, but Report presents the edited answers alongside the old findings without that warning. Report can also say no material findings when backend findings were withheld. Carry those caveats into the printable packet.
+
+## Session 2026-10-26: GitHub sync and project-state review
+- Reviewed the tracked project documentation and the changes in the latest local commit, including backend rules/scoring/OCR, replay/packet wiring, questionnaire, styling, and related tests.
+- Pulled GitHub without rewriting the local commit or touching untracked source documents; no incoming commits were available.
+- Re-ran the existing validation suite and reproduced the first two review follow-ups using the existing in-memory test fixture. No evaluation documents, answer keys, API calls, or public samples were produced by this review.
+- Refreshed the current-phase summary and next steps, and corrected stale README statements about reconciliation/evaluation. Earlier session entries below are preserved as history; the current snapshot above takes precedence.
 
 ## Session 2026-10-25 (evening): tasks 3 and 4
 - `extract.py`: one strict tool call per document (`record_estate_facts`, `strict: true`, `tool_choice: auto` plus an explicit instruction, one retry if no tool call). Streams with `max_tokens` 64000 and no `eager_input_streaming`, which would switch off server-side strict validation. Server-side refusal fallback is on (`fallbacks: "default"`, beta `server-side-fallback-2026-07-01`); `model_served` and `fallback_used` are recorded. Refuses any document without a SYNTHETIC label unless `--public-dataset NAME` is given. Caches by document hash plus model, effort, prompt and schema version, so unchanged documents across variants are not re-sent.
@@ -42,13 +73,15 @@ Frontend and extraction backend reconciled. A static export/import bridge connec
 - Not committed: `AI_in_Finance_Case_Competition.docx` (competition brief, kept local).
 
 ## Next steps
-1. Raymond James fact sheet (draft started in `RJ_Fact_Sheet.md`; 10-K scale facts verified, Form ADV fees, RJ Trust page and AI press releases still unverified after fetch timeouts): scale (10-K), services and fees (Form ADV Part 2A via SEC IAPD), advisor and client counts, estate-planning offering, AI announcements. Cite every item.
-2. User gathers Layer 1 documents (FUNSD, VRDU, CUAD, own phone scans of hand-filled public Texas forms) and builds Household B (clean) by hand in the format in `households/README.md`; run `mutate_household.py households/B --check` until it reports no warnings.
-3. ~~Build `verify_quotes.py` and the extraction step~~ Done. Set `ANTHROPIC_API_KEY`, then run `extract.py` on `households/variants/B_clean/input/docs` as the first live test. Scans: OCRmyPDF first, then `--source scanned`.
-4. ~~Build the mutation script~~ Done. Write `households/plan.yaml` for the headline multi-account variant.
-5. Reconciliation rules (must emit the issue types in `edr/issues.py`), then `run_eval.py`.
-6. Dashboard, Mermaid flowchart, review packet, GitHub Pages (precomputed results only).
-7. Business-case page, time study (label illustrative), demo recording, one-page AI log.
+
+Repository organization is complete: `pipeline/`, `bridge/`, `evaluation/`, and `legacy/` are Python packages; `edr/` remains the shared library. Run commands from the repository root with `.venv/bin/python -m <package.module>`. Current commands and file locations are in `README.md` and `CLAUDE.md`; earlier snapshots and session entries below retain the names used at the time.
+
+1. Resolve the review follow-ups above before relying on displayed exposure totals or exporting a final advisor packet.
+2. Establish the provenance and intended use of the seven local case PDFs. Complete the user-authored clean Household B and gold facts in `households/README.md` format; run `.venv/bin/python -m evaluation.mutate_household households/B --check`, then generate variants with the existing tooling. Do not substitute placeholder fixtures for user-sourced evaluation data.
+3. Validate a live extraction with securely configured API credentials, inspect source/quote verification, and exercise real scanned input if it will be claimed. The configured model/API options have only fake-client coverage here. Install OCR tools if scans are needed.
+4. Run `.venv/bin/python -m evaluation.run_eval` on actual extraction records, inspect misses/false alarms (especially the clean control), then `.venv/bin/python -m bridge.build_replay_samples` to create `public/samples`. Keep evaluation counts aligned with the packaged run. Inspect the resulting replay and printable packet.
+5. Finish or explicitly narrow the Texas rule-pack/tax-option scope; verify any legal/tax claims from primary sources. Finish unverified items in `docs/raymond_james_fact_sheet.md` before using them in the deliverable.
+6. Complete the business-case/time study (label illustrative), static-site deployment, video of at most five minutes, and one-page AI log. Validate submission links and the final checklist. Recorded competition deadline: **October 26, 2026, 11:59 PM**; no submission was made by this sync/review.
 
 ## Decisions log
 - Firm: Raymond James.
@@ -98,3 +131,11 @@ Frontend and extraction backend reconciled. A static export/import bridge connec
 - Shared frontend vocabulary is generated from `edr/schema.py` and `edr/issues.py`, with a drift check. Native backend results remain inspectable even when no frontend comparison rule exists.
 - Version-2 imports use trusted backend verification metadata; the browser does not rerun RapidFuzz or authenticate those metadata. Legacy version-1 packets retain their browser checks.
 - Validation: 85 Python tests, 16 frontend unit tests, 11 browser tests (including Python export → actual UI import and six accessibility scans), vocabulary drift check, and production build. API calls are faked; live model extraction and real household evaluation are unrun.
+
+## Session 2026-10-26: stage packages and naming cleanup
+- Completed the full organization change: OCR/extraction/verification/reconciliation in `pipeline/`; directional conversion, replay packaging and contract generation in `bridge/`; mutation/scoring in `evaluation/`; version-1 packet verification in `legacy/`. `edr/` remains the shared library. Entry points are `.venv/bin/python -m <package.module>` from the repository root.
+- Renamed bridge modules to `facts_to_review_packet`, `workspace_to_inputs`, and `build_replay_samples`. Renamed the legacy verifier and its test to `verify_review_packet_v1.py` / `test_verify_review_packet_v1.py`. Moved executable browser helpers into `tests/helpers/`, fixed their root paths and test imports, and updated both Playwright callers.
+- Renamed generated vocabulary to `src/backendContract.generated.ts`, updated the generator and imports, and regenerated it. Existing packet schemas and the `verifiedBy: "verify_quotes.py"` identifier remain unchanged.
+- Moved project context into `docs/project_brief.md` and `docs/raymond_james_fact_sheet.md`. Moved the local competition instructions to `docs/competition_instructions.docx` and gitignored that exact path; verified its bytes were unchanged. `Estate_Test_Cases/` remains untracked and unmoved pending provenance review. AI-log files, tools and hooks were not changed.
+- Updated README, CLAUDE, household authoring commands, UI command examples, and the red-team document reference. Added the fixtures/cases/variants/replay-bundles vocabulary. Earlier STATUS snapshots/session entries were left intact; only the current Next steps checklist was updated, plus this new session entry.
+- Validation: **118 Python tests, 30 frontend unit tests, 17 Playwright tests, production build and contract drift check passed**. Ten package CLI entry points passed `--help` smoke checks. Added one regression check that stored repository-relative source paths still verify after the package move, even from a different working directory. Existing non-blocking third-party build warnings remain. No live API calls, evaluation dataset generation, deployment or GitHub push was performed.

@@ -1,4 +1,4 @@
-"""build_samples.py on the placeholder fixture: mutate -> simulated extraction -> bundles.
+"""build_replay_samples.py on the placeholder fixture: mutate -> simulated extraction -> bundles.
 
 The simulated extractor quotes, for each gold fact, the first line on the stated page that the
 real verifier accepts. The answer key is read here only to drive that simulation; the test
@@ -9,9 +9,9 @@ import json
 import pytest
 import yaml
 
-import build_samples
-import mutate_household as mh
-import verify_quotes as vq
+from bridge import build_replay_samples
+from evaluation import mutate_household as mh
+from pipeline import verify_quotes as vq
 from edr.pages import file_sha256, load_pages
 
 
@@ -44,7 +44,7 @@ def built(household_dir, tmp_path):
     variants, run_dir, out = tmp_path / "variants", tmp_path / "run", tmp_path / "samples"
     assert mh.main([str(household_dir), "--out", str(variants)]) == 0
     simulate_run(household_dir, variants, run_dir)
-    assert build_samples.main(["--variants", str(variants), "--run", str(run_dir), "--out", str(out)]) == 0
+    assert build_replay_samples.main(["--variants", str(variants), "--run", str(run_dir), "--out", str(out)]) == 0
     return variants, run_dir, out
 
 
@@ -95,11 +95,11 @@ def test_no_answer_key_content_is_published(built):
 
 
 def test_eval_counts_are_copied_without_missed_detail(household_dir, tmp_path, built):
-    import run_eval
+    from evaluation import run_eval
     variants, run_dir, _ = built
     assert run_eval.main(["--variants", str(variants), "--run", str(run_dir)]) == 0
     out = tmp_path / "with_eval"
-    assert build_samples.main(["--variants", str(variants), "--run", str(run_dir), "--out", str(out)]) == 0
+    assert build_replay_samples.main(["--variants", str(variants), "--run", str(run_dir), "--out", str(out)]) == 0
     manifest = load(out, "index.json")
     assert manifest["evaluation"]["false_alarms"]["clean_variants"] == 1
     assert "missed" not in manifest["evaluation"]["issues"]
@@ -113,15 +113,15 @@ def test_refuses_unlabeled_documents(household_dir, tmp_path):
     mh.main([str(household_dir), "--out", str(variants)])
     simulate_run(household_dir, variants, run_dir, label="user_supplied")
     out = tmp_path / "samples"
-    assert build_samples.main(["--variants", str(variants), "--run", str(run_dir), "--out", str(out)]) == 1
+    assert build_replay_samples.main(["--variants", str(variants), "--run", str(run_dir), "--out", str(out)]) == 1
     assert not out.exists()
 
 
 def test_refuses_to_overwrite_without_force(built):
     variants, run_dir, out = built
     args = ["--variants", str(variants), "--run", str(run_dir), "--out", str(out)]
-    assert build_samples.main(args) == 1
-    assert build_samples.main(args + ["--force"]) == 0
+    assert build_replay_samples.main(args) == 1
+    assert build_replay_samples.main(args + ["--force"]) == 0
 
 
 def test_variant_without_extraction_is_skipped(household_dir, tmp_path):
@@ -131,6 +131,6 @@ def test_variant_without_extraction_is_skipped(household_dir, tmp_path):
     for f in (run_dir / "B_clean" / "facts").iterdir():
         f.unlink()
     out = tmp_path / "samples"
-    assert build_samples.main(["--variants", str(variants), "--run", str(run_dir), "--out", str(out)]) == 0
+    assert build_replay_samples.main(["--variants", str(variants), "--run", str(run_dir), "--out", str(out)]) == 0
     manifest = load(out, "index.json")
     assert manifest["skipped"] == ["B_clean"] and "B_clean" not in {s["id"] for s in manifest["samples"]}

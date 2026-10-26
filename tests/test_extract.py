@@ -3,7 +3,7 @@ from types import SimpleNamespace
 
 import pytest
 
-import extract
+from pipeline import extract
 from edr.schema import TOOL_NAME, tool_definition, validate_tool_input
 
 UNSUPPORTED_STRICT_KEYWORDS = {"minimum", "maximum", "multipleOf", "minLength", "maxLength", "minItems", "maxItems"}
