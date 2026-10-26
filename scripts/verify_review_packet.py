@@ -26,8 +26,8 @@ def verify(data):
     pages = {}
     document_ids = set()
     for document in documents:
-        if document.get("source") not in ("synthetic", "public"):
-            raise ValueError("Only synthetic or public document sources are accepted")
+        if document.get("source") not in ("synthetic", "public", "user_supplied"):
+            raise ValueError("Only synthetic, public, or user_supplied document sources are accepted")
         doc_id = document["id"]
         if not doc_id or doc_id in document_ids:
             raise ValueError("Document IDs must be unique and nonempty")

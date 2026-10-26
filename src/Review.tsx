@@ -9,7 +9,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import type { Disposition, Finding, Page, Workspace } from "./domain";
-import { reconcile, verifiedFacts } from "./domain";
+import { backendFindings, money, reviewItems, verifiedFacts } from "./domain";
 import { Badge, Empty, SectionHeading } from "./components";
 export default function Review({
   workspace: w,
@@ -22,7 +22,8 @@ export default function Review({
 }) {
   const [filter, setFilter] = useState("All items");
   const [query, setQuery] = useState("");
-  const findings = reconcile(w.questionnaire, w.packet);
+  const findings = reviewItems(w);
+  const backend = backendFindings(w);
   const filtered = findings.filter(
     (f) =>
       (filter === "All items" ||
@@ -83,6 +84,18 @@ export default function Review({
           <span>unverified · excluded</span>
         </div>
       </div>
+      {w.backend && (
+        <div className="notice review-source" role="note">
+          Includes {backend.shown.length} finding
+          {backend.shown.length === 1 ? "" : "s"} from the reconciliation rules
+          (reconcile.py, {w.backend.source}), listed first, then the
+          browser&rsquo;s name comparisons.
+          {backend.withheld > 0 &&
+            ` ${backend.withheld} withheld because their cited quotes are not verified in the current documents.`}
+          {backend.stale &&
+            " The questionnaire has changed since these findings were computed; they reflect the answers as packaged and are not recomputed in the browser."}
+        </div>
+      )}
       <div className="review-toolbar">
         <div className="segmented">
           {["All items", "To discuss", "Unresolved", "Attorney follow-up"].map(
@@ -115,9 +128,11 @@ export default function Review({
             title={
               findings.length
                 ? "No items match this view"
-                : w.packet
-                  ? "No supported name discrepancies found"
-                  : "Good questions start with good evidence"
+                : w.backend
+                  ? "No material findings"
+                  : w.packet
+                    ? "No supported name discrepancies found"
+                    : "Good questions start with good evidence"
             }
             action={
               <button
@@ -139,9 +154,11 @@ export default function Review({
           >
             {findings.length
               ? "Change the filter or search to see more items."
-              : w.packet
-                ? "This comparison checks names for matching subjects and roles. Missing data, legal interpretation, and unverified facts have not been evaluated."
-                : "After you capture household intentions and import verified document facts, supported differences will appear here. An empty queue is not a completed review."}
+              : w.backend
+                ? "The reconciliation rules found nothing material in the verified facts, and the name comparison found no differences. This is not a determination that the plan is complete or suitable."
+                : w.packet
+                  ? "This comparison checks names for matching subjects and roles. Missing data, legal interpretation, and unverified facts have not been evaluated."
+                  : "After you capture household intentions and import verified document facts, supported differences will appear here. An empty queue is not a completed review."}
           </Empty>
         </section>
       ) : (
@@ -212,6 +229,7 @@ function FindingCard({
                 : "Confirm with client"}
             </Badge>
             <span>{f.subject}</span>
+            {f.amount ? <span>{money(f.amount)} hypothetical</span> : null}
           </div>
           <h2>{f.title}</h2>
         </div>
@@ -228,13 +246,26 @@ function FindingCard({
       {open && (
         <>
           <div className="comparison">
-            <div className="intention-panel">
-              <span className="eyebrow">QUESTIONNAIRE INTENTION</span>
-              <strong>{f.expected || "Not supplied"}</strong>
-              <p>
-                Reported by {w.questionnaire.respondent || "the respondent"}
-              </p>
-            </div>
+            {f.origin === "reconcile" ? (
+              <div className="intention-panel">
+                <span className="eyebrow">QUESTIONNAIRE ANSWER</span>
+                {f.questionnaireEvidence?.length ? (
+                  f.questionnaireEvidence.map((line) => (
+                    <p key={line}>{line}</p>
+                  ))
+                ) : (
+                  <p>No questionnaire answer is part of this observation.</p>
+                )}
+              </div>
+            ) : (
+              <div className="intention-panel">
+                <span className="eyebrow">QUESTIONNAIRE INTENTION</span>
+                <strong>{f.expected || "Not supplied"}</strong>
+                <p>
+                  Reported by {w.questionnaire.respondent || "the respondent"}
+                </p>
+              </div>
+            )}
             <div className="source-panel">
               <span className="eyebrow">SUPPORTING DOCUMENT EVIDENCE</span>
               {f.facts.map((fact) => (

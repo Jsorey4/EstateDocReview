@@ -2,6 +2,10 @@ import { describe, expect, it } from "vitest";
 import {
   completion,
   emptyWorkspace,
+  missingItems,
+  parsePercent,
+  relationshipKind,
+  reviewWarnings,
   normalize,
   packetSchema,
   parsePacket,
@@ -199,5 +203,50 @@ describe("backend packet boundary", () => {
     p.facts[0].field = "successor_trustee";
     p.facts[0].backendField = "successor_trustee";
     expect(reconcile(q, p)).toHaveLength(1);
+  });
+});
+describe("questionnaire completeness", () => {
+  it("reads shares only as percentages", () => {
+    expect(parsePercent("75")).toBe(75);
+    expect(parsePercent(" 12.5 % ")).toBe(12.5);
+    expect(parsePercent("all")).toBeNull();
+    expect(parsePercent("$75")).toBeNull();
+    expect(parsePercent("150%")).toBeNull();
+  });
+  it("maps free-text relationships to a standard category only when they match", () => {
+    const p = { id: "p", name: "", status: "living" as const, note: "" };
+    expect(relationshipKind({ ...p, relationship: "Spouse" })).toBe("spouse");
+    expect(relationshipKind({ ...p, relationship: "sibling" })).toBe("other");
+    expect(relationshipKind({ ...p, relationship: "" })).toBe("");
+    expect(
+      relationshipKind({ ...p, relationship: "", relationshipKind: "other" }),
+    ).toBe("other");
+  });
+  it("lists what blocks each step and keeps completion consistent with it", () => {
+    const q = emptyWorkspace().questionnaire;
+    const missing = missingItems(q);
+    expect(missing[0]).toEqual([
+      "Household name",
+      "Who completed the questionnaire",
+      "Marital status",
+    ]);
+    expect(missing[1]).toEqual(["At least one person"]);
+    expect(completion(q).slice(0, 4)).toEqual(missing.map((m) => !m.length));
+  });
+  it("warns about shares that are not percentages or do not total 100", () => {
+    const q = emptyWorkspace().questionnaire;
+    q.intended_beneficiaries = [
+      { name: "A", share: "all", note: "" },
+      { name: "B", share: "", note: "" },
+    ];
+    expect(reviewWarnings(q)[3]).toEqual([
+      "Share for beneficiary 1 as a percentage",
+      "Share for beneficiary 2",
+    ]);
+    q.intended_beneficiaries = [
+      { name: "A", share: "60%", note: "" },
+      { name: "B", share: "30%", note: "" },
+    ];
+    expect(reviewWarnings(q)[3]).toEqual(["Shares add up to 90%, not 100%"]);
   });
 });

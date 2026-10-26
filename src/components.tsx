@@ -39,18 +39,31 @@ export function SectionHeading({
 }
 export function Empty({
   icon,
+  iconAction,
   title,
   children,
   action,
 }: {
   icon: ReactNode;
+  // Makes the icon itself a button, for empty states whose icon reads as "add".
+  iconAction?: { label: string; onClick: () => void };
   title: string;
   children: ReactNode;
   action?: ReactNode;
 }) {
   return (
     <div className="empty">
-      <div className="empty-icon">{icon}</div>
+      {iconAction ? (
+        <button
+          className="empty-icon empty-icon-button"
+          aria-label={iconAction.label}
+          onClick={iconAction.onClick}
+        >
+          {icon}
+        </button>
+      ) : (
+        <div className="empty-icon">{icon}</div>
+      )}
       <h3>{title}</h3>
       <p>{children}</p>
       {action}

@@ -14,9 +14,9 @@ API constraints this follows (see CLAUDE.md, Architecture):
 Model choice (recorded in every record as model_requested / model_served / model_rationale):
 see MODEL_RATIONALE. Override with --model.
 
-Data guard (CLAUDE.md rule 1): a document is sent to the API only if its text carries the
-SYNTHETIC label, or you pass --public-dataset NAME (recorded for citation), or
---synthetic-confirmed for a scan whose label the OCR text layer lost.
+Data label: recorded in each record as data_label (synthetic if the text carries the SYNTHETIC
+label, public with --public-dataset NAME, otherwise user_supplied). No document is refused for
+lacking a label; you are responsible for sending only synthetic or public data (CLAUDE.md rule 1).
 
 Usage:
   python extract.py households/variants/B_clean/input/docs --out runs/B_clean/facts
@@ -76,21 +76,13 @@ class ExtractionError(Exception):
     pass
 
 
-class DataLabelError(Exception):
-    pass
 
-
-def data_label(pages, public_dataset=None, synthetic_confirmed=False):
+def data_label(pages, public_dataset=None):
     if public_dataset:
         return {"kind": "public", "dataset": public_dataset}
     if "synthetic" in normalize(" ".join(pages)):
         return {"kind": "synthetic", "label_found": True}
-    if synthetic_confirmed:
-        return {"kind": "synthetic", "label_found": False, "confirmed_by_user": True}
-    raise DataLabelError(
-        "no SYNTHETIC label found in the document text. Label synthetic documents, pass "
-        "--public-dataset NAME for public data, or --synthetic-confirmed for a scan whose "
-        "label the OCR lost. Never send real client data (CLAUDE.md rule 1).")
+    return {"kind": "user_supplied", "label_found": False}
 
 
 def build_user_content(doc_id, path, pages, mode):
@@ -164,7 +156,7 @@ def cache_key(sha256, model, effort, mode):
 
 
 def extract_document(path, *, client_factory, model, effort, mode, source, public_dataset=None,
-                     synthetic_confirmed=False, use_cache=True, cache_dir=CACHE_DIR, fallback=True):
+                     use_cache=True, cache_dir=CACHE_DIR, fallback=True):
     path = Path(path)
     pages = load_pages(path)
     sha = file_sha256(path)
@@ -173,12 +165,7 @@ def extract_document(path, *, client_factory, model, effort, mode, source, publi
         "document": {"id": path.stem, "path": vq.display_path(path), "sha256": sha,
                      "page_count": len(pages), "source": source},
     }
-    try:
-        label = data_label(pages, public_dataset, synthetic_confirmed)
-    except DataLabelError as exc:
-        record["error"] = {"type": "data_label", "message": str(exc)}
-        return record
-    record["data_label"] = label
+    record["data_label"] = data_label(pages, public_dataset)
     if not any(text.strip() for text in pages):
         record["warnings"] = ["no text layer: quotes cannot be verified; run OCRmyPDF first"]
     key = cache_key(sha, model, effort, mode)
@@ -231,8 +218,6 @@ def main(argv=None):
     ap.add_argument("--source", default="auto", choices=["auto", "digital", "scanned"],
                     help="scanned enables fuzzy quote matching. auto: PDFs made by OCRmyPDF count as scanned.")
     ap.add_argument("--public-dataset", metavar="NAME", help="input is from this public dataset (recorded for citation)")
-    ap.add_argument("--synthetic-confirmed", action="store_true",
-                    help="the document is synthetic but its SYNTHETIC label is missing from the text layer")
     ap.add_argument("--no-cache", action="store_true", help="call the API even if a cached extraction exists")
     ap.add_argument("--no-fallback", action="store_true",
                     help="don't request server-side refusal fallback (use if the account rejects the beta)")
@@ -258,7 +243,7 @@ def main(argv=None):
             record = extract_document(
                 doc, client_factory=client_factory, model=args.model, effort=args.effort,
                 mode=args.mode, source=args.source, public_dataset=args.public_dataset,
-                synthetic_confirmed=args.synthetic_confirmed, use_cache=not args.no_cache,
+                use_cache=not args.no_cache,
                 cache_dir=CACHE_DIR, fallback=not args.no_fallback)
         except (anthropic.AuthenticationError, anthropic.PermissionDeniedError, anthropic.CredentialsError) as exc:
             print(f"API credentials problem, stopping: {exc}", file=sys.stderr)

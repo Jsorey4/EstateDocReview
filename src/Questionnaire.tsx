@@ -3,6 +3,7 @@ import { BACKEND_DOCUMENT_TYPES } from "./backendContract";
 import {
   ArrowLeft,
   ArrowRight,
+  CircleAlert,
   Check,
   CheckCircle2,
   ClipboardCheck,
@@ -10,7 +11,18 @@ import {
   Trash2,
 } from "lucide-react";
 import type { Asset, Page, Person, Questionnaire as Data } from "./domain";
-import { completion, money, uid } from "./domain";
+import {
+  RELATIONSHIP_KINDS,
+  RELATIONSHIP_SUGGESTIONS,
+  completion,
+  missingItems,
+  money,
+  normalize,
+  parsePercent,
+  relationshipKind,
+  reviewWarnings,
+  uid,
+} from "./domain";
 import { Badge, Empty, Progress, SectionHeading } from "./components";
 const steps = ["Household", "People", "Assets", "Wishes & roles", "Review"];
 export default function Questionnaire({
@@ -23,20 +35,87 @@ export default function Questionnaire({
   go: (p: Page) => void;
 }) {
   const [step, setStep] = useState(0);
+  // Steps the advisor has left unfinished; their missing fields are then marked in place.
+  const [attempted, setAttempted] = useState<Set<number>>(() => new Set());
   const completed = completion(q);
+  const missing = missingItems(q);
+  const warnings = reviewWarnings(q);
+  const show = attempted.has(step);
   const update = (patch: Partial<Data>) =>
     onChange({ ...q, ...patch, reviewed: false });
-  const next = () => {
-    setStep((s) => Math.min(s + 1, 4));
+  const leave = (to: number) => {
+    if (step < 4 && missing[step].length)
+      setAttempted((a) => new Set(a).add(step));
+    setStep(Math.max(0, Math.min(to, 4)));
     window.scrollTo(0, 0);
   };
+  const next = () => leave(step + 1);
+  const stepStatus = (i: number) => {
+    if (i === 4)
+      return q.reviewed
+        ? { tone: "done", text: "Reviewed" }
+        : { tone: "todo", text: "Not yet reviewed" };
+    if (missing[i].length)
+      return attempted.has(i)
+        ? { tone: "missing", text: `${missing[i].length} still needed` }
+        : { tone: "todo", text: "Not finished" };
+    if (warnings[i].length)
+      return { tone: "warn", text: `${warnings[i].length} to confirm` };
+    return { tone: "done", text: "Complete" };
+  };
+  const setPeople = (people: Person[]) => update({ people });
+  const changePerson = (id: string, patch: Partial<Person>) =>
+    setPeople(q.people.map((p) => (p.id === id ? { ...p, ...patch } : p)));
+  const addPerson = () =>
+    setPeople([
+      ...q.people,
+      {
+        id: uid(),
+        name: "",
+        relationship: "",
+        status: "unknown",
+        note: "",
+      },
+    ]);
+  const addAsset = () =>
+    update({
+      assets: [
+        ...q.assets,
+        {
+          id: uid(),
+          name: "",
+          type: "Investment account",
+          value: 0,
+          character: "unknown",
+          governing_document: "",
+          retirementKind: "retirement_401k",
+          owner: "",
+          beneficiary: "",
+          route: "Unknown",
+          note: "",
+        },
+      ],
+    });
+  const setBeneficiary = (
+    i: number,
+    patch: Partial<Data["intended_beneficiaries"][number]>,
+  ) =>
+    update({
+      intended_beneficiaries: q.intended_beneficiaries.map((r, j) =>
+        j === i ? { ...r, ...patch } : r,
+      ),
+    });
+  const shareTotal = q.intended_beneficiaries.reduce(
+    (sum, b) => sum + (parsePercent(b.share) ?? 0),
+    0,
+  );
   return (
     <>
       <SectionHeading
         eyebrow="START WITH INTENTION"
         title="The household questionnaire"
         action={
-          <Badge tone="green">
+          <Badge tone={completed.every(Boolean) ? "green" : "amber"}>
             {completed.filter(Boolean).length} of 5 complete
           </Badge>
         }
@@ -46,17 +125,23 @@ export default function Questionnaire({
       <div className="questionnaire-layout">
         <aside className="questionnaire-steps">
           <div className="step-caption">BUILD THE PICTURE</div>
-          {steps.map((label, i) => (
-            <button
-              key={label}
-              className={`form-step ${i === step ? "selected" : ""}`}
-              onClick={() => setStep(i)}
-              aria-current={i === step ? "step" : undefined}
-            >
-              <span>{completed[i] ? <Check size={15} /> : `0${i + 1}`}</span>
-              {label}
-            </button>
-          ))}
+          {steps.map((label, i) => {
+            const status = stepStatus(i);
+            return (
+              <button
+                key={label}
+                className={`form-step ${i === step ? "selected" : ""} status-${status.tone}`}
+                onClick={() => leave(i)}
+                aria-current={i === step ? "step" : undefined}
+              >
+                <span>{completed[i] ? <Check size={15} /> : `0${i + 1}`}</span>
+                <span className="form-step-label">
+                  {label}
+                  <small>{status.text}</small>
+                </span>
+              </button>
+            );
+          })}
           <div className="questionnaire-progress">
             <span>{completed.filter(Boolean).length * 20}% complete</span>
             <Progress value={completed.filter(Boolean).length * 20} />
@@ -89,19 +174,36 @@ export default function Questionnaire({
               }
             </p>
           </div>
+          {step < 4 && (
+            <StepChecklist
+              missing={missing[step]}
+              warnings={warnings[step]}
+              emphasize={show}
+            />
+          )}
           {step === 0 && (
             <div className="form-body">
               <div className="form-grid">
-                <Field label="Household name" required>
+                <Field
+                  label="Household name"
+                  required
+                  invalid={show && !q.household.trim()}
+                >
                   <input
+                    aria-invalid={show && !q.household.trim()}
                     value={q.household}
                     onChange={(e) => update({ household: e.target.value })}
                     placeholder="e.g. Synthetic household name"
                     autoComplete="off"
                   />
                 </Field>
-                <Field label="Questionnaire completed by" required>
+                <Field
+                  label="Questionnaire completed by"
+                  required
+                  invalid={show && !q.respondent.trim()}
+                >
                   <input
+                    aria-invalid={show && !q.respondent.trim()}
                     value={q.respondent}
                     onChange={(e) => update({ respondent: e.target.value })}
                     placeholder="Name or role"
@@ -125,8 +227,13 @@ export default function Questionnaire({
                     <option>Texas</option>
                   </select>
                 </Field>
-                <Field label="Marital status" required>
+                <Field
+                  label="Marital status"
+                  required
+                  invalid={show && !q.maritalStatus}
+                >
                   <select
+                    aria-invalid={show && !q.maritalStatus}
                     value={q.maritalStatus}
                     onChange={(e) => update({ maritalStatus: e.target.value })}
                   >
@@ -290,98 +397,129 @@ export default function Questionnaire({
               {q.people.length === 0 && (
                 <Empty
                   icon={<Plus size={25} />}
+                  iconAction={{ label: "Add a person", onClick: addPerson }}
                   title="Every name adds context"
                 >
                   Add the people connected to this household. Names are compared
                   exactly after capitalization and spacing are normalized.
                 </Empty>
               )}
-              {q.people.map((person, index) => (
-                <div className="repeater" key={person.id}>
-                  <div className="repeater-head">
-                    <strong>Person {index + 1}</strong>
-                    <button
-                      className="icon-button danger-text"
-                      aria-label={`Remove person ${index + 1}`}
-                      onClick={() =>
-                        update({
-                          people: q.people.filter((p) => p.id !== person.id),
-                        })
-                      }
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                  <div className="form-grid">
-                    <Field label="Full name">
-                      <input
-                        value={person.name}
-                        onChange={(e) =>
-                          update({
-                            people: q.people.map((p) =>
-                              p.id === person.id
-                                ? { ...p, name: e.target.value }
-                                : p,
-                            ),
-                          })
-                        }
-                      />
-                    </Field>
-                    <Field label="Relationship or role">
-                      <input
-                        value={person.relationship}
-                        placeholder="e.g. Child, spouse, attorney"
-                        onChange={(e) =>
-                          update({
-                            people: q.people.map((p) =>
-                              p.id === person.id
-                                ? { ...p, relationship: e.target.value }
-                                : p,
-                            ),
-                          })
-                        }
-                      />
-                    </Field>
-                    <Field label="Current status">
-                      <select
-                        value={person.status}
-                        onChange={(e) =>
-                          update({
-                            people: q.people.map((p) =>
-                              p.id === person.id
-                                ? {
-                                    ...p,
-                                    status: e.target.value as Person["status"],
-                                  }
-                                : p,
-                            ),
-                          })
+              {q.people.map((person, index) => {
+                const kind = relationshipKind(person);
+                const suggestion =
+                  kind === "other"
+                    ? RELATIONSHIP_SUGGESTIONS[normalize(person.relationship)]
+                    : undefined;
+                return (
+                  <div className="repeater" key={person.id}>
+                    <div className="repeater-head">
+                      <strong>Person {index + 1}</strong>
+                      <button
+                        className="icon-button danger-text"
+                        aria-label={`Remove person ${index + 1}`}
+                        onClick={() =>
+                          setPeople(q.people.filter((p) => p.id !== person.id))
                         }
                       >
-                        <option value="living">Living</option>
-                        <option value="deceased">Deceased</option>
-                        <option value="unknown">Unknown / confirm</option>
-                      </select>
-                    </Field>
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                    <div className="form-grid">
+                      <Field
+                        label="Full name"
+                        required
+                        invalid={show && !person.name.trim()}
+                      >
+                        <input
+                          aria-invalid={show && !person.name.trim()}
+                          value={person.name}
+                          onChange={(e) =>
+                            changePerson(person.id, { name: e.target.value })
+                          }
+                        />
+                      </Field>
+                      <Field label="Current status">
+                        <select
+                          value={person.status}
+                          onChange={(e) =>
+                            changePerson(person.id, {
+                              status: e.target.value as Person["status"],
+                            })
+                          }
+                        >
+                          <option value="living">Living</option>
+                          <option value="deceased">Deceased</option>
+                          <option value="unknown">Unknown / confirm</option>
+                        </select>
+                      </Field>
+                    </div>
+                    <fieldset className="relationship-field">
+                      <legend>Relationship or role</legend>
+                      <div className="choice-chips">
+                        {RELATIONSHIP_KINDS.map((k) => (
+                          <label
+                            key={k}
+                            className={`chip-radio ${kind === k ? "chosen" : ""}`}
+                          >
+                            <input
+                              type="radio"
+                              name={`relationship-${person.id}`}
+                              checked={kind === k}
+                              onChange={() =>
+                                changePerson(person.id, {
+                                  relationshipKind: k,
+                                  relationship:
+                                    k === "other"
+                                      ? kind === "other"
+                                        ? person.relationship
+                                        : ""
+                                      : k,
+                                })
+                              }
+                            />
+                            {k[0].toUpperCase() + k.slice(1)}
+                          </label>
+                        ))}
+                      </div>
+                      {kind === "other" && (
+                        <Field label="Describe the relationship">
+                          <input
+                            value={person.relationship}
+                            placeholder="e.g. sibling, friend, financial advisor"
+                            onChange={(e) =>
+                              changePerson(person.id, {
+                                relationship: e.target.value,
+                              })
+                            }
+                          />
+                        </Field>
+                      )}
+                      {suggestion && (
+                        <p className="field-hint">
+                          “{person.relationship}” usually means {suggestion}.{" "}
+                          <button
+                            className="text-link inline"
+                            onClick={() =>
+                              changePerson(person.id, {
+                                relationshipKind: suggestion,
+                                relationship: suggestion,
+                              })
+                            }
+                          >
+                            Use{" "}
+                            {suggestion[0].toUpperCase() + suggestion.slice(1)}
+                          </button>
+                        </p>
+                      )}
+                    </fieldset>
+                    <NoteField
+                      value={person.note}
+                      onChange={(note) => changePerson(person.id, { note })}
+                    />
                   </div>
-                </div>
-              ))}
-              <button
-                className="button secondary"
-                onClick={() =>
-                  update({
-                    people: [
-                      ...q.people,
-                      {
-                        id: uid(),
-                        name: "",
-                        relationship: "",
-                        status: "unknown",
-                      },
-                    ],
-                  })
-                }
-              >
+                );
+              })}
+              <button className="button secondary" onClick={addPerson}>
                 <Plus size={16} />
                 Add a person
               </button>
@@ -398,6 +536,7 @@ export default function Questionnaire({
                   key={asset.id}
                   asset={asset}
                   index={i}
+                  showMissing={show}
                   people={q.people}
                   change={(patch) =>
                     update({
@@ -416,34 +555,14 @@ export default function Questionnaire({
               {q.assets.length === 0 && (
                 <Empty
                   icon={<Plus size={25} />}
+                  iconAction={{ label: "Add an asset", onClick: addAsset }}
                   title="Bring the asset picture together"
                 >
                   Add accounts, property, insurance, or business interests.
                   Leave unknown names blank so they remain open questions.
                 </Empty>
               )}
-              <button
-                className="button secondary"
-                onClick={() =>
-                  update({
-                    assets: [
-                      ...q.assets,
-                      {
-                        id: uid(),
-                        name: "",
-                        type: "Investment account",
-                        value: 0,
-                        character: "unknown",
-                        governing_document: "",
-                        retirementKind: "retirement_401k",
-                        owner: "",
-                        beneficiary: "",
-                        route: "Unknown",
-                      },
-                    ],
-                  })
-                }
-              >
+              <button className="button secondary" onClick={addAsset}>
                 <Plus size={16} />
                 Add an asset
               </button>
@@ -454,8 +573,10 @@ export default function Questionnaire({
               <Field
                 label="In their words: what should this plan accomplish?"
                 required
+                invalid={show && !q.intentions.trim()}
               >
                 <textarea
+                  aria-invalid={show && !q.intentions.trim()}
                   rows={4}
                   value={q.intentions}
                   onChange={(e) => update({ intentions: e.target.value })}
@@ -467,62 +588,102 @@ export default function Questionnaire({
                 Household-level intentions, as distinct from account-specific
                 designations.
               </p>
-              {q.intended_beneficiaries.map((b, i) => (
-                <div className="repeater" key={i}>
-                  <div className="form-grid">
-                    <Field label={`Beneficiary ${i + 1}: name`}>
-                      <input
-                        value={b.name}
-                        onChange={(e) =>
-                          update({
-                            intended_beneficiaries:
-                              q.intended_beneficiaries.map((r, j) =>
-                                j === i ? { ...r, name: e.target.value } : r,
-                              ),
-                          })
-                        }
-                      />
-                    </Field>
-                    <Field label={`Beneficiary ${i + 1}: share`}>
-                      <input
-                        value={b.share}
-                        placeholder="Percentage or description"
-                        onChange={(e) =>
-                          update({
-                            intended_beneficiaries:
-                              q.intended_beneficiaries.map((r, j) =>
-                                j === i ? { ...r, share: e.target.value } : r,
-                              ),
-                          })
-                        }
-                      />
-                    </Field>
+              {q.intended_beneficiaries.map((b, i) => {
+                const pct = parsePercent(b.share);
+                const legacy = b.share.trim() && pct === null ? b.share : "";
+                return (
+                  <div className="repeater" key={i}>
+                    <div className="form-grid">
+                      <Field label={`Beneficiary ${i + 1}: name`}>
+                        <input
+                          value={b.name}
+                          list="people-options"
+                          onChange={(e) =>
+                            setBeneficiary(i, { name: e.target.value })
+                          }
+                        />
+                      </Field>
+                      <Field
+                        label={`Beneficiary ${i + 1}: share (%)`}
+                        invalid={!!legacy}
+                        message="Enter a percentage"
+                      >
+                        <span className="input-suffix">
+                          <input
+                            type="number"
+                            inputMode="decimal"
+                            min="0"
+                            max="100"
+                            step="any"
+                            aria-invalid={!!legacy}
+                            value={pct ?? ""}
+                            placeholder="0–100"
+                            onChange={(e) =>
+                              setBeneficiary(i, {
+                                share: e.target.value
+                                  ? `${e.target.value}%`
+                                  : "",
+                              })
+                            }
+                          />
+                          <span aria-hidden="true">%</span>
+                        </span>
+                      </Field>
+                    </div>
+                    {legacy && (
+                      <p className="field-hint">
+                        Recorded earlier as “{legacy}”. Enter a percentage, and
+                        keep any description in the notes.{" "}
+                        <button
+                          className="text-link inline"
+                          onClick={() =>
+                            setBeneficiary(i, {
+                              share: "",
+                              note: b.note ? `${b.note}\n${legacy}` : legacy,
+                            })
+                          }
+                        >
+                          Move to notes
+                        </button>
+                      </p>
+                    )}
+                    <NoteField
+                      value={b.note}
+                      placeholder="Conditions, timing, or how the client described this share"
+                      onChange={(note) => setBeneficiary(i, { note })}
+                    />
+                    <button
+                      className="button ghost"
+                      onClick={() =>
+                        update({
+                          intended_beneficiaries:
+                            q.intended_beneficiaries.filter((_, j) => j !== i),
+                        })
+                      }
+                    >
+                      Remove beneficiary {i + 1}
+                    </button>
                   </div>
-                  <button
-                    className="button ghost"
-                    onClick={() =>
-                      update({
-                        intended_beneficiaries: q.intended_beneficiaries.filter(
-                          (_, j) => j !== i,
-                        ),
-                      })
-                    }
-                  >
-                    Remove beneficiary {i + 1}
-                  </button>
-                </div>
-              ))}
+                );
+              })}
+              {q.intended_beneficiaries.some((b) => b.share.trim()) && (
+                <p className={`share-total ${shareTotal === 100 ? "" : "off"}`}>
+                  Shares entered: {Math.round(shareTotal * 100) / 100}%
+                  {shareTotal !== 100 && " of 100%"}
+                </p>
+              )}
               <button
                 className="button secondary"
                 onClick={() =>
                   update({
                     intended_beneficiaries: [
                       ...q.intended_beneficiaries,
-                      { name: "", share: "" },
+                      { name: "", share: "", note: "" },
                     ],
                   })
                 }
               >
+                <Plus size={16} />
                 Add intended beneficiary
               </button>
               <h3 className="field-group">Documents available</h3>
@@ -628,10 +789,20 @@ export default function Questionnaire({
                     ) : (
                       <span className="small-dot amber-dot" />
                     )}
-                    {s}
-                    <span className="push-right">
-                      {completed[i] ? "Captured" : "Needs details"}
+                    <span>
+                      {s}
+                      {!completed[i] && (
+                        <small className="readiness-missing">
+                          Needed: {missing[i].join(", ")}
+                        </small>
+                      )}
                     </span>
+                    <button
+                      className={`push-right text-link ${completed[i] ? "" : "amber-text"}`}
+                      onClick={() => leave(i)}
+                    >
+                      {completed[i] ? "Captured" : "Finish this step"}
+                    </button>
                   </div>
                 ))}
               </div>
@@ -661,15 +832,22 @@ export default function Questionnaire({
             <button
               className="button ghost"
               disabled={step === 0}
-              onClick={() => setStep((s) => s - 1)}
+              onClick={() => leave(step - 1)}
             >
               <ArrowLeft size={16} />
               Back
             </button>
-            <span className="muted">
-              <Check size={14} />
-              Changes saved as you go
-            </span>
+            {step < 4 && missing[step].length ? (
+              <span className="footer-missing" role="status">
+                <CircleAlert size={14} />
+                {missing[step].length} still needed · saved as you go
+              </span>
+            ) : (
+              <span className="muted">
+                <Check size={14} />
+                Changes saved as you go
+              </span>
+            )}
             {step < 4 ? (
               <button className="button primary" onClick={next}>
                 Continue
@@ -699,30 +877,108 @@ function Field({
   label,
   children,
   required,
+  invalid,
+  message = "Required to finish this step",
 }: {
   label: string;
   children: React.ReactNode;
   required?: boolean;
+  invalid?: boolean;
+  message?: string;
 }) {
   return (
-    <label className="field">
+    <label className={`field ${invalid ? "is-missing" : ""}`}>
       <span>
         {label}
         {required && <span className="required"> *</span>}
       </span>
       {children}
+      {invalid && (
+        <small className="field-error">
+          <CircleAlert size={12} />
+          {message}
+        </small>
+      )}
     </label>
+  );
+}
+function NoteField({
+  value,
+  onChange,
+  placeholder = "Anything the advisor should know about this item",
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+}) {
+  return (
+    <div className="note-row">
+      <Field label="Notes or comments">
+        <textarea
+          rows={2}
+          value={value}
+          placeholder={placeholder}
+          onChange={(e) => onChange(e.target.value)}
+        />
+      </Field>
+    </div>
+  );
+}
+function StepChecklist({
+  missing,
+  warnings,
+  emphasize,
+}: {
+  missing: string[];
+  warnings: string[];
+  emphasize: boolean;
+}) {
+  if (!missing.length && !warnings.length)
+    return (
+      <div className="step-checklist done">
+        <CheckCircle2 size={16} />
+        This step is complete.
+      </div>
+    );
+  return (
+    <div className={`step-checklist ${emphasize ? "emphasize" : ""}`}>
+      {missing.length > 0 && (
+        <div>
+          <strong>
+            <CircleAlert size={15} />
+            To finish this step
+          </strong>
+          <ul>
+            {missing.map((m) => (
+              <li key={m}>{m}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {warnings.length > 0 && (
+        <div className="checklist-warnings">
+          <strong>Worth confirming</strong>
+          <ul>
+            {warnings.map((w) => (
+              <li key={w}>{w}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
   );
 }
 function AssetForm({
   asset: a,
   index,
+  showMissing,
   people,
   change,
   remove,
 }: {
   asset: Asset;
   index: number;
+  showMissing: boolean;
   people: Person[];
   change: (patch: Partial<Asset>) => void;
   remove: () => void;
@@ -740,8 +996,13 @@ function AssetForm({
         </button>
       </div>
       <div className="form-grid">
-        <Field label="Asset name">
+        <Field
+          label="Asset name"
+          required
+          invalid={showMissing && !a.name.trim()}
+        >
           <input
+            aria-invalid={showMissing && !a.name.trim()}
             value={a.name}
             onChange={(e) => change({ name: e.target.value })}
             placeholder="Use a label, not an account number"
@@ -855,6 +1116,7 @@ function AssetForm({
           </select>
         </Field>
       </div>
+      <NoteField value={a.note} onChange={(note) => change({ note })} />
       <p className="asset-reference">
         Evidence reference: <code>{a.id}</code>
       </p>

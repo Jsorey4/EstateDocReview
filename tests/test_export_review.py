@@ -54,3 +54,10 @@ def test_questionnaire_export_matches_backend_vocabulary():
     assert assets['assets'][0]=={'id':'asset','description':'Label','type':'ira','value_usd':100,'character':'community','governing_document':'d'}
     q['people']=[{'status':'unknown'}]
     with pytest.raises(ValueError,match='Confirm'): build_inputs({'questionnaire':q})
+
+
+def test_beneficiary_notes_stay_out_of_backend_inputs():
+    q={'clientName':'A','asOf':'2026-10-25','maritalStatus':'Single','people':[],'marriages':[],'assets':[],
+       'intended_beneficiaries':[{'name':'B','share':'50%','note':'Advisor-only context'}]}
+    questionnaire,_=build_inputs({'questionnaire':q})
+    assert questionnaire['intended_beneficiaries']==[{'name':'B','share':'50%'}]

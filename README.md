@@ -36,7 +36,7 @@ The browser performs no API calls. Fonts are local. Household answers, imported 
    .venv/bin/python extract.py /path/to/docs --out runs/household/facts
    ```
 
-   The extraction backend enforces its synthetic/public data guard and records the actual served model. For public data use `--public-dataset NAME`; for scans, run OCR separately and use `--source scanned`. No API key goes into Vite, browser code, or committed files.
+   The extraction backend records the data label (synthetic, public, or user_supplied) and the actual served model. For public data use `--public-dataset NAME`; for scans, run OCR separately and use `--source scanned`. No API key goes into Vite, browser code, or committed files.
 
 6. **Verify and package:** use the backend's authoritative `verify_quotes.py` to recheck extraction records, or let the bridge do it automatically:
 
@@ -50,6 +50,23 @@ The browser performs no API calls. Fonts are local. Household answers, imported 
 7. **Import:** open Documents → Import review data and select `review.json`. Inspect source pages, verification results, and unverified facts. The estate map uses questionnaire routes and verified beneficiary evidence; routes are not legal conclusions. Review supported name differences and record follow-up notes. Print the review packet or save it as PDF.
 
 No live API call has been validated in this environment. Tests use the backend's existing fake API client and placeholder fixtures; they prove integration mechanics, not extraction accuracy or legal correctness.
+
+## Sample replay (precomputed demo runs)
+
+The **Sample replay** page steps through one precomputed pipeline run per household variant: source documents, extraction, quote verification, reconciliation, the advisor review, and (when scored) the evaluation. A variant switcher keeps the current step, so the clean control and a mutated variant can be compared side by side. **Open in workspace** loads a variant's questionnaire and review packet into the rest of the app.
+
+Samples are static files in `public/samples/`, built after a real extraction run:
+
+```sh
+.venv/bin/python run_eval.py --variants households/variants --run runs/<run>
+.venv/bin/python build_samples.py --variants households/variants --run runs/<run> --out public/samples
+```
+
+`build_samples.py` packages, per variant with extraction records: the questionnaire in the frontend's shape, a version-2 review packet (`export_review.build_packet`, which re-verifies every quote against the unchanged source file), the reconciliation output (re-run on the re-verified records), and that variant's evaluation counts from `eval.json`. It never reads `answer_key.json` or `household.yaml`; from `eval.json` it copies counts only, never missed-issue or field-miss detail. It refuses documents not labeled synthetic or public, bundles over 8 MB, and a non-empty `--out` unless `--force` is given. Client-reported routes, the intended owner and beneficiary per asset, and the intended executor are not in the YAML inputs, so they stay blank or "Unknown" in the loaded workspace.
+
+The page fetches `samples/index.json` and the selected bundle from the same origin; it makes no API call. A finding is shown only if every document quote it cites is a verified fact in the bundle's packet. With no `public/samples/`, the page explains how to publish samples.
+
+Opening a sample stores its reconciliation output in the workspace (`backend`: the source, the questionnaire it was computed against, and the `reconcile.py` result). The Review queue, review packet, Overview counts and Estate flow flags then list those findings first, followed by the browser's own name comparisons, with the same follow-up statuses and notes. Each finding is re-checked against the current packet and withheld if any cited quote is not a verified fact. Importing new review data clears the stored findings. Editing the questionnaire keeps them but shows a notice that they reflect the answers as packaged; the browser does not re-run `reconcile.py`. Older workspace backups without the field still load.
 
 ## Shared vocabulary and data contracts
 

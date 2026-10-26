@@ -229,7 +229,7 @@ export default function Documents({
                     </small>
                   </span>
                   <Badge tone="neutral">
-                    {d.source === "synthetic" ? "SYNTHETIC" : "PUBLIC"}
+                    {d.source === "synthetic" ? "SYNTHETIC" : d.source === "public" ? "PUBLIC" : "USER-SUPPLIED"}
                   </Badge>
                   <span className="quote-count">
                     {facts.filter((f) => f.documentId === d.id).length} verified

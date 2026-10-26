@@ -14,6 +14,7 @@ import {
   LayoutDashboard,
   Leaf,
   Menu,
+  PlayCircle,
   Plus,
   Settings2,
   ShieldCheck,
@@ -25,7 +26,7 @@ import {
   emptyWorkspace,
   loadWorkspace,
   parsePacket,
-  reconcile,
+  reviewItems,
   STORAGE_KEY,
   workspaceSchema,
 } from "./domain";
@@ -37,6 +38,7 @@ import Documents from "./Documents";
 import Flow from "./Flow";
 import Review from "./Review";
 import Report from "./Report";
+import Replay from "./Replay";
 
 const navigation = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
@@ -45,6 +47,7 @@ const navigation = [
   { id: "flow", label: "Estate flow", icon: GitBranch },
   { id: "review", label: "Review queue", icon: FileCheck2 },
   { id: "report", label: "Review packet", icon: BookOpen },
+  { id: "replay", label: "Sample replay", icon: PlayCircle },
 ] as const;
 const currentPage = (): Page =>
   navigation.some((n) => n.id === location.hash.slice(1))
@@ -64,7 +67,7 @@ export default function App() {
   const [pendingRestore, setPendingRestore] = useState<Workspace | null>(null);
   const restoreRef = useRef<HTMLInputElement>(null);
   const pageRef = useRef<HTMLElement>(null);
-  const findings = reconcile(workspace.questionnaire, workspace.packet);
+  const findings = reviewItems(workspace);
   const openCount = findings.filter(
     (f) => (workspace.dispositions[f.id]?.status ?? "open") === "open",
   ).length;
@@ -273,7 +276,12 @@ export default function App() {
             <Documents
               workspace={workspace}
               onImport={(packet) => {
-                setWorkspace((w) => ({ ...w, packet, dispositions: {} }));
+                setWorkspace((w) => ({
+                  ...w,
+                  packet,
+                  dispositions: {},
+                  backend: null,
+                }));
                 setMessage(
                   "Review data imported. Source pages and verification results are ready to inspect.",
                 );
@@ -295,6 +303,29 @@ export default function App() {
             />
           )}
           {page === "report" && <Report workspace={workspace} go={go} />}
+          {page === "replay" && (
+            <Replay
+              workspace={workspace}
+              onOpen={(sample, source) => {
+                setWorkspace({
+                  version: 1,
+                  questionnaire: sample.questionnaire,
+                  packet: sample.packet,
+                  dispositions: {},
+                  backend: {
+                    source,
+                    questionnaire: sample.questionnaire,
+                    reconciliation: sample.reconciliation,
+                  },
+                });
+                setStorageBlocked(false);
+                setMessage(
+                  "Sample opened in the workspace. Its findings are in the review queue.",
+                );
+              }}
+              go={go}
+            />
+          )}
         </main>
         <footer>
           <span>

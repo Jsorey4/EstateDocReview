@@ -1,11 +1,25 @@
 import { z } from "zod";
-import { BACKEND_FIELDS, BACKEND_DOCUMENT_TYPES } from "./backendContract";
+import {
+  BACKEND_FIELDS,
+  BACKEND_DOCUMENT_TYPES,
+  BACKEND_ISSUE_TYPES,
+} from "./backendContract";
 
+export const RELATIONSHIP_KINDS = [
+  "parent",
+  "child",
+  "spouse",
+  "attorney",
+  "other",
+] as const;
 export const personSchema = z.object({
   id: z.string().min(1),
   name: z.string(),
+  // The standard category, or the client's own words when relationshipKind is "other".
   relationship: z.string(),
+  relationshipKind: z.enum(RELATIONSHIP_KINDS).optional(),
   status: z.enum(["living", "deceased", "unknown"]),
+  note: z.string().default(""),
 });
 export const assetSchema = z.object({
   id: z.string().min(1),
@@ -32,6 +46,7 @@ export const assetSchema = z.object({
     "Beneficiary designation",
     "Joint ownership",
   ]),
+  note: z.string().default(""),
 });
 export const questionnaireSchema = z.object({
   clientName: z.string().default(""),
@@ -47,7 +62,14 @@ export const questionnaireSchema = z.object({
     )
     .default([]),
   intended_beneficiaries: z
-    .array(z.object({ name: z.string(), share: z.string() }))
+    .array(
+      z.object({
+        name: z.string(),
+        // A percentage such as "50%". Older answers may hold a description.
+        share: z.string(),
+        note: z.string().default(""),
+      }),
+    )
     .default([]),
   documents_available: z.array(z.enum(BACKEND_DOCUMENT_TYPES)).default([]),
   household: z.string(),
@@ -90,7 +112,7 @@ export const documentSchema = z.object({
     .string()
     .regex(/^[a-f0-9]{64}$/)
     .optional(),
-  source: z.enum(["synthetic", "public"]),
+  source: z.enum(["synthetic", "public", "user_supplied"]),
   sourceUrl: z
     .string()
     .url()
@@ -175,14 +197,87 @@ export const packetSchema = z
           message: `Missing document for fact ${f.id}`,
         });
   });
+const count = z.number().int().nonnegative();
+// Output of reconcile.py (Python rules over verified facts), as packaged by build_samples.py.
+const evidenceSchema = z.discriminatedUnion("source", [
+  z.object({
+    source: z.literal("document"),
+    doc: z.string(),
+    page: z.number().int().positive(),
+    field: z.string(),
+    quote: z.string(),
+    verification: z.string().nullable(),
+  }),
+  z.object({
+    source: z.literal("questionnaire"),
+    path: z.string(),
+    value: z.unknown(),
+  }),
+]);
+const findingSchema = z.object({
+  id: z.string(),
+  issue_type: z.enum(BACKEND_ISSUE_TYPES),
+  status: z.enum(["flagged", "unresolved"]),
+  documents: z.array(z.string()),
+  people: z.array(z.string()),
+  assets: z.array(z.string()),
+  amount_at_stake_usd: z.number().nonnegative().nullable(),
+  amount_is_hypothetical: z.literal(true),
+  observation: z.string(),
+  evidence: z.array(evidenceSchema).min(1),
+  uncertainty: z.string(),
+  next_question: z.string(),
+  rule_refs: z.array(z.unknown()),
+  disclaimer: z.string(),
+});
+export const reconciliationSchema = z.object({
+  reconcile_version: z.string(),
+  synthetic: z.literal(true),
+  values_are_hypothetical: z.literal(true),
+  rule_pack_status: z.string(),
+  disclaimer: z.string(),
+  client: z.string(),
+  findings: z.array(findingSchema),
+  summary: z.object({
+    findings: count,
+    flagged: count,
+    unresolved: count,
+    amount_at_stake_flagged_usd: z.number().nullable(),
+    documents: z.array(z.string()),
+    verified_facts: count,
+    unverified_facts_excluded: count,
+  }),
+  coverage: z.object({
+    gaps: z.array(z.object({ document: z.string(), reason: z.string() })),
+    unverified_facts: z.array(
+      z.object({
+        document: z.string(),
+        field: z.string().nullable(),
+        value: z.string().nullable(),
+        reason: z.string().nullable(),
+      }),
+    ),
+    people_named_in_documents_but_not_in_questionnaire: z.array(z.string()),
+    document_types_in_questionnaire_but_not_provided: z.array(z.string()),
+  }),
+});
 export type Person = z.infer<typeof personSchema>;
 export type Asset = z.infer<typeof assetSchema>;
 export type Questionnaire = z.infer<typeof questionnaireSchema>;
 export type ReviewDocument = z.infer<typeof documentSchema>;
 export type Fact = z.infer<typeof factSchema>;
 export type Packet = z.infer<typeof packetSchema>;
+export type Reconciliation = z.infer<typeof reconciliationSchema>;
+export type BackendFinding = z.infer<typeof findingSchema>;
+export type Evidence = z.infer<typeof evidenceSchema>;
 export type Page =
-  "overview" | "questionnaire" | "documents" | "flow" | "review" | "report";
+  | "overview"
+  | "questionnaire"
+  | "documents"
+  | "flow"
+  | "review"
+  | "report"
+  | "replay";
 export type Disposition = {
   status: "open" | "discussed" | "attorney";
   note: string;
@@ -198,6 +293,15 @@ export const workspaceSchema = z.object({
       note: z.string(),
     }),
   ),
+  // reconcile.py output for this packet, with the questionnaire it was computed against.
+  backend: z
+    .object({
+      source: z.string(),
+      questionnaire: questionnaireSchema,
+      reconciliation: reconciliationSchema,
+    })
+    .nullable()
+    .default(null),
 });
 export type Workspace = z.infer<typeof workspaceSchema>;
 export const emptyQuestionnaire: Questionnaire = {
@@ -226,6 +330,7 @@ export const emptyWorkspace = (): Workspace => ({
   questionnaire: { ...emptyQuestionnaire, people: [], assets: [], events: [] },
   packet: null,
   dispositions: {},
+  backend: null,
 });
 export const normalize = (value: string) =>
   value.normalize("NFKC").replace(/\s+/g, " ").trim().toLowerCase();
@@ -274,14 +379,91 @@ export function parsePacket(input: unknown): Packet {
     })),
   };
 }
-export function completion(q: Questionnaire) {
+export type RelationshipKind = (typeof RELATIONSHIP_KINDS)[number];
+export function relationshipKind(p: Person): RelationshipKind | "" {
+  if (p.relationshipKind) return p.relationshipKind;
+  const text = normalize(p.relationship);
+  if ((RELATIONSHIP_KINDS as readonly string[]).includes(text))
+    return text as RelationshipKind;
+  return text ? "other" : "";
+}
+// Words a client might type under Other that map to a standard category. Offered, never applied.
+export const RELATIONSHIP_SUGGESTIONS: Record<string, RelationshipKind> = {
+  wife: "spouse",
+  husband: "spouse",
+  mother: "parent",
+  father: "parent",
+  mom: "parent",
+  dad: "parent",
+  son: "child",
+  daughter: "child",
+  lawyer: "attorney",
+};
+/** "75", "75%" or "75.5 %" as a number from 0 to 100; anything else is null. */
+export function parsePercent(share: string): number | null {
+  const m = /^\s*(\d+(?:\.\d+)?)\s*%?\s*$/.exec(share);
+  if (!m) return null;
+  const n = Number(m[1]);
+  return n <= 100 ? n : null;
+}
+/** What blocks each of the first four steps from counting as complete. */
+export function missingItems(q: Questionnaire): string[][] {
   return [
-    !!q.household.trim() && !!q.respondent.trim() && !!q.maritalStatus,
-    q.people.length > 0 && q.people.every((p) => !!p.name.trim()),
-    q.assets.length > 0 && q.assets.every((a) => !!a.name.trim()),
-    !!q.intentions.trim(),
-    q.reviewed,
+    [
+      !q.household.trim() && "Household name",
+      !q.respondent.trim() && "Who completed the questionnaire",
+      !q.maritalStatus && "Marital status",
+    ].filter((s): s is string => !!s),
+    q.people.length
+      ? q.people.flatMap((p, i) =>
+          p.name.trim() ? [] : [`Name for person ${i + 1}`],
+        )
+      : ["At least one person"],
+    q.assets.length
+      ? q.assets.flatMap((a, i) =>
+          a.name.trim() ? [] : [`Name for asset ${i + 1}`],
+        )
+      : ["At least one asset"],
+    q.intentions.trim() ? [] : ["The client's intentions, in their words"],
   ];
+}
+/** Gaps that do not block a step but should be confirmed before the review. */
+export function reviewWarnings(q: Questionnaire): string[][] {
+  const household: string[] = [];
+  if (!q.clientName.trim() || !q.asOf)
+    household.push("Client name and as-of date (needed for backend export)");
+  if (q.maritalStatus === "Married" && !q.marriages.some((m) => !m.ended))
+    household.push("The current marriage in marriage history");
+  q.marriages.forEach((m, i) => {
+    if (!m.spouse.trim() || !m.married)
+      household.push(`Spouse and date for marriage ${i + 1}`);
+  });
+  const people = q.people.flatMap((p, i) => {
+    const kind = relationshipKind(p);
+    return [
+      !kind && `Relationship for person ${i + 1}`,
+      kind === "other" &&
+        !p.relationship.trim() &&
+        `Describe the relationship for person ${i + 1}`,
+      p.status === "unknown" && `Living or deceased for person ${i + 1}`,
+    ].filter((s): s is string => !!s);
+  });
+  const wishes: string[] = [];
+  const shares = q.intended_beneficiaries.map((b) => parsePercent(b.share));
+  q.intended_beneficiaries.forEach((b, i) => {
+    if (!b.name.trim()) wishes.push(`Name for beneficiary ${i + 1}`);
+    if (!b.share.trim()) wishes.push(`Share for beneficiary ${i + 1}`);
+    else if (shares[i] === null)
+      wishes.push(`Share for beneficiary ${i + 1} as a percentage`);
+  });
+  if (shares.length && shares.every((s) => s !== null)) {
+    const total = Math.round(shares.reduce((a, s) => a + s!, 0) * 100) / 100;
+    if (total !== 100) wishes.push(`Shares add up to ${total}%, not 100%`);
+  }
+  return [household, people, [], wishes];
+}
+export function completion(q: Questionnaire) {
+  return [...missingItems(q).map((m) => m.length === 0), q.reviewed];
 }
 export type Finding = {
   id: string;
@@ -293,6 +475,11 @@ export type Finding = {
   facts: Fact[];
   expected: string;
   subject: string;
+  // Set on findings from reconcile.py; absent on the browser's own name comparisons.
+  origin?: "reconcile";
+  questionnaireEvidence?: string[];
+  assets?: string[];
+  amount?: number | null;
 };
 export function reconcile(q: Questionnaire, packet: Packet | null): Finding[] {
   const facts = verifiedFacts(packet);
@@ -403,3 +590,96 @@ export function download(
   anchor.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
+export const squash = (s: string) =>
+  s.normalize("NFKC").replace(/\s+/g, " ").trim();
+
+/** The verified packet fact behind a document citation, if the packet still verifies it. */
+export function citedFact(e: Evidence, packet: Packet): Fact | undefined {
+  if (e.source !== "document") return undefined;
+  return verifiedFacts(packet).find(
+    (f) =>
+      f.documentId === e.doc &&
+      f.page === e.page &&
+      f.backendField === e.field &&
+      squash(f.quote) === squash(e.quote),
+  );
+}
+
+export const ISSUE_LABELS: Record<
+  (typeof BACKEND_ISSUE_TYPES)[number],
+  string
+> = {
+  former_spouse_beneficiary: "Former spouse named on a designation",
+  deceased_fiduciary: "Deceased person appointed to a role",
+  deceased_beneficiary: "Deceased person named as beneficiary",
+  document_predates_marriage: "Document dated before the current marriage",
+  asset_outside_trust: "Asset registered outside the trust",
+  intent_mismatch: "Intended beneficiary not named in any document",
+  undated_amendment: "Amendment date is blank",
+};
+
+export function describeValue(value: unknown): string {
+  if (value === null || value === undefined || value === "") return "(blank)";
+  if (typeof value !== "object") return String(value);
+  return (
+    Object.entries(value as Record<string, unknown>)
+      .filter(([, v]) => v !== null && v !== "")
+      .map(([k, v]) => `${k.replace(/_/g, " ")}: ${describeValue(v)}`)
+      .join(" · ") || "(blank)"
+  );
+}
+
+/** Backend findings as review items. Hard rule 1: a finding whose cited quotes are not all
+ * verified facts in the current packet is withheld, never shown. */
+export function backendFindings(w: Workspace) {
+  const shown: Finding[] = [];
+  let withheld = 0;
+  if (!w.backend || !w.packet) return { shown, withheld, stale: false };
+  const packet = w.packet;
+  const title = (id: string) =>
+    packet.documents.find((d) => d.id === id)?.title ?? id;
+  for (const f of w.backend.reconciliation.findings) {
+    const cited = f.evidence.map((e) =>
+      e.source === "document" ? citedFact(e, packet) : null,
+    );
+    if (cited.some((c) => c === undefined)) {
+      withheld++;
+      continue;
+    }
+    const assetNames = f.assets.map(
+      (id) => w.questionnaire.assets.find((a) => a.id === id)?.name || id,
+    );
+    shown.push({
+      id: `reconcile:${f.issue_type}:${f.documents.join(",")}:${f.people.join(",")}`,
+      origin: "reconcile",
+      type: f.status === "flagged" ? "discrepancy" : "unresolved",
+      title: ISSUE_LABELS[f.issue_type],
+      observation: f.observation,
+      uncertainty: f.uncertainty,
+      question: f.next_question,
+      facts: cited.filter((c): c is Fact => !!c),
+      questionnaireEvidence: f.evidence.flatMap((e) =>
+        e.source === "questionnaire"
+          ? [`${e.path}: ${describeValue(e.value)}`]
+          : [],
+      ),
+      expected: "",
+      subject:
+        assetNames.join(", ") ||
+        f.documents.map(title).join(", ") ||
+        f.people.join(", "),
+      assets: f.assets,
+      amount: f.amount_at_stake_usd,
+    });
+  }
+  const stale =
+    JSON.stringify(w.backend.questionnaire) !== JSON.stringify(w.questionnaire);
+  return { shown, withheld, stale };
+}
+
+/** Everything in the review queue: reconcile.py findings first, then the name comparisons. */
+export function reviewItems(w: Workspace): Finding[] {
+  return [...backendFindings(w).shown, ...reconcile(w.questionnaire, w.packet)];
+}
+export const findingTouchesAsset = (f: Finding, assetId: string) =>
+  !!f.assets?.includes(assetId) || f.facts.some((e) => e.subjectId === assetId);

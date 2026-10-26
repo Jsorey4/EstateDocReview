@@ -3,7 +3,8 @@ import {
   completion,
   download,
   money,
-  reconcile,
+  parsePercent,
+  reviewItems,
   verifiedFacts,
 } from "./domain";
 import type { Page, Workspace } from "./domain";
@@ -16,7 +17,7 @@ export default function Report({
   go: (p: Page) => void;
 }) {
   const q = w.questionnaire;
-  const findings = reconcile(q, w.packet);
+  const findings = reviewItems(w);
   const verified = verifiedFacts(w.packet);
   const completed = completion(q).every(Boolean);
   return (
@@ -106,6 +107,39 @@ export default function Report({
               <strong>Client questions:</strong> {q.concerns}
             </p>
           )}
+          {q.people.length > 0 && (
+            <>
+              <h4>People</h4>
+              <ul className="report-list">
+                {q.people.map((p) => (
+                  <li key={p.id}>
+                    <strong>{p.name || "Unnamed person"}</strong> ·{" "}
+                    {p.relationship || "Relationship to confirm"} ·{" "}
+                    {p.status === "unknown" ? "status to confirm" : p.status}
+                    {p.note && <span className="report-note">{p.note}</span>}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+          {q.intended_beneficiaries.length > 0 && (
+            <>
+              <h4>Intended beneficiaries</h4>
+              <ul className="report-list">
+                {q.intended_beneficiaries.map((b, i) => (
+                  <li key={i}>
+                    <strong>{b.name || "Unnamed beneficiary"}</strong> ·{" "}
+                    {parsePercent(b.share) !== null
+                      ? `${parsePercent(b.share)}%`
+                      : b.share
+                        ? `“${b.share}” (not a percentage)`
+                        : "share to confirm"}
+                    {b.note && <span className="report-note">{b.note}</span>}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </ReportSection>
         <ReportSection number="02" title="Asset and beneficiary overview">
           {q.assets.length ? (
@@ -117,6 +151,7 @@ export default function Report({
                     <th>Hypothetical value</th>
                     <th>Reported route</th>
                     <th>Intended beneficiary</th>
+                    <th>Notes</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -126,6 +161,7 @@ export default function Report({
                       <td>{money(a.value)}</td>
                       <td>{a.route}</td>
                       <td>{a.beneficiary || "To confirm"}</td>
+                      <td>{a.note}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -146,9 +182,26 @@ export default function Report({
                 <h4>
                   {f.title} · {f.subject}
                 </h4>
+                {f.origin === "reconcile" && (
+                  <p>
+                    <strong>Source:</strong> reconcile.py rules over verified
+                    facts
+                  </p>
+                )}
                 <p>
                   <strong>Observation:</strong> {f.observation}
                 </p>
+                {f.amount ? (
+                  <p>
+                    <strong>Amount at stake:</strong> {money(f.amount)}{" "}
+                    (hypothetical)
+                  </p>
+                ) : null}
+                {f.questionnaireEvidence?.map((line) => (
+                  <p key={line}>
+                    <strong>Questionnaire:</strong> {line}
+                  </p>
+                ))}
                 {f.facts.map((fact) => (
                   <blockquote key={fact.id}>
                     “{fact.quote}”
@@ -187,9 +240,11 @@ export default function Report({
             ))
           ) : (
             <p>
-              {w.packet
-                ? "No supported name discrepancies found in the supplied comparable facts. This is not a determination that the estate plan is complete or suitable."
-                : "Document comparison has not been performed. Import evidence to populate this section."}
+              {w.backend
+                ? "The reconciliation rules found no material findings in the verified facts, and the name comparison found no differences. This is not a determination that the estate plan is complete or suitable."
+                : w.packet
+                  ? "No supported name discrepancies found in the supplied comparable facts. This is not a determination that the estate plan is complete or suitable."
+                  : "Document comparison has not been performed. Import evidence to populate this section."}
             </p>
           )}
         </ReportSection>
@@ -217,6 +272,16 @@ export default function Report({
             not assess tax exposure, legal validity, document precedence, or
             whether an estate plan achieves the client’s goals.
           </p>
+          {w.backend && (
+            <p>
+              Observations from reconcile.py ({w.backend.source}) come from
+              deterministic rules over verified facts: former spouse on a
+              designation, deceased fiduciary or beneficiary, document dated
+              before the current marriage, asset registered outside the trust,
+              intended beneficiary no document names, and blank amendment date.
+              Rule pack: {w.backend.reconciliation.rule_pack_status}.
+            </p>
+          )}
           <ul>
             <li>Questionnaire: {completed ? "reviewed" : "incomplete"}.</li>
             <li>

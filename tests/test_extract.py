@@ -139,12 +139,12 @@ def test_refusal_and_truncation_are_errors(will, tmp_path, stop_reason):
     assert "error" in run(will, client, tmp_path)
 
 
-def test_unlabeled_document_is_never_sent(tmp_path):
-    doc = tmp_path / "real.txt"
+def test_unlabeled_document_is_extracted_and_recorded_as_user_supplied(tmp_path):
+    doc = tmp_path / "plain.txt"
     doc.write_text("I appoint Person Gamma as Independent Executor.", encoding="utf-8")
-    client = FakeClient()
+    client = FakeClient(message([tool_call([])]))
     record = run(doc, client, tmp_path)
-    assert record["error"]["type"] == "data_label" and client.calls == []
+    assert record["data_label"] == {"kind": "user_supplied", "label_found": False} and len(client.calls) == 1
     labeled = run(doc, FakeClient(message([tool_call([])])), tmp_path, public_dataset="CUAD")
     assert labeled["data_label"] == {"kind": "public", "dataset": "CUAD"}
 

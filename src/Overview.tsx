@@ -15,7 +15,7 @@ import {
   Wallet,
 } from "lucide-react";
 import type { Page, Workspace } from "./domain";
-import { completion, money, reconcile, verifiedFacts } from "./domain";
+import { completion, money, reviewItems, verifiedFacts } from "./domain";
 import { Badge, Progress, SectionHeading, TextLink, Tick } from "./components";
 export default function Overview({
   workspace: w,
@@ -26,7 +26,7 @@ export default function Overview({
 }) {
   const q = w.questionnaire;
   const progress = completion(q).filter(Boolean).length * 20;
-  const findings = reconcile(q, w.packet);
+  const findings = reviewItems(w);
   const verified = verifiedFacts(w.packet);
   const total = q.assets.reduce((sum, a) => sum + a.value, 0);
   const documents = w.packet?.documents ?? [];

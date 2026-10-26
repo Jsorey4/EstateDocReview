@@ -10,7 +10,12 @@ import {
   X,
 } from "lucide-react";
 import type { Asset, Page, Workspace } from "./domain";
-import { money, reconcile, routeEvidence } from "./domain";
+import {
+  findingTouchesAsset,
+  money,
+  reviewItems,
+  routeEvidence,
+} from "./domain";
 import { Badge, Empty, Modal, SectionHeading } from "./components";
 const lane = (a: Asset) =>
   a.route === "Will / probate"
@@ -28,12 +33,12 @@ export default function Flow({
   const [filter, setFilter] = useState("All assets");
   const [selected, setSelected] = useState<Asset | null>(null);
   const [expanded, setExpanded] = useState(false);
-  const findings = reconcile(w.questionnaire, w.packet);
+  const findings = reviewItems(w);
   const assets = w.questionnaire.assets.filter(
     (a) =>
       filter === "All assets" ||
       (filter === "Needs discussion"
-        ? findings.some((f) => f.facts.some((e) => e.subjectId === a.id))
+        ? findings.some((f) => findingTouchesAsset(f, a.id))
         : a.route === "Unknown"),
   );
   const map = (
@@ -65,7 +70,7 @@ export default function Flow({
                 .map((a) => {
                   const evidence = routeEvidence(a, w.packet);
                   const flag = findings.some((f) =>
-                    f.facts.some((e) => e.subjectId === a.id),
+                    findingTouchesAsset(f, a.id),
                   );
                   const beneficiaryEvidence = evidence.filter((f) =>
                     ["beneficiary", "primary_beneficiary"].includes(f.field),

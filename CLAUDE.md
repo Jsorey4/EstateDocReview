@@ -8,15 +8,14 @@ Product promise: "Turn a client's estate documents into an evidence-backed advis
 **Deadline: Mon Oct 26, 2026, 11:59 PM. Late entries are not judged.** Required: a video of 5 minutes or less (own voice or face, no AI voice), a deliverable, and a one-page AI log PDF. All go on OneDrive, shared (view) with jsomfinlab@utdallas.edu. File names: `Last_First_RaymondJames_Video`, `_Deliverable`, `_AILog`.
 
 ## Hard rules
-1. **Synthetic or public data only.** Label synthetic documents SYNTHETIC. Never put real client, personal, or licensed data into any AI tool. Label hypothetical figures "hypothetical" everywhere they appear.
-2. **No finding without verified evidence.** Every extracted fact carries a verbatim `quote` and a `page`. `verify_quotes.py` must confirm the quote appears on that page (fuzzy match for OCR'd scans). A fact that fails verification is flagged unverified and never shown as a finding.
-3. **Preserve uncertainty.** Ambiguous precedence between documents stays unresolved: show both passages and ask. Document age alone is never a finding. The clean household must produce zero material findings; never manufacture problems.
-4. **No legal advice (UPL boundary).** The tool talks to the advisor, never the client. It offers observations, quantified tax or financial consequences, and attorney-referral questions. See Output rules.
-5. **Never invent** statutes, cases, citations, numbers, or sources. A rule-pack entry needs a source and a "last verified" date. When unsure, write "unverified".
-6. **No accusations about real companies.** Never state or imply that Raymond James or any real firm fails, neglects, or is liable. Frame exposure as industry-wide.
-7. **Texas only.**
-8. **Do not generate test documents or answer keys.** The user sources the test set (see Test data). Build tooling around it.
-9. **AI log.** Hooks write `ai_log/*.jsonl`. Never edit or delete those files and never disable the hooks. Never fill in the user's accept, change or reject decisions; leave them `PENDING`.
+1. **No finding without verified evidence.** Every extracted fact carries a verbatim `quote` and a `page`. `verify_quotes.py` must confirm the quote appears on that page (fuzzy match for OCR'd scans). A fact that fails verification is flagged unverified and never shown as a finding.
+2. **Preserve uncertainty.** Ambiguous precedence between documents stays unresolved: show both passages and ask. Document age alone is never a finding. The clean household must produce zero material findings; never manufacture problems.
+3. **No legal advice (UPL boundary).** The tool talks to the advisor, never the client. It offers observations, quantified tax or financial consequences, and attorney-referral questions. See Output rules.
+4. **Never invent** statutes, cases, citations, numbers, or sources. A rule-pack entry needs a source and a "last verified" date. When unsure, write "unverified".
+5. **No accusations about real companies.** Never state or imply that Raymond James or any real firm fails, neglects, or is liable. Frame exposure as industry-wide.
+6. **Texas only.**
+7. **Do not generate test documents or answer keys.** The user sources the test set (see Test data). Build tooling around it.
+8. **AI log.** Hooks write `ai_log/*.jsonl`. Never edit or delete those files and never disable the hooks. Never fill in the user's accept, change or reject decisions; leave them `PENDING`.
 
 ## Output rules (findings)
 Every finding has four parts: **observation, supporting evidence (quote + page), uncertainty, next question.**
@@ -74,4 +73,7 @@ Setup: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`
 - Extract + verify: `.venv/bin/python extract.py <docs or dir> --out runs/<run>/facts` (needs `ANTHROPIC_API_KEY`; `--source scanned` for OCR'd scans; cached by document hash in `.cache/`)
 - Re-verify: `.venv/bin/python verify_quotes.py runs/<run>/facts` (appends to `ai_log/checks.jsonl`; `--no-log` to skip)
 - Mutations: `.venv/bin/python mutate_household.py households/B --check`, then `--out households/variants`
-- `run_eval.py`: not built yet
+- OCR scans: `.venv/bin/python ocr_scans.py scans/ --out scans_ocr/` (needs `brew install ocrmypdf tesseract`; writes `ocr_report.json` with weak pages; then `extract.py --source scanned`)
+- Reconcile: `.venv/bin/python reconcile.py --facts runs/<run>/facts --inputs households/variants/<v>/input --out runs/<run>/findings.json`
+- Eval: `.venv/bin/python run_eval.py --variants households/variants --run runs/<run>` (expects `runs/<run>/<variant>/facts/*.json`; writes `eval.json`)
+- Demo samples: `.venv/bin/python build_samples.py --variants households/variants --run runs/<run> --out public/samples` (after `run_eval.py`; feeds the Sample replay page; never reads answer keys)

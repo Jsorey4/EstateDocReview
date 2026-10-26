@@ -33,7 +33,7 @@ def build_inputs(workspace):
         raise ValueError('Record the current marriage in marriage history')
     questionnaire = {'synthetic':True,'as_of':q['asOf'],'client':{'name':q['clientName'],'state':'TX'},
                      'marriages':marriages,'people':[{k:p[k] for k in ('name','relationship','status')} for p in q['people']],
-                     'intended_beneficiaries':q.get('intended_beneficiaries',[]),'documents_available':q.get('documents_available',[])}
+                     'intended_beneficiaries':[{'name':b['name'],'share':b['share']} for b in q.get('intended_beneficiaries',[])],'documents_available':q.get('documents_available',[])}
     assets = {'synthetic':True,'values_are_hypothetical':True,'assets':[
         {'id':a['id'],'description':a['name'],'type':a.get('retirementKind','retirement_401k') if a['type']=='Retirement account' else TYPES[a['type']],
          'value_usd':a['value'],'character':a.get('character','unknown'),'governing_document':a.get('governing_document') or None} for a in q['assets']]}

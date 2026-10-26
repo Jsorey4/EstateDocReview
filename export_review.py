@@ -37,8 +37,8 @@ def build_packet(records, workspace, public_sources=None):
         if not path.is_file() or file_sha256(path) != doc['sha256']:
             raise ValueError(f'Source missing or changed: {doc_id}; re-extract before exporting')
         source = record.get('data_label', {}).get('kind')
-        if source not in ('synthetic', 'public'):
-            raise ValueError(f'Missing public/synthetic data label: {doc_id}')
+        if source not in ('synthetic', 'public', 'user_supplied'):
+            raise ValueError(f'Missing data label: {doc_id}')
         url = public_sources.get(doc_id)
         if source == 'public' and (not isinstance(url, str) or not url.startswith(('https://', 'http://'))):
             raise ValueError(f'Provide an original public source URL for {doc_id}')

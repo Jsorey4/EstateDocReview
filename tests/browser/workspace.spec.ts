@@ -9,11 +9,12 @@ test("questionnaire, asset flow, persistence, and print packet", async ({
   await page.getByLabel("Questionnaire completed by").fill("Reviewer");
   await page.getByLabel("Marital status").selectOption("Single");
   await page.getByRole("button", { name: "Continue", exact: true }).click();
-  await page.getByRole("button", { name: "Add a person" }).click();
+  await page.getByRole("button", { name: "Add a person" }).first().click();
   await page.getByLabel("Full name").fill("A");
-  await page.getByLabel("Relationship or role").fill("Role");
+  await page.getByRole("radio", { name: "Other" }).check();
+  await page.getByLabel("Describe the relationship").fill("Role");
   await page.getByRole("button", { name: "Continue", exact: true }).click();
-  await page.getByRole("button", { name: "Add an asset" }).click();
+  await page.getByRole("button", { name: "Add an asset" }).first().click();
   await page.getByLabel("Asset name").fill("Interface asset");
   await page.getByLabel("Estimated value").fill("100");
   await page.getByLabel("Intended beneficiary", { exact: true }).fill("A");
@@ -172,13 +173,11 @@ test("actual Python extraction export imports with verified and rejected facts",
   await page.getByRole("button", { name: "Wishes & roles" }).click();
   await page.getByLabel("Intended executor").fill("Client intention");
   await page.getByRole("link", { name: "Documents", exact: true }).click();
-  await page
-    .getByLabel("Import review JSON")
-    .setInputFiles({
-      name: "backend.json",
-      mimeType: "application/json",
-      buffer,
-    });
+  await page.getByLabel("Import review JSON").setInputFiles({
+    name: "backend.json",
+    mimeType: "application/json",
+    buffer,
+  });
   await page.locator(".document-row").first().click();
   await expect(page.getByRole("dialog")).toContainText(
     "Backend verifier: verified",
