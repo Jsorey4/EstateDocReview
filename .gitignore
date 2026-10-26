@@ -14,3 +14,9 @@ __pycache__/
 ai_log/*.jsonl
 ai_log/hook_errors.log
 ai_log/LOG_DRAFT.md
+
+# Local environment and caches
+.venv/
+.pytest_cache/
+# Extraction cache (model outputs keyed by document hash); results worth publishing go in runs/
+.cache/
