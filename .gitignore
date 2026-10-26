@@ -1,0 +1,16 @@
+# macOS / Python noise
+.DS_Store
+__pycache__/
+*.pyc
+
+# Secrets and local overrides
+.env
+.env.*
+.claude/settings.local.json
+
+# Raw AI-log data written by the hooks (they store prompts verbatim).
+# Kept out of git so flipping the repo public for GitHub Pages can't leak them.
+# Delete these lines if you want the raw logs tracked in a private repo.
+ai_log/*.jsonl
+ai_log/hook_errors.log
+ai_log/LOG_DRAFT.md
