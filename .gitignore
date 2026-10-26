@@ -14,3 +14,10 @@ __pycache__/
 ai_log/*.jsonl
 ai_log/hook_errors.log
 ai_log/LOG_DRAFT.md
+
+# Frontend dependencies, generated output, and browser test artifacts
+node_modules/
+dist/
+*.tsbuildinfo
+playwright-report/
+test-results/

@@ -3,7 +3,7 @@
 Update this file at the end of every work session.
 
 ## Current phase
-Project setup. Scaffold files and logging hooks created. Firm chosen: Raymond James. Git repo created and pushed (private). No product code yet.
+Advisor frontend implemented. React/TypeScript workspace includes questionnaire, precomputed evidence import, estate flow, supported name-discrepancy review, and printable review packet. Live extraction, legal rule packs, and user-sourced product evaluation remain outstanding.
 
 ## Repo setup (2026-10-25)
 - GitHub: https://github.com/Jsorey4/EstateDocReview, **private** until the user decides to take it public. GitHub Pages on a free account needs a public repo, so flip visibility before publishing the site.
@@ -45,3 +45,14 @@ Project setup. Scaffold files and logging hooks created. Firm chosen: Raymond Ja
 - [ ] Video 5 minutes or less, in your own voice, uploaded to OneDrive.
 - [ ] One-page AI log PDF: decision fields completed by you, at least two checks shown.
 - [ ] Files named `Last_First_RaymondJames_Video/Deliverable/AILog`, shared with `jsomfinlab@utdallas.edu`, links tested, Microsoft Form submitted before 11:59 PM.
+
+
+## Frontend implementation (2026-10-25)
+- Added Vite + React + TypeScript frontend with local fonts, responsive navigation, and green/ivory advisor workspace styling.
+- Five-step questionnaire captures household context, people, life events, hypothetical assets, intentions, and fiduciary roles; browser persistence and backup/restore included.
+- Source library accepts precomputed review JSON and exposes source text, quote/page references, and unverified facts. Added conservative offline `verify_quotes.py`; no live PDF upload, OCR, or AI extraction.
+- Estate map groups client-reported probate/non-probate/unknown routes and shows document beneficiary evidence without asserting legal effect.
+- Review queue compares exact names for matched subjects; unverified facts are excluded and conflicting source names remain unresolved. Follow-up statuses and notes appear in the printable report.
+- No estate test documents, answer keys, tax thresholds, legal citations, or user accept/reject decisions were generated.
+- Commands and review-data contract are documented in README.md. Publication and backend integration remain separate work.
+- Validation: clean `npm ci` and production build passed; 13 frontend unit tests, 10 browser tests (including six automated accessibility scans), and five Python verifier checks passed. Desktop and mobile views were inspected. These are interface/protocol checks, not a product evaluation.
