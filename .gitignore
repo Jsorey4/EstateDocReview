@@ -21,3 +21,8 @@ dist/
 *.tsbuildinfo
 playwright-report/
 test-results/
+# Local environment and caches
+.venv/
+.pytest_cache/
+# Extraction cache (model outputs keyed by document hash); results worth publishing go in runs/
+.cache/

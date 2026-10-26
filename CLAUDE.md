@@ -65,4 +65,13 @@ AI Deployment; Analysis & Evidence; Business Value & Feasibility; Innovation & C
 - `STATUS.md`: session log and final checklist; update at the end of every work session
 - `AI_in_Finance_Case_Competition.docx`: competition instructions
 - `ai_log/`: hook-written logs (do not edit)
-- Commands: TBD until code exists (`verify_quotes.py`, `run_eval.py`)
+- `households/README.md`: authoring format for Household B and the mutation catalog
+- `edr/`: shared code (page loading, normalization, dates, extraction schema, issue types, household loader)
+
+## Commands
+Setup: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`
+- Tests: `.venv/bin/python -m pytest -q` (no network; the API is faked)
+- Extract + verify: `.venv/bin/python extract.py <docs or dir> --out runs/<run>/facts` (needs `ANTHROPIC_API_KEY`; `--source scanned` for OCR'd scans; cached by document hash in `.cache/`)
+- Re-verify: `.venv/bin/python verify_quotes.py runs/<run>/facts` (appends to `ai_log/checks.jsonl`; `--no-log` to skip)
+- Mutations: `.venv/bin/python mutate_household.py households/B --check`, then `--out households/variants`
+- `run_eval.py`: not built yet
