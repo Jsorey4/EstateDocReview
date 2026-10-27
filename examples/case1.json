@@ -5,8 +5,14 @@
     "asOf": "2026-10-26",
     "marriages": [
       {
+        "spouse": "Rebecca Lane",
+        "married": "2001-05-19",
+        "ended": "2004-08-30",
+        "how_ended": "divorce"
+      },
+      {
         "spouse": "Eleanor Vance Pendelton",
-        "married": "",
+        "married": "2006-09-16",
         "ended": "",
         "how_ended": ""
       }
@@ -29,7 +35,9 @@
     "maritalStatus": "Married",
     "spouse": "Eleanor Vance Pendelton",
     "state": "Texas",
-    "events": [],
+    "events": [
+      "Divorce"
+    ],
     "people": [
       {
         "id": "eleanor-vance-pendelton",
@@ -56,8 +64,8 @@
         "note": "Named in the supplied PDFs."
       },
       {
-        "id": "julian-m.-pendelton",
-        "name": "Julian M. Pendelton",
+        "id": "graham-m.-pendelton",
+        "name": "Graham M. Pendelton",
         "relationship": "brother",
         "relationshipKind": "other",
         "status": "living",
@@ -67,6 +75,14 @@
         "id": "clara-vance",
         "name": "Clara Vance",
         "relationship": "sister-in-law",
+        "relationshipKind": "other",
+        "status": "living",
+        "note": "Named in the supplied PDFs."
+      },
+      {
+        "id": "rebecca-lane",
+        "name": "Rebecca Lane",
+        "relationship": "former spouse",
         "relationshipKind": "other",
         "status": "living",
         "note": "Named in the supplied PDFs."
@@ -152,11 +168,11 @@
         "note": "Document-based prefill. Value not supplied; 0 is a placeholder, not a valuation."
       }
     ],
-    "executor": "Julian M. Pendelton",
+    "executor": "Graham M. Pendelton",
     "trustee": "",
     "agent": "Eleanor Vance Pendelton",
     "intentions": "Provide for Eleanor first, with Chloe and Liam as contingent beneficiaries; confirm against the client\u2019s current wishes.",
-    "concerns": "Example household for demonstration. Answers were prepared from the supplied PDFs; marriage dates are not in the documents.",
+    "concerns": "Example household for demonstration. Answers were prepared from the supplied PDFs; marriage history is the client\u2019s answer and is not stated in the documents.",
     "reviewed": true
   },
   "packet": {
@@ -168,7 +184,7 @@
         "kind": "Will",
         "date": "",
         "source": "user_supplied",
-        "sha256": "3aa9d91fe81ecd175cdaf7bacc2d187c9a5464432f85642ba31d1e7e064f16d7",
+        "sha256": "3b10946f691acb18fae226a16eb813679ca86cf9f3d94bc26a05ec11ced6b10e",
         "pages": [
           {
             "page": 1,
@@ -176,7 +192,7 @@
           },
           {
             "page": 2,
-            "text": "Section 3.03 Written Memorandum. I may leave a separate written statement or list disposing \nof certain items of my tangible personal property. Any such list in existence at the time of my \ndeath, signed and dated by me, shall be determinative with respect to the items devised therein.\nArticle IV: DISPOSITION OF RESIDUARY ESTATE\nSection 4.01 Primary Residuary Beneficiary. I give, devise, and bequeath all the rest, \nresidue, and remainder of my estate, of every kind and character and wheresoever situated, \nincluding any lapsed or failed devises (my \"Residuary Estate\"), to my spouse, Eleanor Vance \nPendelton, provided she survives me by thirty (30) days.\nSection 4.02 Contingent Residuary Beneficiaries. If Eleanor Vance Pendelton does not \nsurvive me by thirty (30) days, I give, devise, and bequeath my Residuary Estate to my \ndescendants who survive me, per stirpes. If neither my primary beneficiary nor any of my \ndescendants survive me, I give my Residuary Estate to my brother, Julian M. Pendelton.\nArticle V: APPOINTMENT OF EXECUTOR (PERSONAL REPRESENTATIVE)\nSection 5.01 Nomination of Executor. I nominate and appoint Eleanor Vance Pendelton, of \nAustin, Texas, as Independent Executor of this my Last Will and Testament. If Eleanor Vance \nPendelton is unable or unwilling to serve, I nominate and appoint Julian M. Pendelton, of \nAtlanta, Georgia, as Alternate Independent Executor.\nSection 5.02 Bond and Independent Administration. No bond or other security shall be \nrequired of any Executor named herein in any jurisdiction. To the fullest extent permitted by the \nlaws of the State of Texas, I direct that no action shall be had in any court in the administration \nof my estate other than the probating and recording of this Will and the return of an inventory, \nappraisement, and list of claims of my estate (or an affidavit in lieu thereof).\nSection 5.03 Executor Powers. My Executor shall have all powers conferred upon fiduciaries \nby state law, including the power to sell, lease, mortgage, or liquidate any real or personal \nproperty of my estate at public or private sale, with or without notice, distribute assets in cash or \nin kind, settle claims, and employ legal, accounting, or investment professionals.\nArticle VI: CUSTODIAL PROVISIONS FOR MINOR OR YOUNG \nBENEFICIARIES\nSection 6.01 Uniform Transfers to Minors Act (UTMA). If any beneficiary entitled to receive a \ndistribution under this Will is under the age of twenty-one (21) years at the time of distribution, \nmy Executor may distribute such share to a custodian selected by my Executor for such \nbeneficiary under the Texas Uniform Transfers to Minors Act.\nArticle VII: GENERAL & MISCELLANEOUS PROVISIONS\nSection 7.01 Survivorship Requirement. For all purposes of this Will, no person shall be \ndeemed to have survived me unless such person is living on the thirtieth (30th) day following the \ndate of my death."
+            "text": "Section 3.03 Written Memorandum. I may leave a separate written statement or list disposing \nof certain items of my tangible personal property. Any such list in existence at the time of my \ndeath, signed and dated by me, shall be determinative with respect to the items devised therein.\nArticle IV: DISPOSITION OF RESIDUARY ESTATE\nSection 4.01 Primary Residuary Beneficiary. I give, devise, and bequeath all the rest, \nresidue, and remainder of my estate, of every kind and character and wheresoever situated, \nincluding any lapsed or failed devises (my \"Residuary Estate\"), to my spouse, Eleanor Vance \nPendelton, provided she survives me by thirty (30) days.\nSection 4.02 Contingent Residuary Beneficiaries. If Eleanor Vance Pendelton does not \nsurvive me by thirty (30) days, I give, devise, and bequeath my Residuary Estate to my \ndescendants who survive me, per stirpes. If neither my primary beneficiary nor any of my \ndescendants survive me, I give my Residuary Estate to my brother, Graham M. Pendelton.\nArticle V: APPOINTMENT OF EXECUTOR (PERSONAL REPRESENTATIVE)\nSection 5.01 Nomination of Executor. I nominate and appoint Eleanor Vance Pendelton, of \nAustin, Texas, as Independent Executor of this my Last Will and Testament. If Eleanor Vance \nPendelton is unable or unwilling to serve, I nominate and appoint Graham M. Pendelton, of \nAtlanta, Georgia, as Alternate Independent Executor.\nSection 5.02 Bond and Independent Administration. No bond or other security shall be \nrequired of any Executor named herein in any jurisdiction. To the fullest extent permitted by the \nlaws of the State of Texas, I direct that no action shall be had in any court in the administration \nof my estate other than the probating and recording of this Will and the return of an inventory, \nappraisement, and list of claims of my estate (or an affidavit in lieu thereof).\nSection 5.03 Executor Powers. My Executor shall have all powers conferred upon fiduciaries \nby state law, including the power to sell, lease, mortgage, or liquidate any real or personal \nproperty of my estate at public or private sale, with or without notice, distribute assets in cash or \nin kind, settle claims, and employ legal, accounting, or investment professionals.\nArticle VI: CUSTODIAL PROVISIONS FOR MINOR OR YOUNG \nBENEFICIARIES\nSection 6.01 Uniform Transfers to Minors Act (UTMA). If any beneficiary entitled to receive a \ndistribution under this Will is under the age of twenty-one (21) years at the time of distribution, \nmy Executor may distribute such share to a custodian selected by my Executor for such \nbeneficiary under the Texas Uniform Transfers to Minors Act.\nArticle VII: GENERAL & MISCELLANEOUS PROVISIONS\nSection 7.01 Survivorship Requirement. For all purposes of this Will, no person shall be \ndeemed to have survived me unless such person is living on the thirtieth (30th) day following the \ndate of my death."
           },
           {
             "page": 3,
@@ -233,11 +249,11 @@
         "kind": "Other",
         "date": "",
         "source": "user_supplied",
-        "sha256": "9f084e3dbe942df44af09d49c3884617470bff8c7b6e7b8084a182737e9c1fe0",
+        "sha256": "70012816d96e5f381473f59e69bcd14700daa5878609eec3c316ba99a5c4dd4e",
         "pages": [
           {
             "page": 1,
-            "text": "STATUTORY DURABLE FINANCIAL POWER OF ATTORNEY\nGeneral & Financial Asset Management Mandate\nNOTICE: THE POWERS GRANTED BY THIS DOCUMENT ARE BROAD AND SWEEPING. IF \nYOU HAVE ANY QUESTIONS ABOUT THESE POWERS, OBTAIN COMPETENT LEGAL \nADVICE. THIS DOCUMENT DOES NOT AUTHORIZE ANYONE TO MAKE MEDICAL AND \nOTHER HEALTH-CARE DECISIONS FOR YOU. YOU MAY REVOKE THIS POWER OF \nATTORNEY IF YOU LATER WISH TO DO SO.\nArticle I: APPOINTMENT OF AGENT (ATTORNEY-IN-FACT)\nSection 1.01 Principal & Primary Agent: I, ARTHUR PENDELTON, residing at 742 Evergreen \nTerrace, Austin, TX 78701, hereby appoint Eleanor Vance Pendelton, residing at 742 Evergreen \nTerrace, Austin, TX 78701, Phone: (512) 555-0143, as my Agent (attorney-in-fact) to act for me \nin any lawful way with respect to the subjects initialed in Article II below.\nSection 1.02 Successor Agent(s): If Eleanor Vance Pendelton resigns, dies, becomes \nincapacitated, is not qualified to serve, or declines to serve, I appoint Julian M. Pendelton, \nresiding at 1040 West Peachtree St, Atlanta, GA 30309, Phone: (404) 555-0199, as my \nsuccessor Agent. If he is also unable or unwilling to serve, I appoint Clara Vance, residing at \n1802 South Congress Ave, Austin, TX 78704, Phone: (512) 555-0188, as second alternate \nAgent.\nArticle II: GRANT OF GENERAL POWERS\nTO GRANT ALL OF THE FOLLOWING POWERS, INITIAL THE LINE IN FRONT OF (O) AND \nIGNORE THE LINES IN FRONT OF THE OTHER POWERS:\n____ (A) Real property transactions;\n____ (B) Tangible personal property transactions;\n____ (C) Stock and bond transactions;\n____ (D) Commodity and option transactions;\n____ (E) Banking and other financial institution transactions;\n____ (F) Business operating transactions;\n____ (G) Insurance and annuity transactions;\n____ (H) Estate, trust, and other beneficiary transactions;\n____ (I) Claims and litigation;\n____ (J) Personal and family maintenance;\n____ (K) Benefits from social security, Medicare, Medicaid, or other governmental programs;\n____ (L) Retirement plan transactions;"
+            "text": "STATUTORY DURABLE FINANCIAL POWER OF ATTORNEY\nGeneral & Financial Asset Management Mandate\nNOTICE: THE POWERS GRANTED BY THIS DOCUMENT ARE BROAD AND SWEEPING. IF \nYOU HAVE ANY QUESTIONS ABOUT THESE POWERS, OBTAIN COMPETENT LEGAL \nADVICE. THIS DOCUMENT DOES NOT AUTHORIZE ANYONE TO MAKE MEDICAL AND \nOTHER HEALTH-CARE DECISIONS FOR YOU. YOU MAY REVOKE THIS POWER OF \nATTORNEY IF YOU LATER WISH TO DO SO.\nArticle I: APPOINTMENT OF AGENT (ATTORNEY-IN-FACT)\nSection 1.01 Principal & Primary Agent: I, ARTHUR PENDELTON, residing at 742 Evergreen \nTerrace, Austin, TX 78701, hereby appoint Eleanor Vance Pendelton, residing at 742 Evergreen \nTerrace, Austin, TX 78701, Phone: (512) 555-0143, as my Agent (attorney-in-fact) to act for me \nin any lawful way with respect to the subjects initialed in Article II below.\nSection 1.02 Successor Agent(s): If Eleanor Vance Pendelton resigns, dies, becomes \nincapacitated, is not qualified to serve, or declines to serve, I appoint Graham M. Pendelton, \nresiding at 1040 West Peachtree St, Atlanta, GA 30309, Phone: (404) 555-0199, as my \nsuccessor Agent. If he is also unable or unwilling to serve, I appoint Clara Vance, residing at \n1802 South Congress Ave, Austin, TX 78704, Phone: (512) 555-0188, as second alternate \nAgent.\nArticle II: GRANT OF GENERAL POWERS\nTO GRANT ALL OF THE FOLLOWING POWERS, INITIAL THE LINE IN FRONT OF (O) AND \nIGNORE THE LINES IN FRONT OF THE OTHER POWERS:\n____ (A) Real property transactions;\n____ (B) Tangible personal property transactions;\n____ (C) Stock and bond transactions;\n____ (D) Commodity and option transactions;\n____ (E) Banking and other financial institution transactions;\n____ (F) Business operating transactions;\n____ (G) Insurance and annuity transactions;\n____ (H) Estate, trust, and other beneficiary transactions;\n____ (I) Claims and litigation;\n____ (J) Personal and family maintenance;\n____ (K) Benefits from social security, Medicare, Medicaid, or other governmental programs;\n____ (L) Retirement plan transactions;"
           },
           {
             "page": 2,
@@ -256,11 +272,11 @@
         "kind": "Other",
         "date": "",
         "source": "user_supplied",
-        "sha256": "493978a51e49d5a70f2d770c9099b19ebd76292fafcad01385586c9be0482fa9",
+        "sha256": "575b6d20b699a8463f21d476cc1dd821ee1131534c133024088b6a2c73f84217",
         "pages": [
           {
             "page": 1,
-            "text": "ADVANCE HEALTHCARE DIRECTIVE\nMedical Power of Attorney, Living Will & HIPAA Authorization\nI, ARTHUR PENDELTON, Date of Birth: 05/14/1975, residing at 742 Evergreen Terrace, Austin, \nTX 78701, being of sound mind, willfully and voluntarily execute this Advance Healthcare \nDirective consisting of Part I (Medical Power of Attorney / Healthcare Proxy), Part II (Living Will / \nDirective to Physicians), and Part III (HIPAA Release & Organ Donation Preferences).\nPart I: DESIGNATION OF HEALTHCARE PROXY (MEDICAL POWER OF \nATTORNEY)\nSection 1.01 Appointment of Primary Healthcare Agent: If I become unable to make my own \nhealth-care decisions, as determined by my attending physician, I appoint the following person \nas my Healthcare Agent to make any and all health-care decisions for me:\n\u2022 Name: Eleanor Vance Pendelton\n\u2022 Relationship: Spouse\n\u2022 Address: 742 Evergreen Terrace, Austin, TX 78701\n\u2022 Primary Phone: (512) 555-0143          Alternate Phone: (512) 555-0144\nSection 1.02 Alternate Healthcare Agents: If my Primary Healthcare Agent is unwilling, \nunable, or unavailable to act, I appoint:\n\u2022 First Alternate Agent: Julian M. Pendelton, Relationship: Brother, Phone: (404) 555-0199\n\u2022 Second Alternate Agent: Clara Vance, Relationship: Sister-in-Law, Phone: (512) 555-0188\nSection 1.03 Scope of Agent's Authority: My Healthcare Agent is authorized to consent to, \nrefuse, or withdraw any medical treatment, surgical procedure, diagnostic test, medication, \nhospitalization, nursing home or hospice care, and life-sustaining treatment on my behalf, in \naccordance with my wishes stated in Part II below or, if my wishes are unknown, in accordance \nwith my best interests.\nPart II: LIVING WILL (DIRECTIVE TO PHYSICIANS & FAMILY)\nIf I am diagnosed and certified in writing by two qualified physicians to have an incurable or \nirreversible condition listed below, I direct my physicians and Healthcare Agent as follows:\nSection 2.01 Terminal Condition Election: [ AP ] Choice 1 - Comfort Care Only: I direct that \nall treatments other than those needed to keep me comfortable and free of pain be discontinued \nor withheld, and my physician allow me to die as gently as possible.\nSection 2.02 Irreversible Coma / Persistent Vegetative State Election: [ AP ] Choice 1 - \nDiscontinue Life Support: I direct that all treatments other than those needed to keep me \ncomfortable be discontinued or withheld.\nSection 2.03 Artificial Nutrition and Hydration: [ AP ] I DO NOT want artificial nutrition and \nhydration (tube feeding/IV fluids) if it merely prolongs the dying process or an irreversible \nvegetative state."
+            "text": "ADVANCE HEALTHCARE DIRECTIVE\nMedical Power of Attorney, Living Will & HIPAA Authorization\nI, ARTHUR PENDELTON, Date of Birth: 05/14/1975, residing at 742 Evergreen Terrace, Austin, \nTX 78701, being of sound mind, willfully and voluntarily execute this Advance Healthcare \nDirective consisting of Part I (Medical Power of Attorney / Healthcare Proxy), Part II (Living Will / \nDirective to Physicians), and Part III (HIPAA Release & Organ Donation Preferences).\nPart I: DESIGNATION OF HEALTHCARE PROXY (MEDICAL POWER OF \nATTORNEY)\nSection 1.01 Appointment of Primary Healthcare Agent: If I become unable to make my own \nhealth-care decisions, as determined by my attending physician, I appoint the following person \nas my Healthcare Agent to make any and all health-care decisions for me:\n\u2022 Name: Eleanor Vance Pendelton\n\u2022 Relationship: Spouse\n\u2022 Address: 742 Evergreen Terrace, Austin, TX 78701\n\u2022 Primary Phone: (512) 555-0143          Alternate Phone: (512) 555-0144\nSection 1.02 Alternate Healthcare Agents: If my Primary Healthcare Agent is unwilling, \nunable, or unavailable to act, I appoint:\n\u2022 First Alternate Agent: Graham M. Pendelton, Relationship: Brother, Phone: (404) 555-0199\n\u2022 Second Alternate Agent: Clara Vance, Relationship: Sister-in-Law, Phone: (512) 555-0188\nSection 1.03 Scope of Agent's Authority: My Healthcare Agent is authorized to consent to, \nrefuse, or withdraw any medical treatment, surgical procedure, diagnostic test, medication, \nhospitalization, nursing home or hospice care, and life-sustaining treatment on my behalf, in \naccordance with my wishes stated in Part II below or, if my wishes are unknown, in accordance \nwith my best interests.\nPart II: LIVING WILL (DIRECTIVE TO PHYSICIANS & FAMILY)\nIf I am diagnosed and certified in writing by two qualified physicians to have an incurable or \nirreversible condition listed below, I direct my physicians and Healthcare Agent as follows:\nSection 2.01 Terminal Condition Election: [ AP ] Choice 1 - Comfort Care Only: I direct that \nall treatments other than those needed to keep me comfortable and free of pain be discontinued \nor withheld, and my physician allow me to die as gently as possible.\nSection 2.02 Irreversible Coma / Persistent Vegetative State Election: [ AP ] Choice 1 - \nDiscontinue Life Support: I direct that all treatments other than those needed to keep me \ncomfortable be discontinued or withheld.\nSection 2.03 Artificial Nutrition and Hydration: [ AP ] I DO NOT want artificial nutrition and \nhydration (tube feeding/IV fluids) if it merely prolongs the dying process or an irreversible \nvegetative state."
           },
           {
             "page": 2,
@@ -277,7 +293,7 @@
         "subjectId": "household",
         "field": "executor",
         "value": "Eleanor Vance Pendelton",
-        "quote": "Section 5.01 Nomination of Executor. I nominate and appoint Eleanor Vance Pendelton, of \nAustin, Texas, as Independent Executor of this my Last Will and Testament. If Eleanor Vance \nPendelton is unable or unwilling to serve, I nominate and appoint Julian M. Pendelton, of \nAtlanta, Georgia, as Alternate Independent Executor.",
+        "quote": "Section 5.01 Nomination of Executor. I nominate and appoint Eleanor Vance Pendelton, of \nAustin, Texas, as Independent Executor of this my Last Will and Testament. If Eleanor Vance \nPendelton is unable or unwilling to serve, I nominate and appoint Graham M. Pendelton, of \nAtlanta, Georgia, as Alternate Independent Executor.",
         "page": 2,
         "verification": "verified"
       },

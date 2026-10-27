@@ -5,8 +5,14 @@
     "asOf": "2026-10-26",
     "marriages": [
       {
+        "spouse": "Diane Whitaker Montgomery",
+        "married": "2002-04-20",
+        "ended": "2010-11-05",
+        "how_ended": "divorce"
+      },
+      {
         "spouse": "Eleanor Vance Montgomery",
-        "married": "",
+        "married": "2013-06-08",
         "ended": "",
         "how_ended": ""
       }
@@ -23,7 +29,8 @@
     "spouse": "Eleanor Vance Montgomery",
     "state": "Texas",
     "events": [
-      "Health or care needs"
+      "Health or care needs",
+      "Divorce"
     ],
     "people": [
       {
@@ -70,6 +77,14 @@
         "id": "clara-vance",
         "name": "Clara Vance",
         "relationship": "sister-in-law",
+        "relationshipKind": "other",
+        "status": "living",
+        "note": "Named in the supplied PDFs."
+      },
+      {
+        "id": "diane-whitaker-montgomery",
+        "name": "Diane Whitaker Montgomery",
+        "relationship": "former spouse",
         "relationshipKind": "other",
         "status": "living",
         "note": "Named in the supplied PDFs."
@@ -146,7 +161,7 @@
     "trustee": "Julian M. Montgomery",
     "agent": "Eleanor Vance Montgomery",
     "intentions": "Provide for the surviving spouse and the blended family, with staggered distributions and a special-needs trust for Ethan.",
-    "concerns": "Example household for demonstration. Answers were prepared from the supplied PDFs; marriage dates are not in the documents.",
+    "concerns": "Example household for demonstration. Answers were prepared from the supplied PDFs; marriage history is the client\u2019s answer and is not stated in the documents.",
     "reviewed": true
   },
   "packet": {
@@ -154,11 +169,11 @@
     "documents": [
       {
         "id": "Case2_01_Revocable_Living_Trust_Montgomery",
-        "title": "Revocable Living Trust Montgomery",
+        "title": "Revocable Living Trust Montgomery (demo discrepancy)",
         "kind": "Revocable trust",
         "date": "2026-11-12",
         "source": "user_supplied",
-        "sha256": "8e96791fffc49dcb5f07ebcc069bd11eb6e62046de38507f3411ba42b251d73a",
+        "sha256": "6336da8d7c2add354ef890da9295c41cd15614684190a94ec0789869e5d951fd",
         "pages": [
           {
             "page": 1,
@@ -166,7 +181,7 @@
           },
           {
             "page": 2,
-            "text": "this Trust as to their respective community/joint one-half share or separate property upon written \nnotice to the other Grantor and the Trustee.\nSection 2.03 Incapacity of a Grantor. A Grantor shall be deemed incapacitated upon (a) \nwritten certification by two licensed physicians (one of whom is the Grantor's attending \nphysician) that the Grantor is unable to effectively manage their financial affairs, or (b) a court \ndetermination of incapacity. During any period of incapacity of one Grantor, the other Grantor \nshall serve as sole Trustee.\nArticle III: DIVISION INTO SUB-TRUSTS UPON DEATH OF FIRST GRANTOR \n(A-B-C / QTIP STRUCTURE)\nSection 3.01 Mandatory Division at First Death. Upon the death of the first Grantor to die (the \n\"Deceased Grantor\"), the surviving Grantor (the \"Surviving Grantor\") shall have NO power to \namend, revoke, or alter the disposition of the Deceased Grantor's share of the Trust Estate. The \nTrustee shall divide the Trust Estate (including any assets received via the Deceased Grantor's \nPour-Over Will or beneficiary designations) into three separate trusts:\nSection 3.02 The Survivor's Trust (Trust A - Revocable). The Survivor's Trust shall consist of \nthe Surviving Grantor's one-half (1/2) interest in the joint/community estate and all of the \nSurviving Grantor's separate property (Schedule B or C). The Survivor's Trust shall remain \nrevocable and amendable by the Surviving Grantor during their lifetime.\nSection 3.03 The Credit Shelter / Family Bypass Trust (Trust B - Irrevocable). If applicable \nfor estate tax or blended family protection, the Bypass Trust shall hold an amount of the \nDeceased Grantor's share designated in the Sub-Trust Addendum. Trust B is irrevocable upon \nthe first death.\nSection 3.04 The Marital QTIP Trust (Trust C - Irrevocable Blended Family Lock). The \nbalance of the Deceased Grantor's share shall be allocated to the Qualified Terminable Interest \nProperty (\"QTIP\") Marital Trust under IRC \u00a7 2056(b)(7), administered under the QTIP \nAddendum. The Surviving Grantor shall receive all net income at least annually for life, but shall \nhave NO power to divert principal to a new spouse or disinherit the Deceased Grantor's \nbiological children.\nArticle IV: DISTRIBUTION UPON DEATH OF SURVIVING GRANTOR\nSection 4.01 Allocation Among Descendants & Special Needs Sub-Trust. Upon the death \nof the Surviving Grantor, the remaining balance of the Marital QTIP Trust (and Bypass Trust) \nshall pass strictly as directed by the Deceased Grantor's schedule of remainder beneficiaries, \nand the Survivor's Trust shall pass as directed by the Surviving Grantor:\n(a) 60% to the Staggered Distribution Children's Sub-Trusts (administered with HEMS guardrails \nand age 25/30/35 principal releases);\n(b) 40% to the Third-Party Supplemental / Special Needs Trust for the benefit of Ethan \nMontgomery, so as not to disqualify said beneficiary from Medicaid or SSI."
+            "text": "this Trust as to their respective community/joint one-half share or separate property upon written \nnotice to the other Grantor and the Trustee.\nSection 2.03 Incapacity of a Grantor. A Grantor shall be deemed incapacitated upon (a) \nwritten certification by two licensed physicians (one of whom is the Grantor's attending \nphysician) that the Grantor is unable to effectively manage their financial affairs, or (b) a court \ndetermination of incapacity. During any period of incapacity of one Grantor, the other Grantor \nshall serve as sole Trustee.\nArticle III: DIVISION INTO SUB-TRUSTS UPON DEATH OF FIRST GRANTOR \n(A-B-C / QTIP STRUCTURE)\nSection 3.01 Mandatory Division at First Death. Upon the death of the first Grantor to die (the \n\"Deceased Grantor\"), the surviving Grantor (the \"Surviving Grantor\") shall have NO power to \namend, revoke, or alter the disposition of the Deceased Grantor's share of the Trust Estate. The \nTrustee shall divide the Trust Estate (including any assets received via the Deceased Grantor's \nPour-Over Will or beneficiary designations) into three separate trusts:\nSection 3.02 The Survivor's Trust (Trust A - Revocable). The Survivor's Trust shall consist of \nthe Surviving Grantor's one-half (1/2) interest in the joint/community estate and all of the \nSurviving Grantor's separate property (Schedule B or C). The Survivor's Trust shall remain \nrevocable and amendable by the Surviving Grantor during their lifetime.\nSection 3.03 The Credit Shelter / Family Bypass Trust (Trust B - Irrevocable). If applicable \nfor estate tax or blended family protection, the Bypass Trust shall hold an amount of the \nDeceased Grantor's share designated in the Sub-Trust Addendum. Trust B is irrevocable upon \nthe first death.\nSection 3.04 The Marital QTIP Trust (Trust C - Irrevocable Blended Family Lock). The \nbalance of the Deceased Grantor's share shall be allocated to the Qualified Terminable Interest \nProperty (\"QTIP\") Marital Trust under IRC \u00a7 2056(b)(7), administered under the QTIP \nAddendum. The Surviving Grantor shall receive all net income at least annually for life, but shall \nhave NO power to divert principal to a new spouse or disinherit the Deceased Grantor's \nbiological children.\nArticle IV: DISTRIBUTION UPON DEATH OF SURVIVING GRANTOR\nSection 4.01 Allocation Among Descendants & Special Needs Sub-Trust. Upon the death \nof the Surviving Grantor, the remaining balance of the Marital QTIP Trust (and Bypass Trust) \nshall pass strictly as directed by the Deceased Grantor's schedule of remainder beneficiaries, \nand the Survivor's Trust shall pass as directed by the Surviving Grantor:\n(a) 60% to the Staggered Distribution Children's Sub-Trusts (administered with HEMS guardrails \nand age 25/30/35 principal releases);\n(b) 40% to the Third-Party Supplemental / Special Needs Trust for the benefit of Ethan \nMontgomery, so as not to disqualify said beneficiary from Medicaid or SSI.\nSection 4.02 Specific Gift. Grantor 1\u2019s Vanguard account x3302 shall pass to Diane \nWhitaker Montgomery, spouse of Grantor 1."
           },
           {
             "page": 3,
@@ -177,7 +192,7 @@
             "text": "Schedule A, B & C: TRUST ASSET INVENTORY & MULTI-STATE \nPROPERTY SCHEDULES\nSchedule Asset / Real Property \nDescription\nJurisdiction / Account # / \nValue\nSchedule A (Joint) Primary Residence: 1042 \nRiver Oaks Blvd, Houston, \nTX 77019\nHarris County, TX - \n$2,450,000\nSchedule A (Joint) Out-of-State Vacation \nProperty: 405 Ski Run Rd, \nTaos, NM 87571\nTaos County, NM - $850,000\nSchedule A (Joint) Joint Non-Qualified \nBrokerage Account (Austin \nCapital)\nAcct # x8841 - $1,200,000\nSchedule B (Richard) Separate Pre-Marital \nBrokerage Account \n(Vanguard)\nAcct # x3302 - $650,000\nSchedule C (Eleanor) Separate Pre-Marital \nInvestment Account (Fidelity)\nAcct # x9104 - $500,000"
           }
         ],
-        "pdfPath": "examples/pdfs/Case2_01_Revocable_Living_Trust_Montgomery.pdf"
+        "pdfPath": "examples/pdfs/Case2_Trust_Demo_Former_Spouse.pdf"
       },
       {
         "id": "Case2_02_Pour_Over_Will_Montgomery",
@@ -300,6 +315,16 @@
         "field": "trustee",
         "value": "Beatrice Vance",
         "quote": "4. Successor Trustee(s): Beatrice Vance; Clara Vance.",
+        "page": 2,
+        "verification": "verified"
+      },
+      {
+        "id": "case2-fact-3",
+        "documentId": "Case2_01_Revocable_Living_Trust_Montgomery",
+        "subjectId": "case2-asset-3",
+        "field": "beneficiary",
+        "value": "Diane Whitaker Montgomery",
+        "quote": "Section 4.02 Specific Gift. Grantor 1\u2019s Vanguard account x3302 shall pass to Diane \nWhitaker Montgomery, spouse of Grantor 1.",
         "page": 2,
         "verification": "verified"
       }
