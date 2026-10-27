@@ -63,8 +63,7 @@ export default function Report({
           )}
         </p>
         <div className="report-disclaimer">
-          Prototype · Synthetic or public data only · All asset values are
-          hypothetical.
+          Prototype · All asset values are hypothetical.
           <br />
           {disclaimer}
         </div>
@@ -76,10 +75,6 @@ export default function Report({
           <div>
             <strong>{w.packet?.documents.length ?? 0}</strong>
             <span>Source documents</span>
-          </div>
-          <div>
-            <strong>{verified.length}</strong>
-            <span>Verified quotes</span>
           </div>
           <div>
             <strong>{findings.length}</strong>
@@ -255,8 +250,10 @@ export default function Report({
                 <li key={d.id}>
                   <strong>{d.title}</strong>
                   <span>
-                    {d.source.toUpperCase()} · {d.kind} · {d.date || "Undated"}{" "}
-                    · {d.pages.length} pages
+                    {d.source === "synthetic"
+                      ? "EXAMPLE"
+                      : d.source.toUpperCase()}{" "}
+                    · {d.kind} · {d.date || "Undated"} · {d.pages.length} pages
                   </span>
                   {d.sourceUrl && <a href={d.sourceUrl}>{d.sourceUrl}</a>}
                 </li>

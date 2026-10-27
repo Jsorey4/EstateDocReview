@@ -104,6 +104,10 @@ export const documentSchema = z.object({
     "Other",
   ]),
   date: z.string(),
+  pdfPath: z
+    .string()
+    .regex(/^examples\/pdfs\/[A-Za-z0-9_-]+\.pdf$/)
+    .optional(),
   backendVerifier: z.record(z.string(), z.unknown()).optional(),
   extraction: z.record(z.string(), z.unknown()).optional(),
   unreadablePages: z.array(z.number().int().positive()).optional(),

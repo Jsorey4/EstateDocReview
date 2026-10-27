@@ -362,7 +362,6 @@ export default function Overview({
         </div>
       </section>
       <div className="bottom-quote">
-        <span>“</span>
         <p>The best next step starts with the right question.</p>
         <div>BUILT FOR THOUGHTFUL ADVISOR CONVERSATIONS</div>
       </div>

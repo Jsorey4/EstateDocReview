@@ -158,7 +158,7 @@ export default function Review({
                 ? "The reconciliation rules found nothing material in the verified facts, and the name comparison found no differences. This is not a determination that the plan is complete or suitable."
                 : w.packet
                   ? "This comparison checks names for matching subjects and roles. Missing data, legal interpretation, and unverified facts have not been evaluated."
-                  : "After you capture household intentions and import verified document facts, supported differences will appear here. An empty queue is not a completed review."}
+                  : "After you capture household intentions and choose example document evidence, supported differences will appear here. An empty queue is not a completed review."}
           </Empty>
         </section>
       ) : (

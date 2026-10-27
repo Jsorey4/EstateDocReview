@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  ArrowDownToLine,
   ArrowRight,
   BookOpen,
   Check,
@@ -15,7 +14,6 @@ import {
   Leaf,
   Menu,
   PlayCircle,
-  Plus,
   Settings2,
   ShieldCheck,
   X,
@@ -23,16 +21,15 @@ import {
 import {
   completion,
   download,
-  emptyWorkspace,
   loadWorkspace,
-  parsePacket,
   reviewItems,
   STORAGE_KEY,
-  workspaceSchema,
 } from "./domain";
 import type { Page, Workspace } from "./domain";
 import { Badge, disclaimer, Modal } from "./components";
 import Overview from "./Overview";
+import ExamplePicker from "./ExamplePicker";
+import ThemeToggle from "./ThemeToggle";
 import Questionnaire from "./Questionnaire";
 import Documents from "./Documents";
 import Flow from "./Flow";
@@ -64,8 +61,9 @@ export default function App() {
   const [saveError, setSaveError] = useState(initial.error);
   const [storageBlocked, setStorageBlocked] = useState(!!initial.error);
   const [message, setMessage] = useState("");
-  const [pendingRestore, setPendingRestore] = useState<Workspace | null>(null);
-  const restoreRef = useRef<HTMLInputElement>(null);
+  const [examplesOpen, setExamplesOpen] = useState(false);
+  const [householdMenu, setHouseholdMenu] = useState(false);
+  const [questionnaireStep, setQuestionnaireStep] = useState(0);
   const pageRef = useRef<HTMLElement>(null);
   const findings = reviewItems(workspace);
   const openCount = findings.filter(
@@ -103,6 +101,7 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [message]);
   const go = (next: Page) => {
+    if (next !== "questionnaire") setQuestionnaireStep(0);
     location.hash = next;
     setMobileOpen(false);
   };
@@ -111,24 +110,6 @@ export default function App() {
       "estate-review-workspace.json",
       JSON.stringify(workspace, null, 2),
     );
-  const restore = async (file?: File) => {
-    if (!file) return;
-    try {
-      if (file.size > 8_000_000)
-        throw new Error("Backup files must be smaller than 8 MB.");
-      const next = workspaceSchema.parse(JSON.parse(await file.text()));
-      if (next.packet) next.packet = parsePacket(next.packet);
-      setPendingRestore(next);
-      setModal(null);
-    } catch (e) {
-      setMessage(
-        e instanceof Error && e.message.includes("8 MB")
-          ? e.message
-          : "This file is not a valid workspace backup. The current workspace was preserved.",
-      );
-    }
-    if (restoreRef.current) restoreRef.current.value = "";
-  };
   return (
     <div className="app-shell">
       <a
@@ -161,7 +142,8 @@ export default function App() {
         <div className="workspace-label">YOUR WORKSPACE</div>
         <button
           className="household-switch"
-          onClick={() => go("questionnaire")}
+          onClick={() => setHouseholdMenu(!householdMenu)}
+          aria-expanded={householdMenu}
         >
           <span className="household-avatar">
             {workspace.questionnaire.household.slice(0, 2).toUpperCase() ||
@@ -173,6 +155,17 @@ export default function App() {
           </span>
           <ChevronDown size={14} />
         </button>
+        {householdMenu && (
+          <ExamplePicker
+            inline
+            onClose={() => setHouseholdMenu(false)}
+            onSelect={(next) => {
+              setWorkspace(next);
+              setStorageBlocked(false);
+              setHouseholdMenu(false);
+            }}
+          />
+        )}
         <nav aria-label="Main navigation">
           {navigation.map((item) => (
             <a
@@ -233,6 +226,7 @@ export default function App() {
             <strong>{navigation.find((n) => n.id === page)?.label}</strong>
           </div>
           <div className="top-actions">
+            <ThemeToggle />
             <span className="save-state">
               <span className={`online-dot ${saveError ? "warning" : ""}`} />
               {saveError ? "Not saved" : "Saved on this browser"}
@@ -250,8 +244,8 @@ export default function App() {
         <div className="prototype-banner">
           <ShieldCheck size={14} />
           <span>
-            Prototype workspace <span className="banner-divider">/</span> Use
-            synthetic or public data only. All asset amounts are hypothetical.
+            Prototype workspace <span className="banner-divider">/</span>
+            All asset amounts are hypothetical.
           </span>
           <Badge tone="green">TEXAS</Badge>
         </div>
@@ -265,6 +259,8 @@ export default function App() {
           {page === "overview" && <Overview workspace={workspace} go={go} />}
           {page === "questionnaire" && (
             <Questionnaire
+              key={workspace.questionnaire.household}
+              initialStep={questionnaireStep}
               value={workspace.questionnaire}
               onChange={(q) =>
                 setWorkspace((w) => ({ ...w, questionnaire: q }))
@@ -274,22 +270,20 @@ export default function App() {
           )}
           {page === "documents" && (
             <Documents
+              onChooseExample={() => setExamplesOpen(true)}
               workspace={workspace}
-              onImport={(packet) => {
-                setWorkspace((w) => ({
-                  ...w,
-                  packet,
-                  dispositions: {},
-                  backend: null,
-                }));
-                setMessage(
-                  "Review data imported. Source pages and verification results are ready to inspect.",
-                );
-              }}
               go={go}
             />
           )}
-          {page === "flow" && <Flow workspace={workspace} go={go} />}
+          {page === "flow" && (
+            <Flow
+              workspace={workspace}
+              go={(next) => {
+                if (next === "questionnaire") setQuestionnaireStep(2);
+                go(next);
+              }}
+            />
+          )}
           {page === "review" && (
             <Review
               workspace={workspace}
@@ -365,9 +359,8 @@ export default function App() {
             <li>
               <strong>Bring the supporting evidence</strong>
               <p>
-                Import a prepared review JSON file containing user-sourced
-                public or synthetic document pages and facts checked by
-                verify_quotes.py. PDF extraction is a separate workflow.
+                Choose an example household to explore its documents, source
+                pages, and reviewed evidence.
               </p>
             </li>
             <li>
@@ -410,105 +403,39 @@ export default function App() {
           </div>
           <p className="muted">
             This workspace is stored on this browser, with no account sync.
-            Export a backup to move it to another device. Use synthetic or
-            public data only.
           </p>
-          <button className="button secondary full" onClick={exportBackup}>
-            <ArrowDownToLine size={17} />
-            Download workspace backup
+          <button
+            className="button secondary full"
+            onClick={() => {
+              setModal(null);
+              setExamplesOpen(true);
+            }}
+          >
+            Choose an example household
           </button>
           <button
             className="button secondary full"
-            onClick={() => restoreRef.current?.click()}
+            onClick={() => {
+              setModal(null);
+              setExamplesOpen(true);
+            }}
           >
-            Restore a workspace backup
+            Start new household
           </button>
-          {storageBlocked && (
-            <button
-              className="button secondary full"
-              onClick={() =>
-                download(
-                  "unreadable-workspace-backup.json",
-                  localStorage.getItem(STORAGE_KEY) || "",
-                )
-              }
-            >
-              Download preserved browser data
-            </button>
-          )}
-          <div className="settings-danger">
-            <strong>Start a new household</strong>
-            <p>
-              Clears questionnaire answers, imported evidence, and review notes
-              from this browser.
-            </p>
-            <button className="button danger" onClick={() => setModal("reset")}>
-              <Plus size={16} />
-              New household
-            </button>
-          </div>
         </Modal>
       )}
-      {modal === "reset" && (
-        <Modal title="Start a new household?" onClose={() => setModal(null)}>
-          <p>
-            Your current workspace will be replaced. Download a backup first if
-            you need to keep it.
-          </p>
-          <div className="modal-actions">
-            <button className="button secondary" onClick={exportBackup}>
-              Download backup
-            </button>
-            <button
-              className="button danger"
-              onClick={() => {
-                setWorkspace(emptyWorkspace());
-                setStorageBlocked(false);
-                setModal(null);
-                go("overview");
-              }}
-            >
-              Clear and start new
-            </button>
-          </div>
-        </Modal>
+      {examplesOpen && (
+        <ExamplePicker
+          onClose={() => setExamplesOpen(false)}
+          onSelect={(next) => {
+            setWorkspace(next);
+            setStorageBlocked(false);
+            setExamplesOpen(false);
+            setQuestionnaireStep(0);
+            go("questionnaire");
+          }}
+        />
       )}
-      {pendingRestore && (
-        <Modal
-          title="Replace the current workspace?"
-          onClose={() => setPendingRestore(null)}
-        >
-          <p>
-            The backup will replace questionnaire answers, evidence, and review
-            notes. You can save the current workspace first.
-          </p>
-          <div className="modal-actions">
-            <button className="button secondary" onClick={exportBackup}>
-              Download current backup
-            </button>
-            <button
-              className="button primary"
-              onClick={() => {
-                setWorkspace(pendingRestore);
-                setStorageBlocked(false);
-                setPendingRestore(null);
-                setMessage("Workspace restored.");
-                go("overview");
-              }}
-            >
-              Restore backup
-            </button>
-          </div>
-        </Modal>
-      )}
-      <input
-        ref={restoreRef}
-        hidden
-        type="file"
-        accept=".json,application/json"
-        aria-label="Restore workspace file"
-        onChange={(e) => void restore(e.target.files?.[0])}
-      />
     </div>
   );
 }

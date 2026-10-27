@@ -4046,3 +4046,70 @@ footer {
   font-size: 0.92em;
   white-space: pre-wrap;
 }
+
+/* Judge-facing household chooser and report hierarchy. */
+.report-section > h3 > span {
+  font-size: 1.6em;
+  line-height: 1;
+  font-weight: 600;
+}
+.household-dropdown {
+  position: absolute;
+  top: 180px;
+  left: 12px;
+  width: min(340px, calc(100vw - 24px));
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  z-index: 40;
+  padding: 18px;
+  background: white;
+  color: var(--dark);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 12px 30px #203d3226;
+}
+.example-choices {
+  display: grid;
+  gap: 12px;
+}
+.example-choice {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+}
+.example-choice span,
+.example-choice small {
+  font-size: 12px;
+  line-height: 1.5;
+}
+.sidebar {
+  overflow-y: auto;
+}
+.household-dropdown {
+  position: static;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.report-metrics {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.theme-toggle {
+  padding: 7px 10px;
+  min-height: 36px;
+  white-space: nowrap;
+}
+@media (max-width: 500px) {
+  .theme-toggle span {
+    display: none;
+  }
+}
+@media print {
+  .theme-toggle {
+    display: none;
+  }
+}

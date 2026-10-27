@@ -188,15 +188,15 @@ export default function Replay({
             icon={<FolderInput size={30} />}
             title="No sample runs published yet"
           >
-            Samples are precomputed pipeline runs on synthetic households. Run
+            Samples are precomputed pipeline runs on example households. Run
             extraction and reconciliation on the variants, then package them
             with <code>bridge/build_replay_samples.py</code> into{" "}
-            <code>public/samples/</code>. The page reads those files and makes no
-            API call.
+            <code>public/samples/</code>. The page reads those files and makes
+            no API call.
           </Empty>
           <pre className="replay-command">
-            .venv/bin/python -m bridge.build_replay_samples --variants households/variants
-            --run runs/&lt;run&gt; --out public/samples
+            .venv/bin/python -m bridge.build_replay_samples --variants
+            households/variants --run runs/&lt;run&gt; --out public/samples
           </pre>
         </section>
       </>
@@ -230,7 +230,7 @@ export default function Replay({
         }
       />
       <div className="replay-provenance">
-        <Badge tone="green">SYNTHETIC</Badge>
+        <Badge tone="green">EXAMPLE</Badge>
         <span>
           Precomputed run <strong>{m.run}</strong>, packaged{" "}
           {m.builtAt.slice(0, 10)}. Amounts are hypothetical. Nothing is
@@ -470,7 +470,9 @@ function DocumentsStep({
           <span role="cell">{d.extractionSource ?? "digital"}</span>
           <span role="cell">
             <Badge tone="neutral">
-              {d.source.toUpperCase().replace("_", "-")}
+              {d.source === "synthetic"
+                ? "EXAMPLE"
+                : d.source.toUpperCase().replace("_", "-")}
             </Badge>
           </span>
           <span role="cell">
@@ -883,7 +885,7 @@ function EvaluationStep({
       )}
       <p className="field-hint">
         Scored by run_eval.py against the mutation script's answer key, which
-        the product never reads. Synthetic variants only; these figures describe
+        the product never reads. Example variants only; these figures describe
         this test set, not real client documents.
       </p>
     </>
@@ -914,7 +916,11 @@ function SourceModal({
     <Modal title={doc.title} onClose={onClose}>
       <div className="document-modal-meta">
         <Badge>{doc.kind}</Badge>
-        <Badge tone="green">{doc.source.toUpperCase().replace("_", "-")}</Badge>
+        <Badge tone="green">
+          {doc.source === "synthetic"
+            ? "EXAMPLE"
+            : doc.source.toUpperCase().replace("_", "-")}
+        </Badge>
       </div>
       {doc.pages.length > 1 && (
         <div className="segmented" role="group" aria-label="Page">

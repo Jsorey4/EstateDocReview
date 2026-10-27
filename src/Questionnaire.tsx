@@ -27,14 +27,16 @@ import { Badge, Empty, Progress, SectionHeading } from "./components";
 const steps = ["Household", "People", "Assets", "Wishes & roles", "Review"];
 export default function Questionnaire({
   value: q,
+  initialStep = 0,
   onChange,
   go,
 }: {
   value: Data;
+  initialStep?: number;
   onChange: (q: Data) => void;
   go: (p: Page) => void;
 }) {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(initialStep);
   // Steps the advisor has left unfinished; their missing fields are then marked in place.
   const [attempted, setAttempted] = useState<Set<number>>(() => new Set());
   const completed = completion(q);
@@ -165,7 +167,7 @@ export default function Questionnaire({
             <p>
               {
                 [
-                  "Start with a little context. Use a synthetic household name for this prototype.",
+                  "Start with a little context. Enter a household name for this prototype.",
                   "Include family, intended beneficiaries, and people with a decision-making role.",
                   "Record hypothetical assets and the client’s understanding of how each passes.",
                   "Capture intentions in the client’s words. These become the comparison point for the documents.",
@@ -193,7 +195,7 @@ export default function Questionnaire({
                     aria-invalid={show && !q.household.trim()}
                     value={q.household}
                     onChange={(e) => update({ household: e.target.value })}
-                    placeholder="e.g. Synthetic household name"
+                    placeholder="e.g. Household name"
                     autoComplete="off"
                   />
                 </Field>
@@ -816,8 +818,8 @@ export default function Questionnaire({
                   }
                 />
                 <span>
-                  I have reviewed these synthetic or public household details
-                  and they are ready for document comparison.
+                  I have reviewed these household details and they are ready for
+                  document comparison.
                 </span>
               </label>
               {!completed.slice(0, 4).every(Boolean) && (
