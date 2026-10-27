@@ -188,3 +188,12 @@ Repository organization is complete: `pipeline/`, `bridge/`, `evaluation/`, and 
 ## Session 2026-10-26: sidebar household list
 - The sidebar household dropdown is now a list of buttons styled like the household switch (183×59 each): three cases plus New household, labeled "{first initial}. {surname}" with client initials (A. Pendelton / AP, R. Montgomery / RM, V. Thorne / VT); the loaded case is outlined. The switch itself uses the same label after loading. The Choose a household dialog (Overview, Documents, Workspace settings) keeps its numbered descriptive cards. Labels come from `householdBadge` in `src/domain.ts` (suffixes such as Jr. ignored; falls back to the household name, then "New household").
 - Validation: TypeScript, 40 unit tests (3 new for the label helper), 20 of 23 browser tests (dropdown sizes and labels now asserted); the 3 retired upload tests still fail. Checked light and dark.
+
+
+## Session 2026-10-26: readability and advisor topics
+- Document dialog: the source page list and top link are replaced by one "Open source PDF" button (text pages remain only for documents without a PDF). Source badges read USER-SUPPLIED, not USER_SUPPLIED.
+- State of residence is visibly locked (grey, not-allowed cursor, "Texas only in this prototype" hint); all disabled inputs share that style.
+- Capitalization: document-type chips (Will, Revocable trust…), fact field labels, subjects, packet relationships/statuses (Brother, Living), "Questionnaire complete", "Reviewed"/"Incomplete". Display only, via `sentenceCase`; stored vocabulary is unchanged.
+- Review queue "Advisor topics": add free-text follow-ups, mark resolved, optional resolution note; saved in the workspace (`topics`, defaults to empty for older saves) and printed in packet section 03. Topics are notes, not findings, and do not change finding counts.
+- Font sizes: +2px for ≤12px, +1px for 13–19px, headings ≥20px unchanged (313 declarations). Household buttons re-tuned to stay 183×59 without clipping; sidebar links stay on one line. Packet person notes now follow on the same line.
+- Validation: TypeScript, 42 unit tests, 118 Python tests, 21 of 24 browser tests (new: topics persist and print, PDF button, locked state); the 3 retired upload tests still fail. Checked light and dark; scripted check found no clipped text.

@@ -6,6 +6,7 @@ import {
   parsePercent,
   reviewItems,
   verifiedFacts,
+  sentenceCase,
 } from "./domain";
 import type { Page, Workspace } from "./domain";
 import { Badge, disclaimer, SectionHeading } from "./components";
@@ -109,9 +110,12 @@ export default function Report({
                 {q.people.map((p) => (
                   <li key={p.id}>
                     <strong>{p.name || "Unnamed person"}</strong> ·{" "}
-                    {p.relationship || "Relationship to confirm"} ·{" "}
-                    {p.status === "unknown" ? "status to confirm" : p.status}
-                    {p.note && <span className="report-note">{p.note}</span>}
+                    {sentenceCase(p.relationship) || "Relationship to confirm"}{" "}
+                    ·{" "}
+                    {p.status === "unknown"
+                      ? "Status to confirm"
+                      : sentenceCase(p.status)}
+                    {p.note && <span className="report-note"> · {p.note}</span>}
                   </li>
                 ))}
               </ul>
@@ -242,6 +246,25 @@ export default function Report({
                   : "Document comparison has not been performed. Import evidence to populate this section."}
             </p>
           )}
+          {w.topics.length > 0 && (
+            <div className="report-topics">
+              <h4>Advisor topics</h4>
+              {w.topics.map((t) => (
+                <div className="report-topic" key={t.id}>
+                  <p>
+                    <strong>{t.resolved ? "Resolved" : "Open"}:</strong>{" "}
+                    {t.text}
+                  </p>
+                  {t.resolved && (
+                    <p>
+                      <strong>Resolution:</strong>{" "}
+                      {t.resolution || "Not recorded"}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </ReportSection>
         <ReportSection number="04" title="Evidence register">
           {w.packet?.documents.length ? (
@@ -252,7 +275,7 @@ export default function Report({
                   <span>
                     {d.source === "synthetic"
                       ? "EXAMPLE"
-                      : d.source.toUpperCase()}{" "}
+                      : d.source.replaceAll("_", "-").toUpperCase()}{" "}
                     · {d.kind} · {d.date || "Undated"} · {d.pages.length} pages
                   </span>
                   {d.sourceUrl && <a href={d.sourceUrl}>{d.sourceUrl}</a>}
@@ -280,7 +303,7 @@ export default function Report({
             </p>
           )}
           <ul>
-            <li>Questionnaire: {completed ? "reviewed" : "incomplete"}.</li>
+            <li>Questionnaire: {completed ? "Reviewed" : "Incomplete"}.</li>
             <li>
               {(w.packet?.facts.length ?? 0) - verified.length} unverified facts
               excluded from observations.

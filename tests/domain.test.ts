@@ -3,6 +3,7 @@ import {
   completion,
   emptyWorkspace,
   householdBadge,
+  sentenceCase,
   missingItems,
   parsePercent,
   relationshipKind,
@@ -282,5 +283,18 @@ describe("householdBadge", () => {
       initials: "NH",
       name: "New household",
     });
+  });
+});
+
+describe("display helpers and advisor topics", () => {
+  it("capitalizes vocabulary for display", () => {
+    expect(sentenceCase("revocable_trust")).toBe("Revocable trust");
+    expect(sentenceCase("brother")).toBe("Brother");
+    expect(sentenceCase("")).toBe("");
+  });
+  it("loads older saved workspaces without advisor topics", () => {
+    const { topics, ...older } = emptyWorkspace();
+    expect(topics).toEqual([]);
+    expect(workspaceSchema.parse(older).topics).toEqual([]);
   });
 });

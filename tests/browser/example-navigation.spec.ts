@@ -94,3 +94,36 @@ test("household dropdown lists three examples and report numbers exceed heading 
   expect(sizes[1]).toBeGreaterThan(sizes[0]);
   await expect(page.locator("body")).not.toContainText(/synthetic/i);
 });
+
+test("advisor topics, source PDF button, and locked Texas field", async ({
+  page,
+}) => {
+  await page.goto("/#overview");
+  await page
+    .getByRole("button", { name: "Explore an example household" })
+    .click();
+  await page.locator(".example-choice").first().click();
+  await expect(page.getByLabel("State of residence")).toBeDisabled();
+  await page.goto("/#documents");
+  await page.locator(".document-row").first().click();
+  await expect(
+    page.getByRole("link", { name: "Open source PDF" }),
+  ).toHaveAttribute("href", /examples\/pdfs\/.+\.pdf$/);
+  await expect(page.locator(".source-page")).toHaveCount(0);
+  await page.getByRole("button", { name: "Close dialog" }).click();
+  await page.goto("/#review");
+  await page.getByRole("button", { name: "Add a topic" }).click();
+  await page.getByLabel("New topic").fill("Did you follow up on topic X?");
+  await page.getByRole("button", { name: "Add topic", exact: true }).click();
+  await expect(page.locator(".advisor-topics")).toContainText("1 open");
+  await page.getByLabel("Resolved", { exact: true }).check();
+  await page
+    .getByLabel("How was it resolved? (optional)")
+    .fill("Confirmed by phone.");
+  await page.reload();
+  await expect(page.getByLabel("Resolved", { exact: true })).toBeChecked();
+  await page.goto("/#report");
+  await expect(page.locator(".report-topics")).toContainText(
+    "Resolution: Confirmed by phone.",
+  );
+});

@@ -22,6 +22,7 @@ import {
   relationshipKind,
   reviewWarnings,
   uid,
+  sentenceCase,
 } from "./domain";
 import { Badge, Empty, Progress, SectionHeading } from "./components";
 const steps = ["Household", "People", "Assets", "Wishes & roles", "Review"];
@@ -225,9 +226,16 @@ export default function Questionnaire({
                   />
                 </Field>
                 <Field label="State of residence">
-                  <select value="Texas" disabled>
+                  <select
+                    value="Texas"
+                    disabled
+                    title="This prototype reviews Texas households only."
+                  >
                     <option>Texas</option>
                   </select>
+                  <small className="field-hint">
+                    Texas only in this prototype.
+                  </small>
                 </Field>
                 <Field
                   label="Marital status"
@@ -707,7 +715,7 @@ export default function Questionnaire({
                       })
                     }
                   >
-                    {kind.replaceAll("_", " ")}
+                    {sentenceCase(kind)}
                   </button>
                 ))}
               </div>

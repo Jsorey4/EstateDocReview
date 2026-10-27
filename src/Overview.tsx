@@ -295,7 +295,7 @@ export default function Overview({
                 {progress}
                 <span>%</span>
               </strong>
-              <small>questionnaire complete</small>
+              <small>Questionnaire complete</small>
             </div>
           </div>
           <div className="readiness-checks">

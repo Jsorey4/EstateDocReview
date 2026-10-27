@@ -286,6 +286,14 @@ export type Disposition = {
   status: "open" | "discussed" | "attorney";
   note: string;
 };
+// Follow-ups the advisor adds by hand; they are notes, never findings.
+export const advisorTopicSchema = z.object({
+  id: z.string().min(1),
+  text: z.string(),
+  resolved: z.boolean().default(false),
+  resolution: z.string().default(""),
+});
+export type AdvisorTopic = z.infer<typeof advisorTopicSchema>;
 export const workspaceSchema = z.object({
   version: z.literal(1),
   questionnaire: questionnaireSchema,
@@ -297,6 +305,7 @@ export const workspaceSchema = z.object({
       note: z.string(),
     }),
   ),
+  topics: z.array(advisorTopicSchema).default([]),
   // reconcile.py output for this packet, with the questionnaire it was computed against.
   backend: z
     .object({
@@ -334,6 +343,7 @@ export const emptyWorkspace = (): Workspace => ({
   questionnaire: { ...emptyQuestionnaire, people: [], assets: [], events: [] },
   packet: null,
   dispositions: {},
+  topics: [],
   backend: null,
 });
 export const normalize = (value: string) =>
@@ -466,6 +476,11 @@ export function reviewWarnings(q: Questionnaire): string[][] {
   }
   return [household, people, [], wishes];
 }
+/** "revocable_trust" → "Revocable trust"; display only, stored values keep their vocabulary. */
+export const sentenceCase = (s: string) => {
+  const text = s.replaceAll("_", " ").trim();
+  return text ? text[0].toUpperCase() + text.slice(1) : text;
+};
 const NAME_SUFFIX = /^(jr|sr|ii|iii|iv|v)\.?$/i;
 /** Sidebar label for a household: "A. Pendelton" and "AP" from the client name, else the household name. */
 export function householdBadge(q: Questionnaire) {

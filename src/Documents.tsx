@@ -1,12 +1,13 @@
 import { useState } from "react";
 import {
   ArrowRight,
+  ExternalLink,
   FileText,
   FolderOpen,
   Search,
   ShieldCheck,
 } from "lucide-react";
-import { verifiedFacts } from "./domain";
+import { sentenceCase, verifiedFacts } from "./domain";
 import type { Page, ReviewDocument, Workspace } from "./domain";
 import { Badge, Empty, Modal, SectionHeading } from "./components";
 export default function Documents({
@@ -189,17 +190,8 @@ export default function Documents({
             <Badge tone="green">
               {selected.source === "synthetic"
                 ? "EXAMPLE"
-                : selected.source.toUpperCase()}
+                : selected.source.replaceAll("_", "-").toUpperCase()}
             </Badge>
-            {selected.pdfPath && (
-              <a
-                href={`${import.meta.env.BASE_URL}${selected.pdfPath}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Open source PDF ↗
-              </a>
-            )}
             {selected.sourceUrl && (
               <a href={selected.sourceUrl} target="_blank" rel="noreferrer">
                 Original public source ↗
@@ -213,7 +205,8 @@ export default function Documents({
               <div className="evidence-quote" key={f.id}>
                 <div>
                   <strong>
-                    {f.backendField || f.field}: {f.value || "(blank field)"}
+                    {sentenceCase(f.backendField || f.field)}:{" "}
+                    {f.value || "(blank field)"}
                   </strong>
                   <Badge
                     tone={facts.some((v) => v.id === f.id) ? "green" : "amber"}
@@ -239,7 +232,7 @@ export default function Documents({
                 <span>
                   Page {f.page} · Subject:{" "}
                   {w.questionnaire.assets.find((a) => a.id === f.subjectId)
-                    ?.name || f.subjectId}
+                    ?.name || sentenceCase(f.subjectId)}
                 </span>
               </div>
             ))}
@@ -248,13 +241,28 @@ export default function Documents({
               No extracted facts are included for this document.
             </p>
           )}
-          <h3 className="field-group">Source pages</h3>
-          {selected.pages.map((p) => (
-            <details className="source-page" key={p.page}>
-              <summary>Page {p.page}</summary>
-              <pre>{p.text}</pre>
-            </details>
-          ))}
+          {selected.pdfPath ? (
+            <a
+              className="button secondary full source-pdf-button"
+              href={`${import.meta.env.BASE_URL}${selected.pdfPath}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <FileText size={16} />
+              Open source PDF
+              <ExternalLink size={14} />
+            </a>
+          ) : (
+            <>
+              <h3 className="field-group">Source pages</h3>
+              {selected.pages.map((p) => (
+                <details className="source-page" key={p.page}>
+                  <summary>Page {p.page}</summary>
+                  <pre>{p.text}</pre>
+                </details>
+              ))}
+            </>
+          )}
         </Modal>
       )}
       {help && (

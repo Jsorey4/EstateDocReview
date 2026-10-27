@@ -5,19 +5,35 @@ import {
   ChevronDown,
   FileCheck2,
   MessageSquare,
+  Plus,
   Search,
   ShieldCheck,
+  Trash2,
 } from "lucide-react";
-import type { Disposition, Finding, Page, Workspace } from "./domain";
-import { backendFindings, money, reviewItems, verifiedFacts } from "./domain";
+import type {
+  AdvisorTopic,
+  Disposition,
+  Finding,
+  Page,
+  Workspace,
+} from "./domain";
+import {
+  backendFindings,
+  money,
+  reviewItems,
+  uid,
+  verifiedFacts,
+} from "./domain";
 import { Badge, Empty, SectionHeading } from "./components";
 export default function Review({
   workspace: w,
   onDisposition,
+  onTopics,
   go,
 }: {
   workspace: Workspace;
   onDisposition: (id: string, disposition: Disposition) => void;
+  onTopics: (topics: AdvisorTopic[]) => void;
   go: (p: Page) => void;
 }) {
   const [filter, setFilter] = useState("All items");
@@ -174,6 +190,7 @@ export default function Review({
           ))}
         </div>
       )}
+      <AdvisorTopics topics={w.topics} onChange={onTopics} />
       <section className="card discussion-prompts">
         <span className="eyebrow">BEYOND THE CHECKLIST</span>
         <h2>Advisor discussion prompts</h2>
@@ -327,5 +344,116 @@ function FindingCard({
         </>
       )}
     </article>
+  );
+}
+function AdvisorTopics({
+  topics,
+  onChange,
+}: {
+  topics: AdvisorTopic[];
+  onChange: (topics: AdvisorTopic[]) => void;
+}) {
+  const [draft, setDraft] = useState<string | null>(null);
+  const update = (id: string, change: Partial<AdvisorTopic>) =>
+    onChange(topics.map((t) => (t.id === id ? { ...t, ...change } : t)));
+  const add = () => {
+    if (!draft?.trim()) return;
+    onChange([
+      ...topics,
+      { id: uid(), text: draft.trim(), resolved: false, resolution: "" },
+    ]);
+    setDraft(null);
+  };
+  const open = topics.filter((t) => !t.resolved).length;
+  return (
+    <section className="card advisor-topics">
+      <div className="advisor-topics-head">
+        <div>
+          <span className="eyebrow">YOUR AGENDA</span>
+          <h2>Advisor topics</h2>
+          <p className="muted">
+            Add your own follow-ups, such as a question from your last call.
+            They print in the review packet.
+          </p>
+        </div>
+        {topics.length > 0 && (
+          <Badge tone={open ? "amber" : "green"}>
+            {open ? `${open} open` : "All resolved"}
+          </Badge>
+        )}
+      </div>
+      {topics.map((t) => (
+        <div
+          className={`advisor-topic ${t.resolved ? "resolved" : ""}`}
+          key={t.id}
+        >
+          <label className="topic-check">
+            <input
+              type="checkbox"
+              checked={t.resolved}
+              onChange={(e) => update(t.id, { resolved: e.target.checked })}
+            />
+            <span>Resolved</span>
+          </label>
+          <p className="topic-text">{t.text}</p>
+          <button
+            className="icon-button"
+            aria-label={`Remove topic: ${t.text}`}
+            onClick={() => onChange(topics.filter((x) => x.id !== t.id))}
+          >
+            <Trash2 size={16} />
+          </button>
+          {t.resolved && (
+            <label className="field topic-resolution">
+              <span>How was it resolved? (optional)</span>
+              <textarea
+                rows={2}
+                autoFocus={!t.resolution}
+                value={t.resolution}
+                onChange={(e) => update(t.id, { resolution: e.target.value })}
+                placeholder="What was decided, who confirmed it, and when…"
+              />
+            </label>
+          )}
+        </div>
+      ))}
+      {draft === null ? (
+        <button className="button secondary" onClick={() => setDraft("")}>
+          <Plus size={16} />
+          Add a topic
+        </button>
+      ) : (
+        <div className="topic-draft">
+          <label className="field">
+            <span>New topic</span>
+            <textarea
+              rows={2}
+              autoFocus
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  add();
+                }
+              }}
+              placeholder="For example: Did you follow up on the beneficiary form from our last call?"
+            />
+          </label>
+          <div className="modal-actions">
+            <button className="button secondary" onClick={() => setDraft(null)}>
+              Cancel
+            </button>
+            <button
+              className="button primary"
+              disabled={!draft.trim()}
+              onClick={add}
+            >
+              Add topic
+            </button>
+          </div>
+        </div>
+      )}
+    </section>
   );
 }

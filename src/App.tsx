@@ -314,6 +314,7 @@ export default function App() {
                   dispositions: { ...w.dispositions, [id]: disposition },
                 }))
               }
+              onTopics={(topics) => setWorkspace((w) => ({ ...w, topics }))}
               go={go}
             />
           )}
@@ -327,6 +328,7 @@ export default function App() {
                   questionnaire: sample.questionnaire,
                   packet: sample.packet,
                   dispositions: {},
+                  topics: [],
                   backend: {
                     source,
                     questionnaire: sample.questionnaire,

@@ -901,6 +901,16 @@
   html[data-theme="dark"] .household-option.current {
     border-color: #6c8b59;
   }
+  html[data-theme="dark"] input:disabled,
+  html[data-theme="dark"] select:disabled,
+  html[data-theme="dark"] textarea:disabled {
+    background: #1d2621;
+    color: #a2b09d;
+    border-color: #383c32;
+  }
+  html[data-theme="dark"] .advisor-topic {
+    background: #141a17;
+  }
   /* Hand-tuned dark-theme rules, appended after the generated overrides. */
   html[data-theme="dark"] {
     color-scheme: dark;

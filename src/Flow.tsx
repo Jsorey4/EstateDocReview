@@ -15,6 +15,7 @@ import {
   money,
   reviewItems,
   routeEvidence,
+  sentenceCase,
 } from "./domain";
 import { Badge, Empty, Modal, SectionHeading } from "./components";
 const lane = (a: Asset) =>
@@ -301,7 +302,7 @@ export default function Flow({
             routeEvidence(selected, w.packet).map((f) => (
               <div className="evidence-quote" key={f.id}>
                 <strong>
-                  {f.field}: {f.value}
+                  {sentenceCase(f.field)}: {f.value}
                 </strong>
                 <blockquote>“{f.quote}”</blockquote>
                 <small>
