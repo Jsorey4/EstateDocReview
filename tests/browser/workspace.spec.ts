@@ -4,7 +4,7 @@ test("questionnaire, asset flow, persistence, and print packet", async ({
   page,
 }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "Start a household review" }).click();
+  await page.getByRole("button", { name: "or start your own" }).click();
   await page.getByLabel("Household name").fill("Interface check");
   await page.getByLabel("Questionnaire completed by").fill("Reviewer");
   await page.getByLabel("Marital status").selectOption("Single");

@@ -20,9 +20,11 @@ import { Badge, Progress, SectionHeading, TextLink, Tick } from "./components";
 export default function Overview({
   workspace: w,
   go,
+  onChooseExample,
 }: {
   workspace: Workspace;
   go: (p: Page) => void;
+  onChooseExample: () => void;
 }) {
   const q = w.questionnaire;
   const progress = completion(q).filter(Boolean).length * 20;
@@ -31,6 +33,15 @@ export default function Overview({
   const total = q.assets.reduce((sum, a) => sum + a.value, 0);
   const documents = w.packet?.documents ?? [];
   const started = !!q.household;
+  const complete = progress === 100;
+  const unvalued = q.assets.filter((a) => !a.value).length;
+  // Zero is the placeholder for a value the documents do not state, so it is never shown as $0.
+  const totalLabel = total
+    ? money(total) + (unvalued ? "+" : "")
+    : "Not stated";
+  const valueNote = unvalued
+    ? `${unvalued} of ${q.assets.length} values not stated in documents`
+    : "hypothetical values";
   return (
     <>
       <SectionHeading
@@ -69,12 +80,38 @@ export default function Overview({
             <br className="desktop-only" /> Capture their intentions, then see
             how the documents align.
           </p>
-          <button className="button light" onClick={() => go("questionnaire")}>
-            {started ? "Continue questionnaire" : "Start a household review"}
-            <ArrowRight size={16} />
-          </button>
+          {started ? (
+            <button
+              className="button light"
+              onClick={() => go(complete ? "review" : "questionnaire")}
+            >
+              {complete
+                ? "See what needs a conversation"
+                : "Continue questionnaire"}
+              <ArrowRight size={16} />
+            </button>
+          ) : (
+            <button className="button light" onClick={onChooseExample}>
+              Explore an example household
+              <ArrowRight size={16} />
+            </button>
+          )}
           <span className="welcome-footnote">
-            Five guided steps <span>·</span> Progress saved as you go
+            {started ? (
+              <>
+                Five guided steps <span>·</span> Progress saved as you go
+              </>
+            ) : (
+              <>
+                Three prepared households <span>·</span>{" "}
+                <button
+                  className="welcome-link"
+                  onClick={() => go("questionnaire")}
+                >
+                  or start your own
+                </button>
+              </>
+            )}
           </span>
         </div>
         <div className="welcome-art" aria-hidden="true">
@@ -108,10 +145,10 @@ export default function Overview({
         <Stat
           icon={<Wallet size={19} />}
           label="HOUSEHOLD ASSETS"
-          value={q.assets.length ? money(total) : "—"}
+          value={q.assets.length ? totalLabel : "—"}
           detail={
             q.assets.length
-              ? `${q.assets.length} assets · hypothetical values`
+              ? `${q.assets.length} ${q.assets.length === 1 ? "asset" : "assets"} · ${valueNote}`
               : "Add the assets that tell the story"
           }
           onClick={() => go("questionnaire")}
@@ -122,7 +159,7 @@ export default function Overview({
           value={String(documents.length).padStart(2, "0")}
           detail={
             documents.length
-              ? `${verified.length} quotes verified against pages`
+              ? `${verified.length} ${verified.length === 1 ? "quote" : "quotes"} verified against pages`
               : "Ready for your first document"
           }
           onClick={() => go("documents")}
@@ -308,7 +345,7 @@ export default function Overview({
               </strong>
               <span>
                 {q.assets.length
-                  ? `${money(total)} · hypothetical`
+                  ? `${totalLabel} · ${unvalued ? "some values not stated" : "hypothetical"}`
                   : "Accounts, property & interests"}
               </span>
             </div>

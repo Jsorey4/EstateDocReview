@@ -32,11 +32,37 @@ test("settings and documents use example selection without file inputs", async (
   await page
     .getByRole("button", { name: "Start new household", exact: true })
     .click();
+  // Nothing would be lost, so no confirmation is needed.
   await page.getByRole("button", { name: "Start an empty household" }).click();
+  await expect(page).toHaveURL(/#questionnaire$/);
+});
+
+test("choosing a scenario opens its completed questionnaire, and edits are protected", async ({
+  page,
+}) => {
+  await page.goto("/#overview");
+  await page
+    .getByRole("button", { name: "Explore an example household" })
+    .click();
+  await page.locator(".example-choice").first().click();
+  await expect(page).toHaveURL(/#questionnaire$/);
+  await expect(page.getByText("5 of 5 complete")).toBeVisible();
+  await expect(page.getByLabel("Household name *")).toHaveValue(
+    "Pendelton household",
+  );
+  await expect(page.locator(".toast")).toContainText("1 item needs discussion");
+  await page
+    .getByLabel("Household name *")
+    .fill("Pendelton household (edited)");
+  await page.locator(".household-switch").click();
+  await page.locator(".household-dropdown .example-choice").nth(1).click();
+  await expect(
+    page.getByRole("dialog", { name: "Start this household?" }),
+  ).toBeVisible();
   await page
     .getByRole("button", { name: "Start household", exact: true })
     .click();
-  await expect(page).toHaveURL(/#questionnaire$/);
+  await expect(page.locator(".household-switch")).toContainText("Montgomery");
 });
 
 test("household dropdown lists three examples and report numbers exceed heading size", async ({

@@ -45,10 +45,8 @@ test("judges can load each prefilled PDF scenario", async ({ page }) => {
     const choice = page.locator(".example-choice").nth(i);
     await expect(choice).toBeEnabled();
     await choice.click();
-    await page
-      .getByRole("button", { name: "Start household", exact: true })
-      .click();
     await expect(page.locator(".household-switch")).toContainText(name);
+    await expect(page).toHaveURL(/#questionnaire$/);
     await page.goto("/#documents");
     await expect(page.locator(".document-row")).toHaveCount(i === 2 ? 6 : 5);
   }

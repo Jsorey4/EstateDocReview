@@ -64,6 +64,8 @@ export default function App() {
   const [examplesOpen, setExamplesOpen] = useState(false);
   const [householdMenu, setHouseholdMenu] = useState(false);
   const [questionnaireStep, setQuestionnaireStep] = useState(0);
+  // Remounts the questionnaire whenever a household is loaded, even the same one twice.
+  const [loadCount, setLoadCount] = useState(0);
   const pageRef = useRef<HTMLElement>(null);
   const findings = reviewItems(workspace);
   const openCount = findings.filter(
@@ -104,6 +106,23 @@ export default function App() {
     if (next !== "questionnaire") setQuestionnaireStep(0);
     location.hash = next;
     setMobileOpen(false);
+  };
+  // Every example chooser lands on the prefilled questionnaire so the client's answers come first.
+  const loadHousehold = (next: Workspace) => {
+    setWorkspace(next);
+    setStorageBlocked(false);
+    setHouseholdMenu(false);
+    setExamplesOpen(false);
+    setQuestionnaireStep(0);
+    setLoadCount((n) => n + 1);
+    location.hash = "questionnaire";
+    setMobileOpen(false);
+    const items = reviewItems(next).length;
+    setMessage(
+      next.questionnaire.household
+        ? `${next.questionnaire.household} loaded with the client’s questionnaire answers. ${items} ${items === 1 ? "item needs" : "items need"} discussion in the review queue.`
+        : "Empty household started.",
+    );
   };
   const exportBackup = () =>
     download(
@@ -158,12 +177,9 @@ export default function App() {
         {householdMenu && (
           <ExamplePicker
             inline
+            current={workspace}
             onClose={() => setHouseholdMenu(false)}
-            onSelect={(next) => {
-              setWorkspace(next);
-              setStorageBlocked(false);
-              setHouseholdMenu(false);
-            }}
+            onSelect={loadHousehold}
           />
         )}
         <nav aria-label="Main navigation">
@@ -256,10 +272,16 @@ export default function App() {
           </div>
         )}
         <main id="main-content" ref={pageRef} tabIndex={-1}>
-          {page === "overview" && <Overview workspace={workspace} go={go} />}
+          {page === "overview" && (
+            <Overview
+              workspace={workspace}
+              go={go}
+              onChooseExample={() => setExamplesOpen(true)}
+            />
+          )}
           {page === "questionnaire" && (
             <Questionnaire
-              key={workspace.questionnaire.household}
+              key={`${loadCount}:${workspace.questionnaire.household}`}
               initialStep={questionnaireStep}
               value={workspace.questionnaire}
               onChange={(q) =>
@@ -426,14 +448,9 @@ export default function App() {
       )}
       {examplesOpen && (
         <ExamplePicker
+          current={workspace}
           onClose={() => setExamplesOpen(false)}
-          onSelect={(next) => {
-            setWorkspace(next);
-            setStorageBlocked(false);
-            setExamplesOpen(false);
-            setQuestionnaireStep(0);
-            go("questionnaire");
-          }}
+          onSelect={loadHousehold}
         />
       )}
     </div>

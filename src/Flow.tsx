@@ -92,7 +92,13 @@ export default function Flow({
                         <strong>{a.name || "Unnamed asset"}</strong>
                         <small>{a.type}</small>
                         <span>
-                          {money(a.value)} <small>hypothetical</small>
+                          {a.value ? (
+                            <>
+                              {money(a.value)} <small>hypothetical</small>
+                            </>
+                          ) : (
+                            <small>Value not stated</small>
+                          )}
                         </span>
                       </div>
                       <div className="node-connector">
@@ -106,7 +112,7 @@ export default function Flow({
                         <small>Client reported · unconfirmed</small>
                         <span className="node-status">
                           {evidence.length
-                            ? `${evidence.length} supporting facts`
+                            ? `${evidence.length} supporting ${evidence.length === 1 ? "fact" : "facts"}`
                             : "Awaiting document evidence"}
                         </span>
                       </div>
@@ -270,8 +276,11 @@ export default function Flow({
           onClose={() => setSelected(null)}
         >
           <div className="asset-detail-total">
-            {money(selected.value)}
-            <small>Hypothetical value · {selected.type}</small>
+            {selected.value ? money(selected.value) : "Not stated"}
+            <small>
+              {selected.value ? "Hypothetical value" : "Value not in documents"}{" "}
+              · {selected.type}
+            </small>
           </div>
           <div className="detail-grid">
             <div>

@@ -211,7 +211,7 @@ export default function Questionnaire({
                     placeholder="Name or role"
                   />
                 </Field>
-                <Field label="Client name (backend client.name)">
+                <Field label="Client name">
                   <input
                     value={q.clientName}
                     onChange={(e) => update({ clientName: e.target.value })}

@@ -2,8 +2,15 @@
   "version": 1,
   "questionnaire": {
     "clientName": "Arthur Pendelton",
-    "asOf": "",
-    "marriages": [],
+    "asOf": "2026-10-26",
+    "marriages": [
+      {
+        "spouse": "Eleanor Vance Pendelton",
+        "married": "",
+        "ended": "",
+        "how_ended": ""
+      }
+    ],
     "intended_beneficiaries": [
       {
         "name": "Eleanor Vance Pendelton",
@@ -18,7 +25,7 @@
       "other"
     ],
     "household": "Pendelton household",
-    "respondent": "Document-based prefill \u2014 confirm with client",
+    "respondent": "Arthur Pendelton (example client)",
     "maritalStatus": "Married",
     "spouse": "Eleanor Vance Pendelton",
     "state": "Texas",
@@ -28,29 +35,41 @@
         "id": "eleanor-vance-pendelton",
         "name": "Eleanor Vance Pendelton",
         "relationship": "spouse",
-        "status": "unknown",
-        "note": "Prefilled from PDF; confirm current status."
+        "relationshipKind": "spouse",
+        "status": "living",
+        "note": "Named in the supplied PDFs."
       },
       {
         "id": "chloe-pendelton",
         "name": "Chloe Pendelton",
         "relationship": "child",
-        "status": "unknown",
-        "note": "Prefilled from PDF; confirm current status."
+        "relationshipKind": "child",
+        "status": "living",
+        "note": "Named in the supplied PDFs."
       },
       {
         "id": "liam-pendelton",
         "name": "Liam Pendelton",
         "relationship": "child",
-        "status": "unknown",
-        "note": "Prefilled from PDF; confirm current status."
+        "relationshipKind": "child",
+        "status": "living",
+        "note": "Named in the supplied PDFs."
       },
       {
         "id": "julian-m.-pendelton",
         "name": "Julian M. Pendelton",
         "relationship": "brother",
-        "status": "unknown",
-        "note": "Prefilled from PDF; confirm current status."
+        "relationshipKind": "other",
+        "status": "living",
+        "note": "Named in the supplied PDFs."
+      },
+      {
+        "id": "clara-vance",
+        "name": "Clara Vance",
+        "relationship": "sister-in-law",
+        "relationshipKind": "other",
+        "status": "living",
+        "note": "Named in the supplied PDFs."
       }
     ],
     "assets": [
@@ -135,10 +154,10 @@
     ],
     "executor": "Eleanor Vance Pendelton",
     "trustee": "",
-    "agent": "",
+    "agent": "Eleanor Vance Pendelton",
     "intentions": "Provide for Eleanor first, with Chloe and Liam as contingent beneficiaries; confirm against the client\u2019s current wishes.",
-    "concerns": "Prefilled from the supplied PDFs, not an independent client interview. Confirm missing dates, living status, and current intentions.",
-    "reviewed": false
+    "concerns": "Example household for demonstration. Answers were prepared from the supplied PDFs; marriage dates are not in the documents.",
+    "reviewed": true
   },
   "packet": {
     "schemaVersion": 1,
@@ -258,8 +277,68 @@
         "subjectId": "household",
         "field": "executor",
         "value": "Eleanor Vance Pendelton",
-        "quote": "Section 5.01 Nomination of Executor. I nominate and appoint Eleanor Vance Pendelton, of \nAustin, Texas, as Independent Executor",
+        "quote": "Section 5.01 Nomination of Executor. I nominate and appoint Eleanor Vance Pendelton, of \nAustin, Texas, as Independent Executor of this my Last Will and Testament. If Eleanor Vance \nPendelton is unable or unwilling to serve, I nominate and appoint Julian M. Pendelton, of \nAtlanta, Georgia, as Alternate Independent Executor.",
         "page": 2,
+        "verification": "verified"
+      },
+      {
+        "id": "case1-fact-1",
+        "documentId": "Case1_02_Transfer_on_Death_Deed_Arthur_Pendelton",
+        "subjectId": "case1-asset-0",
+        "field": "beneficiary",
+        "value": "Eleanor Vance Pendelton",
+        "quote": "I designate the following person as Primary Beneficiary to receive all of my right, title, and \ninterest in the described real property upon my death:\n\u2022 Full Legal Name: Eleanor Vance Pendelton",
+        "page": 1,
+        "verification": "verified"
+      },
+      {
+        "id": "case1-fact-2",
+        "documentId": "Case1_03_Beneficiary_Designation_Schedule_Arthur_Pendelton",
+        "subjectId": "case1-asset-1",
+        "field": "beneficiary",
+        "value": "Eleanor Vance Pendelton",
+        "quote": "Lone Star State \nBank \nChecking/Saving\ns\nx[4091] POD (Payable \non Death)\nEleanor Vance \nPendelton \n(100%)",
+        "page": 1,
+        "verification": "verified"
+      },
+      {
+        "id": "case1-fact-3",
+        "documentId": "Case1_03_Beneficiary_Designation_Schedule_Arthur_Pendelton",
+        "subjectId": "case1-asset-2",
+        "field": "beneficiary",
+        "value": "Eleanor Vance Pendelton",
+        "quote": "Austin Capital \nBrokerage \nIndividual\nx[8832] TOD (Transfer \non Death)\nEleanor Vance \nPendelton \n(100%)",
+        "page": 1,
+        "verification": "verified"
+      },
+      {
+        "id": "case1-fact-4",
+        "documentId": "Case1_03_Beneficiary_Designation_Schedule_Arthur_Pendelton",
+        "subjectId": "case1-asset-3",
+        "field": "beneficiary",
+        "value": "Eleanor Vance Pendelton",
+        "quote": "Apex Global \nEmployer 401(k)\nx[3104] Plan Beneficiary Eleanor Vance \nPendelton \n(100%)",
+        "page": 1,
+        "verification": "verified"
+      },
+      {
+        "id": "case1-fact-5",
+        "documentId": "Case1_03_Beneficiary_Designation_Schedule_Arthur_Pendelton",
+        "subjectId": "case1-asset-4",
+        "field": "beneficiary",
+        "value": "Eleanor Vance Pendelton",
+        "quote": "Vanguard \nTraditional IRA\nx[9012] Plan Beneficiary Eleanor Vance \nPendelton \n(100%)",
+        "page": 1,
+        "verification": "verified"
+      },
+      {
+        "id": "case1-fact-6",
+        "documentId": "Case1_03_Beneficiary_Designation_Schedule_Arthur_Pendelton",
+        "subjectId": "case1-asset-5",
+        "field": "beneficiary",
+        "value": "Eleanor Vance Pendelton",
+        "quote": "Texas Mutual \nTerm Life Policy\nx[7755] Policy \nBeneficiary\nEleanor Vance \nPendelton \n(100%)",
+        "page": 1,
         "verification": "verified"
       }
     ],

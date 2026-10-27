@@ -1,6 +1,12 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
-import { workspaceSchema, parsePacket, reviewItems } from "../src/domain";
+import {
+  completion,
+  parsePacket,
+  reviewItems,
+  verifiedFacts,
+  workspaceSchema,
+} from "../src/domain";
 const load = (name: string) => {
   const w = workspaceSchema.parse(
     JSON.parse(readFileSync(`public/examples/${name}.json`, "utf8")),
@@ -40,5 +46,51 @@ describe("prepared PDF scenarios", () => {
       "Beatrice Vance",
       "Julian M. Montgomery",
     ]);
+  });
+  it("opens every case with a completed client questionnaire", () => {
+    for (const id of ["case1", "case2", "case3"]) {
+      const q = load(id).questionnaire;
+      expect(completion(q).every(Boolean)).toBe(true);
+      expect(q.respondent).toContain("example client");
+      expect(q.people.every((p) => p.status !== "unknown")).toBe(true);
+    }
+  });
+  it("produces only the authorized demo findings, with no false alarms", () => {
+    const summary = (id: string) =>
+      reviewItems(load(id))
+        .map((f) => `${f.type}:${f.title}`)
+        .sort();
+    expect(summary("case1")).toEqual([
+      "discrepancy:Executor differs from questionnaire",
+    ]);
+    expect(summary("case2")).toEqual([
+      "discrepancy:Executor differs from questionnaire",
+      "unresolved:Conflicting trustee records",
+    ]);
+    expect(summary("case3")).toEqual([
+      "discrepancy:Trustee differs from questionnaire",
+    ]);
+  });
+  it("verifies every Case 1 asset beneficiary against a quoted page", () => {
+    const w = load("case1");
+    const assetFacts = verifiedFacts(w.packet).filter((f) =>
+      f.subjectId.startsWith("case1-asset-"),
+    );
+    expect(new Set(assetFacts.map((f) => f.subjectId)).size).toBe(
+      w.questionnaire.assets.length,
+    );
+  });
+  it("notes when the questionnaire's name appears in the quote in another role", () => {
+    for (const id of ["case1", "case2"]) {
+      const executor = reviewItems(load(id)).find((f) =>
+        f.title.startsWith("Executor"),
+      )!;
+      expect(executor.uncertainty).toContain(
+        "also appears in the quoted passage",
+      );
+    }
+    const trustee = reviewItems(load("case3"))[0];
+    expect(new Set(trustee.facts.map((f) => f.documentId)).size).toBe(4);
+    expect(trustee.uncertainty).not.toContain("also appears");
   });
 });

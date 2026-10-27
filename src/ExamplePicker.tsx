@@ -8,34 +8,46 @@ const examples = [
     id: "case1",
     title: "Simple & straightforward estate",
     description:
-      "Pendelton household · questionnaire executor differs from the will.",
+      "Pendelton household · will, TOD deed, beneficiary schedule, and incapacity documents.",
   },
   {
     id: "case2",
     title: "Medium complexity estate",
     description:
-      "Montgomery household · trust and certificate name different successors.",
+      "Montgomery household · blended family, revocable trust, and sub-trusts.",
   },
   {
     id: "case3",
     title: "Complex estate",
     description:
-      "Thorne household · specialized agreements for document inspection.",
+      "Thorne household · FLP, ILIT, SLAT, GRAT, buy-sell, and charitable trust.",
   },
 ];
 
 export default function ExamplePicker({
   inline = false,
+  current,
   onSelect,
   onClose,
 }: {
   inline?: boolean;
+  current: Workspace;
   onSelect: (workspace: Workspace) => void;
   onClose: () => void;
 }) {
   const [loaded, setLoaded] = useState<Record<string, Workspace>>({});
   const [loading, setLoading] = useState(true);
   const [pending, setPending] = useState<Workspace | null>(null);
+  // Ask before replacing only when the current household holds work that would be lost.
+  const choose = (next: Workspace) => {
+    const q = current.questionnaire;
+    const blank = !q.household && !q.people.length && !q.assets.length;
+    const unedited = Object.values(loaded).some(
+      (example) => JSON.stringify(example) === JSON.stringify(current),
+    );
+    if (blank || unedited) onSelect(next);
+    else setPending(next);
+  };
   useEffect(() => {
     let live = true;
     void Promise.all(
@@ -74,7 +86,7 @@ export default function ExamplePicker({
           key={id}
           className="example-choice"
           disabled={!loaded[id]}
-          onClick={() => setPending(structuredClone(loaded[id]))}
+          onClick={() => choose(structuredClone(loaded[id]))}
         >
           <strong>
             {index + 1}. {title}
@@ -89,7 +101,7 @@ export default function ExamplePicker({
       ))}
       <button
         className="button secondary full"
-        onClick={() => setPending(emptyWorkspace())}
+        onClick={() => choose(emptyWorkspace())}
       >
         Start an empty household
       </button>

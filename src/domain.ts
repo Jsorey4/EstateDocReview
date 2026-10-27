@@ -532,6 +532,17 @@ export function reconcile(q: Questionnaire, packet: Packet | null): Finding[] {
         p.status === "deceased" &&
         evidence.some((f) => normalize(f.value) === normalize(p.name)),
     );
+    const household = subject.id === "household";
+    const source = (f: Fact) =>
+      packet?.documents.find((d) => d.id === f.documentId)?.title ??
+      "The document";
+    const names = [...new Set(evidence.map((f) => f.value))];
+    // The questionnaire's name can sit in the same passage in another role, such as an alternate.
+    const alsoQuoted =
+      !!subject.expected.trim() &&
+      evidence.some((f) =>
+        normalize(f.quote).includes(normalize(subject.expected)),
+      );
     const fingerprint = evidence
       .map((f) => `${f.documentId}:${f.page}:${f.value}:${f.quote}`)
       .sort()
@@ -543,11 +554,11 @@ export function reconcile(q: Questionnaire, packet: Packet | null): Finding[] {
         ? `Conflicting ${subject.field} records`
         : `${subject.field[0].toUpperCase() + subject.field.slice(1)} differs from questionnaire`,
       observation: ambiguous
-        ? `${subject.label} has different ${subject.field} names in the supplied records.`
-        : `${subject.label} names “${evidence[0].value}” in the document; the questionnaire names “${subject.expected}”.`,
+        ? `The supplied records name different ${subject.field}s${household ? "" : ` for ${subject.label}`}: ${names.map((n) => `“${n}”`).join(" and ")}.`
+        : `${source(evidence[0])} names “${evidence[0].value}” as ${subject.field}${household ? "" : ` for ${subject.label}`}${evidence.length > 1 ? `, as do ${evidence.length - 1} other quoted ${evidence.length === 2 ? "passage" : "passages"}` : ""}; the questionnaire names “${subject.expected}”.`,
       uncertainty: ambiguous
         ? "Multiple names may reflect co-appointments, shares, conditions, or different document versions. Confirm the role and document precedence; no record is assumed to supersede another."
-        : `A name difference may reflect aliases, incomplete records, or a deliberate choice.${dead ? " The questionnaire also reports this person as deceased." : ""} Legal effect has not been determined.`,
+        : `A name difference may reflect aliases, incomplete records, or a deliberate choice.${alsoQuoted ? ` “${subject.expected}” also appears in the quoted passage, possibly in another role such as alternate or successor.` : ""}${dead ? " The questionnaire also reports this person as deceased." : ""} Legal effect has not been determined.`,
       question: `Confirm the current ${subject.field} record and the client’s intention. Which record is in effect? Refer questions about legal effect to an estate attorney.`,
       facts: evidence,
       expected: subject.expected,

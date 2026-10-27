@@ -153,7 +153,7 @@ export default function Report({
                   {q.assets.map((a) => (
                     <tr key={a.id}>
                       <td>{a.name || "Unnamed asset"}</td>
-                      <td>{money(a.value)}</td>
+                      <td>{a.value ? money(a.value) : "Not stated"}</td>
                       <td>{a.route}</td>
                       <td>{a.beneficiary || "To confirm"}</td>
                       <td>{a.note}</td>

@@ -4113,3 +4113,15 @@ footer {
     display: none;
   }
 }
+.welcome-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.welcome-footnote {
+  display: inline-block;
+}
