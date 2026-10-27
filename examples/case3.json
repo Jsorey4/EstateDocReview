@@ -1,0 +1,193 @@
+{
+  "version": 1,
+  "questionnaire": {
+    "clientName": "Victoria H. Thorne",
+    "asOf": "",
+    "marriages": [],
+    "intended_beneficiaries": [],
+    "documents_available": [
+      "other"
+    ],
+    "household": "Thorne household",
+    "respondent": "Document-based prefill \u2014 confirm with client",
+    "maritalStatus": "Married",
+    "spouse": "Alistair C. Thorne",
+    "state": "Texas",
+    "events": [],
+    "people": [
+      {
+        "id": "alistair-c.-thorne",
+        "name": "Alistair C. Thorne",
+        "relationship": "spouse",
+        "status": "unknown",
+        "note": "Prefilled from PDF; confirm current status."
+      },
+      {
+        "id": "julian-thorne",
+        "name": "Julian Thorne",
+        "relationship": "child",
+        "status": "unknown",
+        "note": "Prefilled from PDF; confirm current status."
+      },
+      {
+        "id": "clara-thorne",
+        "name": "Clara Thorne",
+        "relationship": "child",
+        "status": "unknown",
+        "note": "Prefilled from PDF; confirm current status."
+      },
+      {
+        "id": "samuel-t.-sterling",
+        "name": "Samuel T. Sterling",
+        "relationship": "other",
+        "status": "unknown",
+        "note": "Prefilled from PDF; confirm current status."
+      }
+    ],
+    "assets": [
+      {
+        "id": "case3-asset-0",
+        "name": "Thorne Holdings, L.P. interests",
+        "type": "Business interest",
+        "governing_document": "Case3_01_Family_Limited_Partnership_Thorne",
+        "value": 0,
+        "owner": "",
+        "beneficiary": "",
+        "route": "Unknown",
+        "character": "unknown",
+        "retirementKind": "retirement_401k",
+        "note": "Document-based prefill. Value not supplied; 0 is a placeholder, not a valuation."
+      },
+      {
+        "id": "case3-asset-1",
+        "name": "Thorne Enterprises, Inc. shares",
+        "type": "Business interest",
+        "governing_document": "Case3_05_Buy_Sell_Agreement_and_Recapitalization_Thorne",
+        "value": 0,
+        "owner": "",
+        "beneficiary": "",
+        "route": "Unknown",
+        "character": "unknown",
+        "retirementKind": "retirement_401k",
+        "note": "Document-based prefill. Value not supplied; 0 is a placeholder, not a valuation."
+      }
+    ],
+    "executor": "",
+    "trustee": "",
+    "agent": "",
+    "intentions": "Coordinate family business succession, multigenerational trusts, estate liquidity, and charitable giving. Confirm each trust\u2019s distinct roles and terms.",
+    "concerns": "Prefilled from the supplied PDFs, not an independent client interview. Confirm missing dates, living status, and current intentions. These specialized agreements exceed the current automatic name-comparison coverage; an empty queue does not confirm cross-document consistency.",
+    "reviewed": false
+  },
+  "packet": {
+    "schemaVersion": 1,
+    "documents": [
+      {
+        "id": "Case3_01_Family_Limited_Partnership_Thorne",
+        "title": "Family Limited Partnership Thorne",
+        "kind": "Other",
+        "date": "2026-11-15",
+        "source": "user_supplied",
+        "sha256": "b0acb8cc46393a52d07853825b6415b872bf20e786b1a46861c13fffc423d522",
+        "pages": [
+          {
+            "page": 1,
+            "text": "AGREEMENT OF LIMITED PARTNERSHIP OF THORNE \nHOLDINGS, L.P.\nA Family Limited Partnership for Multi-Generational Asset Management & Valuation \nDiscount Planning\nTHIS AGREEMENT OF LIMITED PARTNERSHIP is made and entered into effective as of the \n15th day of November, 2026, by and among Thorne Management, LLC, a Texas limited liability \ncompany, as the General Partner, and VICTORIA H. THORNE, ALISTAIR C. THORNE, and the \nfamily trusts listed on Schedule A attached hereto, as the Limited Partners.\nArticle I: FORMATION, NON-TAX BUSINESS PURPOSE & PRINCIPAL \nOFFICE\nSection 1.01 Formation Under State Act. The Partners hereby form a limited partnership \npursuant to the Texas Business Organizations Code upon the filing of a Certificate of Formation \nwith the Secretary of State of Texas.\nSection 1.02 Legitimate Non-Tax Business Purposes. The Partnership is established for \nsubstantial, bona fide non-tax business and investment purposes, including: consolidating \ncommercial real estate and private equity holdings; establishing centralized multi-generational \ninvestment governance; and protecting enterprise assets from judgment creditors.\nArticle II: CAPITAL CONTRIBUTIONS & UNIT STRUCTURE\nSection 2.01 Initial Capital Contributions & Unit Classes. Each Partner has contributed \nproperty in exchange for Units:\n\u2022 Class A GP Voting Units (1.00%): Held by Thorne Management, LLC (100% management \ncontrol).\n\u2022 Class B LP Non-Voting Units (99.00%): Held by Limited Partners, carrying zero voting rights.\nArticle III: MANAGEMENT & PRO-RATA DISTRIBUTIONS\nSection 3.01 Management & Distributions. The General Partner shall have sole authority to \nmanage operations and investments. All distributions shall be made strictly PRO RATA among \nall Partners in accordance with their respective Percentage Interests.\nArticle IV: TRANSFER RESTRICTIONS & RIGHT OF FIRST REFUSAL\nSection 4.01 Transfer Restrictions & ROFR. No Limited Partner may transfer LP Units without \nGP consent. The Partnership retains a 90-day Right of First Refusal at appraised Fair Market \nValue with applicable minority and lack-of-marketability discounts."
+          },
+          {
+            "page": 2,
+            "text": "SCHEDULE A \u2014 CAPITAL CONTRIBUTIONS & PARTNERSHIP UNIT \nLEDGER\nPartner Name Unit Class % Interest Contributed Asset \n& Value\nThorne Management, \nLLC\nClass A GP (Voting) 1.00% Cash GP \nContribution \n($150,000)\nVictoria H. Thorne \nRevocable Trust\nClass B LP (Non-\nVoting)\n39.00% Houston Commercial \nRE Portfolio \n($5,850,000)\nThe Thorne Dynasty \nTrust\nClass B LP (Non-\nVoting)\n30.00% Gifted/Sold LP Units \n($4,500,000)\nThe Thorne Spousal \nLifetime Access Trust\nClass B LP (Non-\nVoting)\n30.00% Gifted/Sold LP Units \n($4,500,000)\nIN WITNESS WHEREOF, the General Partner and Limited Partners have executed this \nAgreement on November 15, 2026.\n__________________________________________________\nVICTORIA H. THORNE, Managing Member, Thorne Management, LLC\n__________________________________________________\nALISTAIR C. THORNE, Limited Partner & Trustee"
+          }
+        ],
+        "pdfPath": "examples/pdfs/Case3_01_Family_Limited_Partnership_Thorne.pdf"
+      },
+      {
+        "id": "Case3_02_Irrevocable_Life_Insurance_Trust_Thorne",
+        "title": "Irrevocable Life Insurance Trust Thorne",
+        "kind": "Other",
+        "date": "2026-11-15",
+        "source": "user_supplied",
+        "sha256": "28b9cae713ce9dc81c924ecf1a7317b14c267b46c6fd70e8d571464fedb4642f",
+        "pages": [
+          {
+            "page": 1,
+            "text": "THE THORNE IRREVOCABLE LIFE INSURANCE TRUST (ILIT)\nSecond-to-Die / Survivorship Estate Liquidity Trust with Crummey Mechanics\nTHIS IRREVOCABLE LIFE INSURANCE TRUST AGREEMENT is made this 15th day of \nNovember, 2026, by and between VICTORIA H. THORNE and ALISTAIR C. THORNE, of \nHouston, Texas (the \"Grantors\"), and SAMUEL T. STERLING (the \"Independent Trustee\").\nArticle I: IRREVOCABILITY & RELINQUISHMENT OF INCIDENTS OF \nOWNERSHIP\nSection 1.01 Irrevocability & IRC \u00a7 2042 Safe Harbor. This Trust is strictly IRREVOCABLE. \nThe Grantors permanently relinquish all incidents of ownership under IRC \u00a7 2042 in any life \ninsurance policy held by the Trust.\nArticle II: ACQUISITION OF SURVIRORSHIP LIFE INSURANCE POLICY\nSection 2.01 Survivorship Policy Acquisition. The Trustee is authorized to apply directly as \nowner and beneficiary for a $10,000,000 survivorship life insurance policy on the lives of the \nGrantors to avoid the IRC \u00a7 2035 3-year rule.\nArticle III: CRUMMEY DEMAND WITHDRAWAL RIGHTS\nSection 3.01 Crummey Withdrawal Rights & Hanging Powers. Living children and \ngrandchildren (Crummey Beneficiaries) have an immediate 30-day right to withdraw annual \ncontributions up to statutory gift exclusion limits. Lapses are governed by the 5-and-5 Hanging \nPower rules under IRC \u00a7 2514(e).\nArticle IV: ESTATE TAX LIQUIDITY LOANS & ASSET PURCHASES\nSection 4.01 Estate Liquidity Provisions. To preserve family real estate and business assets \nfrom forced liquidation upon death, the Trustee is authorized to purchase illiquid assets from or \nmake secured loans to the Grantors' probate estates or Revocable Living Trust.\nIN WITNESS WHEREOF, the Grantors and Independent Trustee have executed this \nAgreement on November 15, 2026.\n__________________________________________________\nVICTORIA H. THORNE, Grantor\n__________________________________________________\nALISTAIR C. THORNE, Grantor\n__________________________________________________\nSAMUEL T. STERLING, Independent Trustee"
+          }
+        ],
+        "pdfPath": "examples/pdfs/Case3_02_Irrevocable_Life_Insurance_Trust_Thorne.pdf"
+      },
+      {
+        "id": "Case3_03_SLAT_and_Dynasty_Trust_Thorne",
+        "title": "SLAT and Dynasty Trust Thorne",
+        "kind": "Other",
+        "date": "2026-11-15",
+        "source": "user_supplied",
+        "sha256": "185c5b8a0c0d60c28035f9159f3333eabb217d9ecbd6638fedc194ee4b688a82",
+        "pages": [
+          {
+            "page": 1,
+            "text": "THE THORNE SPOUSAL LIFETIME ACCESS & DYNASTY \nTRUST\nA GST-Exempt Multi-Generational Irrevocable Grantor Trust (South Dakota Domicile)\nTHIS IRREVOCABLE SPOUSAL LIFETIME ACCESS AND DYNASTY TRUST AGREEMENT is \nmade this 15th day of November, 2026, by and between VICTORIA H. THORNE, of Houston, \nTexas (the \"Grantor\"), SAMUEL T. STERLING as Distribution Trustee, and South Dakota Trust \nCompany LLC as Administrative Trustee.\nArticle I: IRREVOCABILITY & RECIPROCAL TRUST DOCTRINE \nCOMPLIANCE\nSection 1.01 Irrevocable Gift & Non-Reciprocal Drafting. Funded exclusively with Grantor's \nseparate Class B LP Units in Thorne Holdings, L.P. Structured with distinct administrative terms \nunder United States v. Estate of Grace to comply with the Reciprocal Trust Doctrine.\nArticle II: LIFETIME SPOUSAL ACCESS PERIOD (SLAT PHASE)\nSection 2.01 Spousal Access & Divorce Cutoff. During the lifetime of Beneficiary Spouse \nALISTAIR C. THORNE, the Independent Distribution Trustee may distribute income/principal for \nHEMS or in sole discretion. Spousal status terminates automatically upon divorce filing.\nArticle III: PERPETUAL MULTI-GENERATIONAL DYNASTY TRUST\nSection 3.01 South Dakota Dynasty Situs. Upon the death of the Beneficiary Spouse, assets \ndivide into perpetual GST-exempt Dynasty Sub-Trusts for descendants, governed under South \nDakota law abolishing the Rule Against Perpetuities.\nArticle IV: INTENTIONALLY DEFECTIVE GRANTOR TRUST (IDGT) POWERS\nSection 4.01 IDGT Substitution Power. Grantor retains nonfiduciary substitution powers under \nIRC \u00a7 675(4)(C), causing IDGT tax status to allow income tax payments and tax-free asset \ntransfers.\nIN WITNESS WHEREOF, the Grantor and Trustees have executed this Agreement on \nNovember 15, 2026.\n__________________________________________________\nVICTORIA H. THORNE, Grantor\n__________________________________________________\nSAMUEL T. STERLING, Distribution Trustee"
+          },
+          {
+            "page": 2,
+            "text": "__________________________________________________\nBEATRICE MONROE, Authorized Officer, South Dakota Trust Company LLC"
+          }
+        ],
+        "pdfPath": "examples/pdfs/Case3_03_SLAT_and_Dynasty_Trust_Thorne.pdf"
+      },
+      {
+        "id": "Case3_04_Grantor_Retained_Annuity_Trust_Thorne",
+        "title": "Grantor Retained Annuity Trust Thorne",
+        "kind": "Other",
+        "date": "2026-11-15",
+        "source": "user_supplied",
+        "sha256": "dfe064d7587f53e0e460a540d84c964b555d46e8bb4d20d2d702b80e4147ee12",
+        "pages": [
+          {
+            "page": 1,
+            "text": "THE VICTORIA H. THORNE 2026 ZEROED-OUT GRAT\nQualified Annuity Interest Estate-Freeze Trust Under IRC \u00a7 2702 & Treas. Reg. \u00a7 \n25.2702-3\nTHIS GRANTOR RETAINED ANNUITY TRUST AGREEMENT is made this 15th day of \nNovember, 2026, by and between VICTORIA H. THORNE (the \"Grantor\") and SAMUEL T. \nSTERLING (the \"Trustee\").\nArticle I: IRREVOCABILITY & INITIAL CONTRIBUTION\nSection 1.01 Irrevocability & Funding. Irrevocable 2-year GRAT funded with Class B LP Units \nof Thorne Holdings, L.P. Additional contributions are strictly prohibited.\nArticle II: ANNUITY TERM & ZEROED-OUT ANNUITY PAYOUT\nSection 2.01 Walton Zeroed-Out Structure. Pays mandatory annual annuity payments \ncalculated under Walton v. Commissioner to yield a near-zero taxable gift on Form 709 ($1.00 \ngift value) using the IRC \u00a7 7520 hurdle rate.\nAnnuity Year Defined % of Initial FMV Estimated Payout\nYear 1 48.6542% of Initial FMV $2,432,710\nYear 2 58.3850% of Initial FMV \n(120% of Yr 1)\n$2,919,250\nArticle III: DISPOSITION OF TAX-FREE APPRECIATION\nSection 3.01 Remainder Transfer. All growth in excess of the IRC \u00a7 7520 hurdle rate passes \ntax-free at term end to The Thorne Dynasty Trust.\nIN WITNESS WHEREOF, the Grantor and Trustee have executed this Agreement on November \n15, 2026.\n__________________________________________________\nVICTORIA H. THORNE, Grantor\n__________________________________________________\nSAMUEL T. STERLING, Trustee"
+          }
+        ],
+        "pdfPath": "examples/pdfs/Case3_04_Grantor_Retained_Annuity_Trust_Thorne.pdf"
+      },
+      {
+        "id": "Case3_05_Buy_Sell_Agreement_and_Recapitalization_Thorne",
+        "title": "Buy Sell Agreement and Recapitalization Thorne",
+        "kind": "Other",
+        "date": "2026-11-15",
+        "source": "user_supplied",
+        "sha256": "5ba6db73fc49837db60684abf3f8c0c20aa45258261c4ebb70f4b4690bc61f71",
+        "pages": [
+          {
+            "page": 1,
+            "text": "SHAREHOLDERS' BUY-SELL & RECAPITALIZATION \nAGREEMENT\nCross-Purchase / Wait-and-See Hybrid Succession Plan for Thorne Enterprises, Inc.\nTHIS BUY-SELL AND RECAPITALIZATION AGREEMENT is entered into this 15th day of \nNovember, 2026, by and among Thorne Enterprises, Inc., a Texas corporation, and its \nShareholders.\nArticle I: DUAL-CLASS EQUITY RECAPITALIZATION\nSection 1.01 Class A / Class B Dual Structure. Equity is divided into Class A Voting Common \nStock (5% vote, restricted to active operational children Julian Thorne and Clara Thorne) and \nClass B Non-Voting Common Stock (95% equity, held by non-active heirs and trusts).\nArticle II: WAIT-AND-SEE CROSS-PURCHASE (CONNELLY COMPLIANT)\nSection 2.01 Connelly Safe Harbor Priority. Structured to comply with Supreme Court ruling \nConnelly v. United States. Cross-purchase life insurance policies are owned by active \nshareholders (or an LLC) to prevent corporate valuation inflation.\nArticle III: VALUATION FORMULA & INSTALLMENT NOTE\nSection 3.01 Valuation & Installment Terms. Valuation established by independent ASA \nappraisal (IRC \u00a7 2703 compliant). Uninsured balance payable via 20% cash down payment and \n10-year AFR promissory note.\nShareholder Name Class A Voting Class B Non-Voting Cross-Purchase \nLife Policy\nVictoria H. Thorne 500 Shares (50%) 4,500 Shares Policy #TH-001 \n($10,000,000)\nJulian Thorne \n(Active)\n250 Shares (25%) 2,500 Shares Policy #TH-002 \n($5,000,000)\nClara Thorne (Active) 250 Shares (25%) 2,500 Shares Policy #TH-003 \n($5,000,000)\nIN WITNESS WHEREOF, the Company and Shareholders have executed this Agreement on \nNovember 15, 2026.\n__________________________________________________\nVICTORIA H. THORNE, President, Thorne Enterprises, Inc.\n__________________________________________________"
+          },
+          {
+            "page": 2,
+            "text": "JULIAN THORNE, Active Shareholder"
+          }
+        ],
+        "pdfPath": "examples/pdfs/Case3_05_Buy_Sell_Agreement_and_Recapitalization_Thorne.pdf"
+      },
+      {
+        "id": "Case3_06_Charitable_Remainder_Trust_Thorne",
+        "title": "Charitable Remainder Trust Thorne",
+        "kind": "Other",
+        "date": "2026-11-15",
+        "source": "user_supplied",
+        "sha256": "b01ff4a7428891bddb23a209cf08fd491d7db5ecec8d72b3f215068684a9bdb0",
+        "pages": [
+          {
+            "page": 1,
+            "text": "THE THORNE CHARITABLE REMAINDER TRUST \nAGREEMENT\nTax-Exempt Split-Interest Trust Under IRC \u00a7 664 (FLIP-CRUT Structure)\nTHIS CHARITABLE REMAINDER TRUST AGREEMENT is made this 15th day of November, \n2026, by and between VICTORIA H. THORNE and ALISTAIR C. THORNE (Donors), and \nSAMUEL T. STERLING (Trustee).\nArticle I: IRREVOCABILITY & FLIP-CRUT ELECTION\nSection 1.01 FLIP-CRUT Structure. Irrevocable tax-exempt split-interest trust under IRC \u00a7 664 \nmodeled on IRS Rev. Proc. 2005-52. Operates as NIMCRUT initially for appreciated \ncommercial property and FLIPS to a Standard 6.00% CRUT on January 1st post-sale.\nArticle II: UNITRUST PAYOUT & STATUTORY TESTS\nSection 2.01 Payout & Actuarial Tests. Pays 6.00% annual unitrust stream for joint lifetimes. \nMeets the statutory 10% minimum charitable remainder requirement under IRC \u00a7 664(d)(2)(D).\nArticle III: CHARITABLE REMAINDERMAN\nSection 3.01 Private Foundation Remainder. Upon death of the survivor, remaining principal \npasses 100% to The Thorne Family Private Foundation (IRC \u00a7 170(c) / \u00a7 2055(a) compliant).\nIN WITNESS WHEREOF, the Donors and Trustee have executed this Agreement on November \n15, 2026.\n__________________________________________________\nVICTORIA H. THORNE, Donor\n__________________________________________________\nALISTAIR C. THORNE, Donor\n__________________________________________________\nSAMUEL T. STERLING, Trustee"
+          }
+        ],
+        "pdfPath": "examples/pdfs/Case3_06_Charitable_Remainder_Trust_Thorne.pdf"
+      }
+    ],
+    "facts": [],
+    "verifiedBy": "verify_quotes.py"
+  },
+  "dispositions": {},
+  "backend": null
+}

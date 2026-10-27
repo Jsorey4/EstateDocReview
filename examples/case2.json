@@ -1,0 +1,296 @@
+{
+  "version": 1,
+  "questionnaire": {
+    "clientName": "Richard Sterling Montgomery",
+    "asOf": "",
+    "marriages": [],
+    "intended_beneficiaries": [],
+    "documents_available": [
+      "revocable_trust",
+      "will",
+      "other"
+    ],
+    "household": "Montgomery household",
+    "respondent": "Document-based prefill \u2014 confirm with client",
+    "maritalStatus": "Married",
+    "spouse": "Eleanor Vance Montgomery",
+    "state": "Texas",
+    "events": [],
+    "people": [
+      {
+        "id": "eleanor-vance-montgomery",
+        "name": "Eleanor Vance Montgomery",
+        "relationship": "spouse",
+        "status": "unknown",
+        "note": "Prefilled from PDF; confirm current status."
+      },
+      {
+        "id": "harrison-montgomery",
+        "name": "Harrison Montgomery",
+        "relationship": "child",
+        "status": "unknown",
+        "note": "Prefilled from PDF; confirm current status."
+      },
+      {
+        "id": "beatrice-vance",
+        "name": "Beatrice Vance",
+        "relationship": "stepchild",
+        "status": "unknown",
+        "note": "Prefilled from PDF; confirm current status."
+      },
+      {
+        "id": "ethan-montgomery",
+        "name": "Ethan Montgomery",
+        "relationship": "child",
+        "status": "unknown",
+        "note": "Prefilled from PDF; confirm current status."
+      },
+      {
+        "id": "julian-m.-montgomery",
+        "name": "Julian M. Montgomery",
+        "relationship": "other",
+        "status": "unknown",
+        "note": "Prefilled from PDF; confirm current status."
+      },
+      {
+        "id": "clara-vance",
+        "name": "Clara Vance",
+        "relationship": "other",
+        "status": "unknown",
+        "note": "Prefilled from PDF; confirm current status."
+      }
+    ],
+    "assets": [
+      {
+        "id": "case2-asset-0",
+        "name": "1042 River Oaks Blvd, Houston",
+        "type": "Real estate",
+        "governing_document": "Case2_01_Revocable_Living_Trust_Montgomery",
+        "value": 2450000,
+        "owner": "",
+        "beneficiary": "",
+        "route": "Revocable trust",
+        "character": "community",
+        "retirementKind": "retirement_401k",
+        "note": "Document-based prefill. Value transcribed from the PDF inventory; not independently valued."
+      },
+      {
+        "id": "case2-asset-1",
+        "name": "405 Ski Run Rd, Taos",
+        "type": "Real estate",
+        "governing_document": "Case2_01_Revocable_Living_Trust_Montgomery",
+        "value": 850000,
+        "owner": "",
+        "beneficiary": "",
+        "route": "Revocable trust",
+        "character": "community",
+        "retirementKind": "retirement_401k",
+        "note": "Document-based prefill. Value transcribed from the PDF inventory; not independently valued."
+      },
+      {
+        "id": "case2-asset-2",
+        "name": "Austin Capital joint brokerage x8841",
+        "type": "Investment account",
+        "governing_document": "Case2_01_Revocable_Living_Trust_Montgomery",
+        "value": 1200000,
+        "owner": "",
+        "beneficiary": "",
+        "route": "Revocable trust",
+        "character": "community",
+        "retirementKind": "retirement_401k",
+        "note": "Document-based prefill. Value transcribed from the PDF inventory; not independently valued."
+      },
+      {
+        "id": "case2-asset-3",
+        "name": "Richard Vanguard brokerage x3302",
+        "type": "Investment account",
+        "governing_document": "Case2_01_Revocable_Living_Trust_Montgomery",
+        "value": 650000,
+        "owner": "",
+        "beneficiary": "",
+        "route": "Revocable trust",
+        "character": "separate",
+        "retirementKind": "retirement_401k",
+        "note": "Document-based prefill. Value transcribed from the PDF inventory; not independently valued."
+      },
+      {
+        "id": "case2-asset-4",
+        "name": "Eleanor Fidelity investments x9104",
+        "type": "Investment account",
+        "governing_document": "Case2_01_Revocable_Living_Trust_Montgomery",
+        "value": 500000,
+        "owner": "",
+        "beneficiary": "",
+        "route": "Revocable trust",
+        "character": "separate",
+        "retirementKind": "retirement_401k",
+        "note": "Document-based prefill. Value transcribed from the PDF inventory; not independently valued."
+      }
+    ],
+    "executor": "Eleanor Vance Montgomery",
+    "trustee": "Julian M. Montgomery",
+    "agent": "",
+    "intentions": "Provide for the surviving spouse and the blended family, with staggered distributions and a special-needs trust for Ethan.",
+    "concerns": "Prefilled from the supplied PDFs, not an independent client interview. Confirm missing dates, living status, and current intentions.",
+    "reviewed": false
+  },
+  "packet": {
+    "schemaVersion": 1,
+    "documents": [
+      {
+        "id": "Case2_01_Revocable_Living_Trust_Montgomery",
+        "title": "Revocable Living Trust Montgomery",
+        "kind": "Revocable trust",
+        "date": "2026-11-12",
+        "source": "user_supplied",
+        "sha256": "8e96791fffc49dcb5f07ebcc069bd11eb6e62046de38507f3411ba42b251d73a",
+        "pages": [
+          {
+            "page": 1,
+            "text": "THE MONTGOMERY REVOCABLE LIVING TRUST \nAGREEMENT\nA Joint Revocable Inter Vivos Trust for Multi-State Probate Avoidance & Blended Family \nProtection\nTHIS REVOCABLE LIVING TRUST AGREEMENT (the \"Trust Agreement\") is made and \nentered into this 12th day of November, 2026, by and between RICHARD STERLING \nMONTGOMERY and ELEANOR VANCE MONTGOMERY, spouses residing in Houston, Harris \nCounty, State of Texas (hereinafter collectively referred to as the \"Grantors\" and individually as \na \"Grantor\"), and RICHARD STERLING MONTGOMERY and ELEANOR VANCE \nMONTGOMERY as Initial Co-Trustees (hereinafter collectively referred to with any successor \ntrustee(s) as the \"Trustee\").\nArticle I: TRUST NAME, FAMILY DECLARATIONS, AND TRUST FUNDING\nSection 1.01 Name of Trust. This trust shall be known as \"THE MONTGOMERY REVOCABLE \nLIVING TRUST, dated November 12, 2026\" and may be referred to as such in all deeds, \nfinancial account titles, beneficiary designations, and legal instruments.\nSection 1.02 Blended Family & Children Declarations. Grantors are lawfully married. Grantor \n1 (Richard Sterling Montgomery) has 1 child from a prior marriage, namely: Harrison \nMontgomery (DOB: 06/14/2005). Grantor 2 (Eleanor Vance Montgomery) has 1 child from a \nprior marriage, namely: Beatrice Vance (DOB: 09/22/2008). Together, Grantors have 1 joint \nchild of this marriage, namely: Ethan Montgomery (DOB: 11/05/2015), who is a beneficiary with \nspecial needs.\nSection 1.03 Initial Funding & Multi-State Real Property. Grantors hereby assign, convey, \ntransfer, and deliver to the Trustee all property listed on Schedule A (Joint/Community \nProperty), Schedule B (Separate Property of Grantor 1), and Schedule C (Separate Property of \nGrantor 2) attached hereto, including the primary residence located in Texas and the vacation \nreal property located in New Mexico, to be held, administered, and distributed in accordance \nwith the terms of this Agreement so as to avoid both domiciliary and ancillary probate.\nArticle II: ADMINISTRATION DURING JOINT LIFETIMES & RESERVATION \nOF RIGHTS\nSection 2.01 Distributions During Joint Lifetimes. During the joint lifetimes of the Grantors, \nthe Trustee shall distribute to or for the benefit of the Grantors so much of the net income and \nprincipal of the community/joint trust estate as either Grantor may direct, or as the Trustee \ndeems necessary for the Grantors' health, education, maintenance, and support (\"HEMS\") in \ntheir accustomed standard of living.\nSection 2.02 Right to Amend or Revoke. While both Grantors are living and have legal \ncapacity, this Trust may be amended, modified, or restated only by a signed written instrument \nexecuted by both Grantors and delivered to the Trustee. Either Grantor may unilaterally revoke "
+          },
+          {
+            "page": 2,
+            "text": "this Trust as to their respective community/joint one-half share or separate property upon written \nnotice to the other Grantor and the Trustee.\nSection 2.03 Incapacity of a Grantor. A Grantor shall be deemed incapacitated upon (a) \nwritten certification by two licensed physicians (one of whom is the Grantor's attending \nphysician) that the Grantor is unable to effectively manage their financial affairs, or (b) a court \ndetermination of incapacity. During any period of incapacity of one Grantor, the other Grantor \nshall serve as sole Trustee.\nArticle III: DIVISION INTO SUB-TRUSTS UPON DEATH OF FIRST GRANTOR \n(A-B-C / QTIP STRUCTURE)\nSection 3.01 Mandatory Division at First Death. Upon the death of the first Grantor to die (the \n\"Deceased Grantor\"), the surviving Grantor (the \"Surviving Grantor\") shall have NO power to \namend, revoke, or alter the disposition of the Deceased Grantor's share of the Trust Estate. The \nTrustee shall divide the Trust Estate (including any assets received via the Deceased Grantor's \nPour-Over Will or beneficiary designations) into three separate trusts:\nSection 3.02 The Survivor's Trust (Trust A - Revocable). The Survivor's Trust shall consist of \nthe Surviving Grantor's one-half (1/2) interest in the joint/community estate and all of the \nSurviving Grantor's separate property (Schedule B or C). The Survivor's Trust shall remain \nrevocable and amendable by the Surviving Grantor during their lifetime.\nSection 3.03 The Credit Shelter / Family Bypass Trust (Trust B - Irrevocable). If applicable \nfor estate tax or blended family protection, the Bypass Trust shall hold an amount of the \nDeceased Grantor's share designated in the Sub-Trust Addendum. Trust B is irrevocable upon \nthe first death.\nSection 3.04 The Marital QTIP Trust (Trust C - Irrevocable Blended Family Lock). The \nbalance of the Deceased Grantor's share shall be allocated to the Qualified Terminable Interest \nProperty (\"QTIP\") Marital Trust under IRC \u00a7 2056(b)(7), administered under the QTIP \nAddendum. The Surviving Grantor shall receive all net income at least annually for life, but shall \nhave NO power to divert principal to a new spouse or disinherit the Deceased Grantor's \nbiological children.\nArticle IV: DISTRIBUTION UPON DEATH OF SURVIVING GRANTOR\nSection 4.01 Allocation Among Descendants & Special Needs Sub-Trust. Upon the death \nof the Surviving Grantor, the remaining balance of the Marital QTIP Trust (and Bypass Trust) \nshall pass strictly as directed by the Deceased Grantor's schedule of remainder beneficiaries, \nand the Survivor's Trust shall pass as directed by the Surviving Grantor:\n(a) 60% to the Staggered Distribution Children's Sub-Trusts (administered with HEMS guardrails \nand age 25/30/35 principal releases);\n(b) 40% to the Third-Party Supplemental / Special Needs Trust for the benefit of Ethan \nMontgomery, so as not to disqualify said beneficiary from Medicaid or SSI."
+          },
+          {
+            "page": 3,
+            "text": "Article V: TRUSTEE SUCCESSION, POWERS, AND SPENDTHRIFT \nPROTECTION\nSection 5.01 Nomination of Successor Trustees. Upon the death, resignation, or incapacity \nof both Initial Co-Trustees, the following shall serve as Successor Trustee in the order named:\n1. First Successor Trustee: Julian M. Montgomery, Austin, TX\n2. Second Successor Trustee: Clara Vance, Houston, TX\n3. Corporate / Independent Fiduciary Backup: Texas Capital Trust Company\nSection 5.02 Spendthrift Clause. No interest of any beneficiary in the income or principal of \nany trust created hereunder shall be subject to anticipation, assignment, pledge, sale, or \ntransfer in any manner, nor shall any beneficiary's interest be liable for or subject to the debts, \ncontracts, liabilities, engagements, torts, lawsuits, bankruptcy, or marital dissolution/alimony \nclaims of any beneficiary or their spouse.\nSection 5.03 Governing Law. The validity, construction, and administration of this Trust shall \nbe governed by the laws of the State of Texas.\nIN WITNESS WHEREOF, the Grantors and Initial Co-Trustees have executed this Revocable \nLiving Trust Agreement as of the day and year first written above.\n__________________________________________________\nRICHARD STERLING MONTGOMERY, Grantor & Co-Trustee\n__________________________________________________\nELEANOR VANCE MONTGOMERY, Grantor & Co-Trustee\nNOTARY ACKNOWLEDGMENT\nSTATE OF TEXAS\nCOUNTY OF HARRIS\nBefore me, the undersigned authority, on this day personally appeared RICHARD STERLING \nMONTGOMERY and ELEANOR VANCE MONTGOMERY, known to me to be the persons \nwhose names are subscribed to the foregoing instrument, and acknowledged to me that they \nexecuted the same for the purposes and consideration therein expressed.\nGiven under my hand and seal of office this 12th day of November, 2026.\n__________________________________________________\nNotary Public, State of Texas\nMy Commission Expires: 10/15/2029"
+          },
+          {
+            "page": 4,
+            "text": "Schedule A, B & C: TRUST ASSET INVENTORY & MULTI-STATE \nPROPERTY SCHEDULES\nSchedule Asset / Real Property \nDescription\nJurisdiction / Account # / \nValue\nSchedule A (Joint) Primary Residence: 1042 \nRiver Oaks Blvd, Houston, \nTX 77019\nHarris County, TX - \n$2,450,000\nSchedule A (Joint) Out-of-State Vacation \nProperty: 405 Ski Run Rd, \nTaos, NM 87571\nTaos County, NM - $850,000\nSchedule A (Joint) Joint Non-Qualified \nBrokerage Account (Austin \nCapital)\nAcct # x8841 - $1,200,000\nSchedule B (Richard) Separate Pre-Marital \nBrokerage Account \n(Vanguard)\nAcct # x3302 - $650,000\nSchedule C (Eleanor) Separate Pre-Marital \nInvestment Account (Fidelity)\nAcct # x9104 - $500,000"
+          }
+        ],
+        "pdfPath": "examples/pdfs/Case2_01_Revocable_Living_Trust_Montgomery.pdf"
+      },
+      {
+        "id": "Case2_02_Pour_Over_Will_Montgomery",
+        "title": "Pour Over Will Montgomery",
+        "kind": "Will",
+        "date": "2026-11-12",
+        "source": "user_supplied",
+        "sha256": "fb970af677a356a117fd16960480792132fdb0154f49f8d41162fc4ac967c09a",
+        "pages": [
+          {
+            "page": 1,
+            "text": "LAST WILL AND TESTAMENT (POUR-OVER WILL)\nof RICHARD STERLING MONTGOMERY \u2014 With Minor Child Guardianship \nNominations\nI, RICHARD STERLING MONTGOMERY, residing in Houston, Harris County, State of Texas, \nbeing of sound mind and disposing memory, do hereby make, publish, and declare this \ninstrument to be my Last Will and Testament (specifically structured as a \"Pour-Over Will\" to \noperate in conjunction with my Revocable Living Trust), hereby revoking all prior wills and \ncodicils heretofore made by me.\nArticle I: FAMILY IDENTIFICATION & BLENDED FAMILY DECLARATIONS\nSection 1.01 Spouse and Children. I am married to Eleanor Vance Montgomery. My child \nfrom a prior relationship is Harrison Montgomery (DOB: 06/14/2005), and my joint child born of \nmy current marriage is Ethan Montgomery (DOB: 11/05/2015).\nArticle II: DISPOSITION OF TANGIBLE PERSONAL PROPERTY\nSection 2.01 Personal Effects. I give and bequeath all of my clothing, jewelry, household \nfurniture, automobiles, and other tangible personal property not already titled in my Revocable \nLiving Trust (and not disposed of by a signed Personal Property Memorandum) to my spouse, \nEleanor Vance Montgomery, if she survives me by thirty (30) days; and if not, to the Trustee of \nthe Trust identified in Article III below.\nArticle III: POUR-OVER OF RESIDUARY ESTATE TO REVOCABLE LIVING \nTRUST\nSection 3.01 Pour-Over Devise to Living Trust. I give, devise, and bequeath all the rest, \nresidue, and remainder of my probate estate, of every kind and character and wheresoever \nsituated, which I may own or have any interest in at the time of my death and which was \ninadvertently omitted from or not titled in my Trust prior to my death, to the then-acting Trustee \nof \"THE MONTGOMERY REVOCABLE LIVING TRUST, dated November 12, 2026\" executed \nprior to (or concurrently with) the execution of this Will, to be added to the principal of said Trust \nand held, administered, subdivided into the Marital QTIP, Children's Staggered, and Special \nNeeds Sub-Trusts, and distributed in accordance with the terms of said Trust Agreement.\nSection 3.02 Savings Incorporation by Reference. If for any reason the aforesaid Revocable \nLiving Trust is not in existence at the time of my death, or if the devise under Section 3.01 is \nheld invalid by a court of competent jurisdiction, I hereby incorporate by reference the terms and \nprovisions of said Trust Agreement as it existed on the date of execution of this Will, and direct \nthat my Residuary Estate be held and administered by my Executor as Trustee of a \ntestamentary trust on those identical terms."
+          },
+          {
+            "page": 2,
+            "text": "Article IV: NOMINATION OF GUARDIAN FOR MINOR OR INCAPACITATED \nCHILDREN\nSection 4.01 Guardian of the Person. If my spouse does not survive me, or is adjudicated \nincapacitated, and at my death any child of mine is a minor (under eighteen (18) years of age) \nor requires adult guardianship due to special needs, I nominate and appoint Julian M. \nMontgomery, residing at 1040 West Peachtree St, Austin, TX 78701, Relationship: Brother, to \nserve as Guardian of the Person of my minor or incapacitated child(ren).\nSection 4.02 Alternate Guardian of the Person. If Julian M. Montgomery is unable or \nunwilling to serve, I nominate and appoint Clara Vance, residing at 1802 South Congress Ave, \nHouston, TX 77019, Relationship: Sister-in-Law, as Alternate Guardian of the Person.\nSection 4.03 Waiver of Bond for Guardian. I direct that no Guardian nominated herein shall \nbe required to post any bond or security in any jurisdiction.\nArticle V: APPOINTMENT OF INDEPENDENT EXECUTOR\nSection 5.01 Executor Designation. I nominate and appoint Eleanor Vance Montgomery as \nIndependent Executor of this Pour-Over Will, and Julian M. Montgomery as Successor \nIndependent Executor, to serve without bond and free of court supervision to the maximum \nextent permitted by state law.\nSection 5.02 Tax Elections & DSUE Portability. My Executor is expressly authorized to \ncoordinate with the Trustee of my Revocable Living Trust regarding the filing of federal and \nstate estate tax returns (Form 706), the Qualified Terminable Interest Property (QTIP) election \nunder IRC \u00a7 2056(b)(7), and the Deceased Spousal Unused Exclusion (\"DSUE\") portability \nelection.\nIN WITNESS WHEREOF, I, RICHARD STERLING MONTGOMERY, have signed this Pour-\nOver Will on this 12th day of November, 2026.\n__________________________________________________\nRICHARD STERLING MONTGOMERY, Testator\nATTESTATION & SELF-PROVING AFFIDAVIT\nSigned, published, and declared by RICHARD STERLING MONTGOMERY as his Pour-Over \nLast Will and Testament in our presence, who at his request and in his presence and in the \npresence of each other have subscribed our names as witnesses hereto.\nWitness 1 Signature: ____________________________________     Address: 1204 Congress \nAve, Houston, TX 77002\nName: Marcus Vance\nWitness 2 Signature: ____________________________________     Address: 4501 Guadalupe "
+          },
+          {
+            "page": 3,
+            "text": "St, Houston, TX 77004\nName: Sarah Jenkins\nNOTARY ACKNOWLEDGMENT\nSTATE OF TEXAS\nCOUNTY OF HARRIS\nBefore me, the undersigned authority, on this day personally appeared RICHARD STERLING \nMONTGOMERY, Testator, and Marcus Vance and Sarah Jenkins, Witnesses, known to me to \nbe the persons whose names are subscribed to the foregoing instrument, and acknowledged to \nme that they executed the same for the purposes and consideration therein expressed.\nGiven under my hand and seal of office this 12th day of November, 2026.\n__________________________________________________\nNotary Public, State of Texas\nMy Commission Expires: 10/15/2029"
+          }
+        ],
+        "pdfPath": "examples/pdfs/Case2_02_Pour_Over_Will_Montgomery.pdf"
+      },
+      {
+        "id": "Case2_03_Marital_QTIP_and_Staggered_SubTrusts_Montgomery",
+        "title": "Marital QTIP and Staggered SubTrusts Montgomery",
+        "kind": "Other",
+        "date": "2026-11-12",
+        "source": "user_supplied",
+        "sha256": "dc5eab556611e443e6b6e2a72de99c3debe94a4eab656184271521462cd3ee21",
+        "pages": [
+          {
+            "page": 1,
+            "text": "MARITAL QTIP TRUST & STAGGERED CHILDREN'S SUB-\nTRUSTS\nIrrevocable Blended Family Sub-Trust & Age-Staggered HEMS Distribution Instrument\nTHIS SUB-TRUST ADMINISTRATION INSTRUMENT governs the administration of (1) The \nMarital QTIP Trust for the Blended Family, and (2) The Separate Staggered-Distribution Sub-\nTrusts for the Grantors' Children under The Montgomery Revocable Living Trust.\nPart I: THE MARITAL QTIP SUB-TRUST (BLENDED FAMILY PROTECTION)\nSection 1.01 Purpose & Irrevocability. Upon the death of the Deceased Grantor (Richard \nSterling Montgomery), the Marital QTIP Sub-Trust is strictly IRREVOCABLE. Its dual purpose is \nto provide financial security for the Surviving Spouse (Eleanor Vance Montgomery) during her \nremaining lifetime while legally guaranteeing that the remaining principal passes upon the \nSurviving Spouse's death to the Deceased Grantor's designated biological/adopted children \n(Harrison Montgomery and Ethan Montgomery).\nSection 1.02 Mandatory Income to Surviving Spouse (IRC \u00a7 2056(b)(7)). The Trustee shall \npay to or apply for the benefit of the Surviving Spouse all of the net income of the Marital QTIP \nTrust in quarterly or more frequent installments during the Surviving Spouse's lifetime. The \nSurviving Spouse shall have the right to require the Trustee to make any unproductive property \nin the Marital QTIP Trust productive or to convert it into income-producing property within a \nreasonable time.\nSection 1.03 Ascertainable Standard Principal Invasions (HEMS Only). The Independent \nTrustee (or Co-Trustees) may distribute principal from the Marital QTIP Trust to the Surviving \nSpouse ONLY as strictly necessary for the Surviving Spouse's health, education, maintenance, \nand support (\"HEMS\") in her accustomed standard of living, after taking into account all income \nand liquid resources available to the Surviving Spouse inside the Survivor's Trust (Trust A).\nSection 1.04 Prohibition on Beneficiary Modification or Diversion. The Surviving Spouse \nshall have NO inter vivos or testamentary general or limited power of appointment over the \nMarital QTIP Trust, and may not pledge, assign, or divert any principal of the Marital QTIP Trust \nto a subsequent spouse, stepchildren, or third parties.\nSection 1.05 Remainder Upon Death of Surviving Spouse. Upon the death of the Surviving \nSpouse, any accrued and undistributed net income shall be distributed to the Surviving \nSpouse's estate, and the entire remaining principal of the Marital QTIP Trust shall be transferred \nto the Staggered Children's Sub-Trusts (Part II) and/or Special Needs Trust for the Deceased \nGrantor's designated descendants."
+          },
+          {
+            "page": 2,
+            "text": "Part II: STAGGERED DISTRIBUTION CHILDREN'S SUB-TRUSTS (AGES 25 / \n30 / 35)\nSection 2.01 Division into Separate Shares. Upon the triggering distribution event, the trust \nestate allocated to the Children's Sub-Trusts shall be divided into separate, equal shares (per \nstirpes) for Harrison Montgomery and Beatrice Vance (excluding Ethan Montgomery, whose \nshare is specifically directed to his Third-Party Special Needs Trust). Each child's share shall be \nheld and administered as a separate sub-trust.\nSection 2.02 Discretionary HEMS Distributions Prior to Full Vesting. Until a child's separate \nsub-trust is fully distributed, the Trustee shall pay to or apply for the benefit of the child so much \nof the net income and principal of the child's sub-trust as the Trustee, in its sole discretion, \ndeems necessary or advisable for the child's health, higher education, maintenance, and \nsupport (\"HEMS\").\nSection 2.03 Early Principal Advancement Milestones. Prior to full termination, the Trustee is \nauthorized in its discretion to advance principal to a beneficiary for: (a) The purchase of a \nprimary residence (up to 20% of the sub-trust value); or (b) The acquisition or startup of a bona \nfide business or professional practice upon presentation of a formal business plan.\nSection 2.04 Mandatory Staggered Age Distributions (1/3 \u2014 1/3 \u2014 1/3). Subject to the \nHoldback Guardrails in Section 2.05, the Trustee shall make outright distributions of principal to \neach child upon attaining the following ages:\nMilestone Age Required Fraction of \nRemaining Principal\nPractical Equivalent\nAge Twenty-Five (25) One-Third (1/3) of the then-\ncurrent principal balance\nFirst 1/3 installment\nAge Thirty (30) One-Half (1/2) of the then-\nremaining principal balance\nSecond 1/3 installment\nAge Thirty-Five (35) All (100%) of the remaining \nbalance of the sub-trust\nFinal 1/3 installment\nSection 2.05 Substance Abuse, Gambling & Creditor Holdback Clause. Notwithstanding \nSection 2.04, if the Trustee reasonably believes that a beneficiary is (a) dependent upon or \nabusing alcohol, illegal drugs, or prescription medications, (b) engaged in compulsive gambling, \n(c) a defendant in a pending lawsuit or bankruptcy proceeding, or (d) party to a pending divorce \naction, the Trustee SHALL suspend any mandatory age-based principal distribution until the \ncondition is resolved.\nAPPROVED AND EXECUTED as an integral Sub-Trust Charter on this 12th day of November, \n2026.\n__________________________________________________\nRICHARD STERLING MONTGOMERY, Grantor & Trustee"
+          },
+          {
+            "page": 3,
+            "text": "__________________________________________________\nELEANOR VANCE MONTGOMERY, Grantor & Trustee\n__________________________________________________\nJULIAN M. MONTGOMERY, Successor Trustee\nNOTARY ACKNOWLEDGMENT\nSTATE OF TEXAS\nCOUNTY OF HARRIS\nBefore me, the undersigned authority, on this day personally appeared RICHARD STERLING \nMONTGOMERY and ELEANOR VANCE MONTGOMERY, known to me to be the persons \nwhose names are subscribed to the foregoing instrument, and acknowledged to me that they \nexecuted the same for the purposes and consideration therein expressed.\nGiven under my hand and seal of office this 12th day of November, 2026.\n__________________________________________________\nNotary Public, State of Texas\nMy Commission Expires: 10/15/2029"
+          }
+        ],
+        "pdfPath": "examples/pdfs/Case2_03_Marital_QTIP_and_Staggered_SubTrusts_Montgomery.pdf"
+      },
+      {
+        "id": "Case2_04_Third_Party_Special_Needs_Trust_Montgomery",
+        "title": "Third Party Special Needs Trust Montgomery",
+        "kind": "Other",
+        "date": "2026-11-12",
+        "source": "user_supplied",
+        "sha256": "4d6c0811fef88021d8927fc62890a18e7740b6f1ba4265774b162b0391b022bb",
+        "pages": [
+          {
+            "page": 1,
+            "text": "THIRD-PARTY SUPPLEMENTAL / SPECIAL NEEDS TRUST\nFor the Sole Benefit of ETHAN MONTGOMERY\nTHIS THIRD-PARTY SPECIAL NEEDS TRUST AGREEMENT (the \"Trust Agreement\") is \nestablished this 12th day of November, 2026, by and between RICHARD STERLING \nMONTGOMERY and ELEANOR VANCE MONTGOMERY (the \"Grantors\") and JULIAN M. \nMONTGOMERY (the \"Trustee\"), for the lifelong supplemental benefit of ETHAN \nMONTGOMERY, born November 5, 2015 (the \"Beneficiary\").\nArticle I: THIRD-PARTY ORIGIN & NON-PAYBACK DECLARATION\nSection 1.01 Third-Party Funding Only. This Trust is a third-party supplemental needs trust \nfunded exclusively with assets belonging to the Grantors (via inter vivos gifts, life insurance \nproceeds, or pours/transfers from The Montgomery Revocable Living Trust). NO assets \nbelonging to the Beneficiary (such as personal injury settlements, back-pay awards, or direct \ninheritances) shall ever be commingled with or accepted into this Trust.\nSection 1.02 No Medicaid Payback Required. Because this is a Third-Party Special Needs \nTrust and not a self-settled trust under 42 U.S.C. \u00a7 1396p(d)(4)(A), upon the death of the \nBeneficiary, the State Medicaid agency shall have NO claim for reimbursement against the \nremaining principal, which shall pass directly to the Grantors' remainder beneficiaries named in \nArticle IV.\nArticle II: SUPPLEMENTAL NEEDS PURPOSE & PRESERVE BENEFITS \nMANDATE\nSection 2.01 Intent of Grantors \u2014 Supplement, Never Supplant. It is the primary intent of \nthe Grantors that the assets of this Trust be used to supplement, and NEVER to supplant, \nimpair, or diminish, any federal, state, local, or private means-tested government assistance or \nbenefits for which the Beneficiary may be eligible or receiving, including but not limited to \nSupplemental Security Income (\"SSI\"), Medicaid, Waiver Programs, HUD Section 8 housing \nassistance, or state disability services.\nSection 2.02 Purely Discretionary Supplemental Distributions. The Trustee may pay to or \napply for the benefit of the Beneficiary such amounts from the net income or principal of the \nTrust as the Trustee, in its SOLE, ABSOLUTE, and UNFETTERED DISCRETION, deems \nadvisable to provide for the Beneficiary's nonsupport supplemental needs. The Beneficiary shall \nhave NO legal right to demand, compel, or direct any distribution from this Trust.\nSection 2.03 Permitted Quality-of-Life Expenditures. Permissible supplemental distributions \npaid directly to third-party vendors include, by way of illustration:\n\u2022 Medical, dental, rehabilitative, behavioral, or physical therapy services and assistive \ntechnology not covered by Medicaid;\n\u2022 Private case management, companion care, caregiver respite, and advocacy services;\n\u2022 Wheelchair-accessible vehicles, vehicle maintenance, insurance, and transportation;"
+          },
+          {
+            "page": 2,
+            "text": "\u2022 Computers, electronics, internet/phone service, hobby supplies, recreation, vacations, and \ntravel expenses;\n\u2022 Contributions to a qualified ABLE Account (IRC \u00a7 529A) owned by the Beneficiary up to the \nannual federal gift tax limit.\nSection 2.04 Strict Prohibition on Direct Cash & ISM Guardrails. The Trustee shall NEVER \ndistribute unrestricted cash directly to the Beneficiary. Prior to paying for any food or shelter \nitem that could be classified by the Social Security Administration as \"In-Kind Support and \nMaintenance\" (\"ISM\") under the Presumed Maximum Value (PMV) rules, the Trustee shall \nevaluate whether such payment would reduce or eliminate the Beneficiary's SSI or linked \nMedicaid eligibility.\nArticle III: SPENDTHRIFT, EMERGENCY TERMINATION & SAVINGS \nCLAUSES\nSection 3.01 Spendthrift & Non-Countable Resource Clause. No part of the principal or \nincome of this Trust shall be considered an available resource to the Beneficiary for government \nbenefit eligibility purposes, nor shall it be subject to the claims of any public agency or private \ncreditor.\nSection 3.02 Administrative Amendment Power for Statutory Changes. The Independent \nTrustee is authorized to amend the administrative or distribution provisions of this Trust without \ncourt approval to the extent strictly necessary to comply with changes in Social Security \n(POMS) or Medicaid laws and regulations so as to preserve the Beneficiary's eligibility.\nArticle IV: TERMINATION UPON DEATH OF BENEFICIARY\nSection 4.01 Final Remainder Distribution. Upon the death of the Beneficiary, the Trustee \nmay pay the Beneficiary's funeral and burial expenses, and shall distribute all remaining \nprincipal and undistributed income free of government payback claims to:\n\u2022 Harrison Montgomery (50%); and\n\u2022 Beatrice Vance (50%), per stirpes.\nIN WITNESS WHEREOF, the Grantors and Trustee have executed this Third-Party Special \nNeeds Trust Agreement on the date first written above.\n__________________________________________________\nRICHARD STERLING MONTGOMERY, Grantor\n__________________________________________________\nELEANOR VANCE MONTGOMERY, Grantor\n__________________________________________________\nJULIAN M. MONTGOMERY, Trustee"
+          },
+          {
+            "page": 3,
+            "text": "NOTARY ACKNOWLEDGMENT\nSTATE OF TEXAS\nCOUNTY OF HARRIS\nBefore me, the undersigned authority, on this day personally appeared RICHARD STERLING \nMONTGOMERY, ELEANOR VANCE MONTGOMERY, and JULIAN M. MONTGOMERY, \nknown to me to be the persons whose names are subscribed to the foregoing instrument, and \nacknowledged to me that they executed the same for the purposes and consideration therein \nexpressed.\nGiven under my hand and seal of office this 12th day of November, 2026.\n__________________________________________________\nNotary Public, State of Texas\nMy Commission Expires: 10/15/2029"
+          }
+        ],
+        "pdfPath": "examples/pdfs/Case2_04_Third_Party_Special_Needs_Trust_Montgomery.pdf"
+      },
+      {
+        "id": "Case2_05_Incapacity_Suite_and_Certificate_of_Trust_Montgomery",
+        "title": "Incapacity Suite and Certificate of Trust Montgomery (demo discrepancy)",
+        "kind": "Other",
+        "date": "2026-11-12",
+        "source": "user_supplied",
+        "sha256": "7ce25a6a61fc060c27e299ef9da8ff8841b2554c874ac52d0fff2b173596edac",
+        "pages": [
+          {
+            "page": 1,
+            "text": "TRUST-INTEGRATED INCAPACITY SUITE & CERTIFICATE \nOF TRUST\nDurable Financial POA, Advance Directive, HIPAA & Abstract of Trust\nPURPOSE OF THIS COMPREHENSIVE INCAPACITY SUITE: In a Medium-Complexity Estate \nPlan centered around a Revocable Living Trust, standard incapacity documents must be \nexplicitly coordinated with the Trust. This file contains: (Part I) A Trust-Integrated Durable \nFinancial Power of Attorney authorizing your Agent to transfer forgotten assets into your \nRevocable Living Trust if you become incapacitated prior to death; (Part II) A Coordinated \nMedical Power of Attorney, Living Will & HIPAA Release; and (Part III) A Certification / Abstract \nof Trust to present to banks and out-of-state title companies without exposing private blended-\nfamily or Special Needs distribution terms.\nPart I: TRUST-INTEGRATED DURABLE FINANCIAL POWER OF ATTORNEY\nSection 1.01 Appointment of Financial Agent. I, RICHARD STERLING MONTGOMERY, \nresiding at 1042 River Oaks Blvd, Houston, TX 77019, appoint my spouse, Eleanor Vance \nMontgomery, as my Primary Financial Agent. If my spouse is unable or unwilling to serve, I \nappoint Julian M. Montgomery as First Alternate Financial Agent, and Clara Vance as Second \nAlternate Financial Agent.\nSection 1.02 Express Authority to Fund Revocable Living Trust. In addition to all statutory \ngeneral powers over real estate, banking, securities, retirement accounts, taxes, and digital \nassets, my Agent is EXPRESSLY AUTHORIZED to convey, assign, transfer, and retitle any of \nmy real or personal property into \"THE MONTGOMERY REVOCABLE LIVING TRUST, dated \nNovember 12, 2026\" so as to complete the funding of my Trust and prevent probate during any \nperiod of my incapacity. However, my Agent shall have NO power to amend, revoke, or alter the \ndispositive sub-trust terms (QTIP, Children's, or Special Needs Sub-Trusts) of said Trust.\nSection 1.03 Durability & Effective Date. This Power of Attorney is durable and shall not be \naffected by my subsequent disability or incapacity. [ X ] Effective Immediately.\nPart II: COORDINATED HEALTHCARE POA, LIVING WILL & FAMILY HIPAA \nRELEASE\nSection 2.01 Healthcare Proxy Appointment. If I am unable to make medical decisions, I \nappoint Eleanor Vance Montgomery (Phone: (713) 555-0192) as my Healthcare Agent, and \nJulian M. Montgomery (Phone: (512) 555-0143) as Alternate Healthcare Agent.\nSection 2.02 Blended Family Visitation & HIPAA Access. To prevent family conflict during \nhospitalization, I authorize all physicians and hospitals under HIPAA (45 C.F.R. \u00a7 164.508) to \nrelease medical status updates to my Healthcare Agent AND to the following family members: \nEleanor Vance Montgomery, Harrison Montgomery, and Clara Vance."
+          },
+          {
+            "page": 2,
+            "text": "Section 2.03 End-of-Life Living Will Directive. If certified by two physicians to have a terminal \ncondition or irreversible coma/persistent vegetative state: [ X ] Withhold artificial life-prolonging \nprocedures and provide maximum palliative comfort care.\nPart III: CERTIFICATION OF TRUST (ABSTRACT OF TRUST FOR \nFINANCIAL INSTITUTIONS)\nSection 3.01 Statutory Certification. Pursuant to the Texas Trust Code, the undersigned \nTrustee(s) hereby certify the following facts to any financial institution, brokerage custodian, or \ntitle insurance company:\n1. Name of Trust: THE MONTGOMERY REVOCABLE LIVING TRUST, dated November 12, \n2026.\n2. Grantors/Settlors: RICHARD STERLING MONTGOMERY and ELEANOR VANCE \nMONTGOMERY.\n3. Currently Acting Trustee(s): RICHARD STERLING MONTGOMERY and ELEANOR VANCE \nMONTGOMERY, residing at 1042 River Oaks Blvd, Houston, TX 77019.\n5. Revocability & Taxpayer ID: The Trust is currently revocable; its Tax ID is the SSN of either \nGrantor while living.\n6. Title Taking Format: \"RICHARD STERLING MONTGOMERY and ELEANOR VANCE \nMONTGOMERY, Trustees of The Montgomery Revocable Living Trust, dated November 12, \n2026.\"\n7. Full Trustee Powers: The Trustees possess full power to buy, sell, mortgage, lease, invest, \ntrade securities, and open/manage bank and brokerage accounts without beneficiary consent.\n8. No Prior Revocation: The Trust has not been revoked, modified, or amended in any manner \nthat would cause the representations in this Certification to be incorrect.\nEXECUTED this 12th day of November, 2026.\n__________________________________________________\nRICHARD STERLING MONTGOMERY, Principal / Trustee\n__________________________________________________\nELEANOR VANCE MONTGOMERY, Trustee\nWitness 1: _______________________________________     Witness 2: \n_______________________________________\nNOTARY ACKNOWLEDGMENT\nSTATE OF TEXAS\nCOUNTY OF HARRIS\nBefore me, the undersigned authority, on this day personally appeared RICHARD STERLING \nMONTGOMERY and ELEANOR VANCE MONTGOMERY, known to me to be the persons \n4. Successor Trustee(s): Beatrice Vance; Clara Vance.\nDEMO VARIANT: successor-trustee discrepancy intentionally introduced."
+          },
+          {
+            "page": 3,
+            "text": "whose names are subscribed to the foregoing instrument, and acknowledged to me that they \nexecuted the same for the purposes and consideration therein expressed.\nGiven under my hand and seal of office this 12th day of November, 2026.\n__________________________________________________\nNotary Public, State of Texas\nMy Commission Expires: 10/15/2029"
+          }
+        ],
+        "pdfPath": "examples/pdfs/Case2_Certificate_Demo_Discrepancy.pdf"
+      }
+    ],
+    "facts": [
+      {
+        "id": "case2-fact-0",
+        "documentId": "Case2_02_Pour_Over_Will_Montgomery",
+        "subjectId": "household",
+        "field": "executor",
+        "value": "Eleanor Vance Montgomery",
+        "quote": "Section 5.01 Executor Designation. I nominate and appoint Eleanor Vance Montgomery as \nIndependent Executor",
+        "page": 2,
+        "verification": "verified"
+      },
+      {
+        "id": "case2-fact-1",
+        "documentId": "Case2_01_Revocable_Living_Trust_Montgomery",
+        "subjectId": "household",
+        "field": "trustee",
+        "value": "Julian M. Montgomery",
+        "quote": "1. First Successor Trustee: Julian M. Montgomery, Austin, TX",
+        "page": 3,
+        "verification": "verified"
+      },
+      {
+        "id": "case2-fact-2",
+        "documentId": "Case2_05_Incapacity_Suite_and_Certificate_of_Trust_Montgomery",
+        "subjectId": "household",
+        "field": "trustee",
+        "value": "Beatrice Vance",
+        "quote": "4. Successor Trustee(s): Beatrice Vance; Clara Vance.",
+        "page": 2,
+        "verification": "verified"
+      }
+    ],
+    "verifiedBy": "verify_quotes.py"
+  },
+  "dispositions": {},
+  "backend": null
+}
