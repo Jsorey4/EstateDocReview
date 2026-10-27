@@ -44,7 +44,8 @@
   html[data-theme="dark"] .workspace-label {
     color: #b0b7af;
   }
-  html[data-theme="dark"] .household-switch {
+  html[data-theme="dark"] .household-switch,
+  html[data-theme="dark"] .household-option {
     background: #1b231e;
     border: 1px solid #353830;
   }
@@ -893,6 +894,12 @@
   }
   html[data-theme="dark"] .example-choice {
     background: #191f1b;
+  }
+  html[data-theme="dark"] .household-option:hover:not(:disabled) {
+    border-color: #434f39;
+  }
+  html[data-theme="dark"] .household-option.current {
+    border-color: #6c8b59;
   }
   /* Hand-tuned dark-theme rules, appended after the generated overrides. */
   html[data-theme="dark"] {

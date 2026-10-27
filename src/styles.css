@@ -180,7 +180,8 @@ code {
   margin-bottom: 12px;
   font-weight: 600;
 }
-.household-switch {
+.household-switch,
+.household-option {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -194,14 +195,16 @@ code {
   font-weight: 600;
   margin-bottom: 28px;
 }
-.household-switch > span:nth-child(2) {
+.household-switch > span:nth-child(2),
+.household-option > span:nth-child(2) {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   flex: 1;
   white-space: nowrap;
 }
-.household-switch small {
+.household-switch small,
+.household-option small {
   display: block;
   font-size: 9px;
   color: var(--muted);
@@ -4091,8 +4094,29 @@ footer {
 }
 .household-dropdown {
   position: static;
+  display: grid;
+  gap: 8px;
   width: 100%;
   flex-shrink: 0;
+  max-height: none;
+  margin-bottom: 28px;
+  padding: 0;
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
+.household-switch[aria-expanded="true"] {
+  margin-bottom: 8px;
+}
+.household-option {
+  margin-bottom: 0;
+  min-height: 59px;
+}
+.household-option:hover:not(:disabled) {
+  border-color: #b7c3ae;
+}
+.household-option.current {
+  border-color: #6e8d5b;
 }
 
 .report-metrics {

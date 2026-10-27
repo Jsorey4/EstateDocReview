@@ -42,7 +42,7 @@ test("judges can load each prefilled PDF scenario", async ({ page }) => {
     [2, "Thorne"],
   ] as const) {
     await page.locator(".household-switch").click();
-    const choice = page.locator(".example-choice").nth(i);
+    const choice = page.locator(".household-option").nth(i);
     await expect(choice).toBeEnabled();
     await choice.click();
     await expect(page.locator(".household-switch")).toContainText(name);

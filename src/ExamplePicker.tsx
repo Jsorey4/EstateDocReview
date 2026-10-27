@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { emptyWorkspace, workspaceSchema, parsePacket } from "./domain";
+import {
+  emptyWorkspace,
+  householdBadge,
+  workspaceSchema,
+  parsePacket,
+} from "./domain";
 import type { Workspace } from "./domain";
 import { Modal } from "./components";
 
@@ -78,6 +83,72 @@ export default function ExamplePicker({
       live = false;
     };
   }, []);
+  const confirm = pending && (
+    <Modal title="Start this household?" onClose={() => setPending(null)}>
+      <p>
+        This replaces the current household and its edits in this browser. An
+        empty household lets you enter your own details; document evidence is
+        available only through the prepared examples.
+      </p>
+      <div className="modal-actions">
+        <button className="button secondary" onClick={() => setPending(null)}>
+          Cancel
+        </button>
+        <button className="button primary" onClick={() => onSelect(pending)}>
+          Start household
+        </button>
+      </div>
+    </Modal>
+  );
+  // The sidebar list mirrors the household switch itself; the dialog keeps the descriptive cards.
+  const option = (
+    workspace: Workspace | undefined,
+    label: string,
+    onClick: () => void,
+    key?: string,
+  ) => {
+    const badge = workspace
+      ? householdBadge(workspace.questionnaire)
+      : { initials: "…", name: loading ? "Loading…" : "Not available" };
+    const isCurrent =
+      !!workspace &&
+      workspace.questionnaire.clientName === current.questionnaire.clientName &&
+      workspace.questionnaire.household === current.questionnaire.household;
+    return (
+      <button
+        key={key}
+        className={`household-option ${isCurrent ? "current" : ""}`}
+        aria-label={label}
+        aria-current={isCurrent || undefined}
+        title={label}
+        disabled={!workspace}
+        onClick={onClick}
+      >
+        <span className="household-avatar">{badge.initials}</span>
+        <span>
+          {badge.name}
+          <small>Texas · Estate review</small>
+        </span>
+      </button>
+    );
+  };
+  if (inline)
+    return (
+      <div className="household-dropdown" role="group" aria-label="Households">
+        {examples.map(({ id, title }, index) =>
+          option(
+            loaded[id],
+            `${index + 1}. ${title}`,
+            () => choose(structuredClone(loaded[id])),
+            id,
+          ),
+        )}
+        {option(emptyWorkspace(), "Start an empty household", () =>
+          choose(emptyWorkspace()),
+        )}
+        {confirm}
+      </div>
+    );
   const content = (
     <div className="example-choices">
       <p>Choose an example to explore, or start with an empty household.</p>
@@ -108,34 +179,10 @@ export default function ExamplePicker({
       <button className="text-link" onClick={onClose}>
         Close
       </button>
-      {pending && (
-        <Modal title="Start this household?" onClose={() => setPending(null)}>
-          <p>
-            This replaces the current household and its edits in this browser.
-            An empty household lets you enter your own details; document
-            evidence is available only through the prepared examples.
-          </p>
-          <div className="modal-actions">
-            <button
-              className="button secondary"
-              onClick={() => setPending(null)}
-            >
-              Cancel
-            </button>
-            <button
-              className="button primary"
-              onClick={() => onSelect(pending)}
-            >
-              Start household
-            </button>
-          </div>
-        </Modal>
-      )}
+      {confirm}
     </div>
   );
-  return inline ? (
-    <div className="household-dropdown">{content}</div>
-  ) : (
+  return (
     <Modal title="Choose a household" onClose={onClose}>
       {content}
     </Modal>

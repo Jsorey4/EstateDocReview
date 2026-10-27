@@ -21,6 +21,7 @@ import {
 import {
   completion,
   download,
+  householdBadge,
   loadWorkspace,
   reviewItems,
   STORAGE_KEY,
@@ -68,6 +69,7 @@ export default function App() {
   const [loadCount, setLoadCount] = useState(0);
   const pageRef = useRef<HTMLElement>(null);
   const findings = reviewItems(workspace);
+  const badge = householdBadge(workspace.questionnaire);
   const openCount = findings.filter(
     (f) => (workspace.dispositions[f.id]?.status ?? "open") === "open",
   ).length;
@@ -164,12 +166,9 @@ export default function App() {
           onClick={() => setHouseholdMenu(!householdMenu)}
           aria-expanded={householdMenu}
         >
-          <span className="household-avatar">
-            {workspace.questionnaire.household.slice(0, 2).toUpperCase() ||
-              "NH"}
-          </span>
+          <span className="household-avatar">{badge.initials}</span>
           <span>
-            {workspace.questionnaire.household || "New household"}
+            {badge.name}
             <small>Texas · Estate review</small>
           </span>
           <ChevronDown size={14} />

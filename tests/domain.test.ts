@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   completion,
   emptyWorkspace,
+  householdBadge,
   missingItems,
   parsePercent,
   relationshipKind,
@@ -248,5 +249,38 @@ describe("questionnaire completeness", () => {
       { name: "B", share: "30%", note: "" },
     ];
     expect(reviewWarnings(q)[3]).toEqual(["Shares add up to 90%, not 100%"]);
+  });
+});
+
+describe("householdBadge", () => {
+  const q = (clientName: string, household = "") => ({
+    ...emptyWorkspace().questionnaire,
+    clientName,
+    household,
+  });
+  it("abbreviates the client's first name and keeps the surname", () => {
+    expect(householdBadge(q("Arthur Pendelton"))).toEqual({
+      initials: "AP",
+      name: "A. Pendelton",
+    });
+    expect(householdBadge(q("Richard Sterling Montgomery")).name).toBe(
+      "R. Montgomery",
+    );
+    expect(householdBadge(q("Victoria H. Thorne")).initials).toBe("VT");
+  });
+  it("ignores generational suffixes", () => {
+    expect(householdBadge(q("Samuel T. Sterling Jr.")).name).toBe(
+      "S. Sterling",
+    );
+  });
+  it("falls back to the household name, then New household", () => {
+    expect(householdBadge(q("Cher", "Interface check"))).toEqual({
+      initials: "IN",
+      name: "Interface check",
+    });
+    expect(householdBadge(q(""))).toEqual({
+      initials: "NH",
+      name: "New household",
+    });
   });
 });

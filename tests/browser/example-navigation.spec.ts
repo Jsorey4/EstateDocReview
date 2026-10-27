@@ -55,7 +55,7 @@ test("choosing a scenario opens its completed questionnaire, and edits are prote
     .getByLabel("Household name *")
     .fill("Pendelton household (edited)");
   await page.locator(".household-switch").click();
-  await page.locator(".household-dropdown .example-choice").nth(1).click();
+  await page.locator(".household-dropdown .household-option").nth(1).click();
   await expect(
     page.getByRole("dialog", { name: "Start this household?" }),
   ).toBeVisible();
@@ -70,9 +70,20 @@ test("household dropdown lists three examples and report numbers exceed heading 
 }) => {
   await page.goto("/#report");
   await page.locator(".household-switch").click();
-  await expect(page.locator(".household-dropdown .example-choice")).toHaveCount(
-    3,
-  );
+  // The sidebar list mirrors the switch: three cases plus a new household, same size.
+  const options = page.locator(".household-dropdown .household-option");
+  await expect(options).toHaveCount(4);
+  await expect(options.first()).toContainText("A. Pendelton");
+  await expect(options.first().locator(".household-avatar")).toHaveText("AP");
+  await expect(options.nth(1)).toContainText("R. Montgomery");
+  await expect(options.nth(2)).toContainText("V. Thorne");
+  const switchBox = await page.locator(".household-switch").boundingBox();
+  for (const box of await Promise.all(
+    (await options.all()).map((o) => o.boundingBox()),
+  )) {
+    expect(box!.width).toBeCloseTo(switchBox!.width, 0);
+    expect(box!.height).toBeCloseTo(switchBox!.height, 0);
+  }
   const sizes = await page
     .locator(".report-section > h3")
     .first()

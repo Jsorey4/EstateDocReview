@@ -466,6 +466,25 @@ export function reviewWarnings(q: Questionnaire): string[][] {
   }
   return [household, people, [], wishes];
 }
+const NAME_SUFFIX = /^(jr|sr|ii|iii|iv|v)\.?$/i;
+/** Sidebar label for a household: "A. Pendelton" and "AP" from the client name, else the household name. */
+export function householdBadge(q: Questionnaire) {
+  const parts = q.clientName.trim().split(/\s+/).filter(Boolean);
+  while (parts.length > 2 && NAME_SUFFIX.test(parts[parts.length - 1]))
+    parts.pop();
+  if (parts.length >= 2) {
+    const first = parts[0];
+    const last = parts[parts.length - 1];
+    return {
+      initials: (first[0] + last[0]).toUpperCase(),
+      name: `${first[0].toUpperCase()}. ${last}`,
+    };
+  }
+  return {
+    initials: q.household.slice(0, 2).toUpperCase() || "NH",
+    name: q.household || "New household",
+  };
+}
 export function completion(q: Questionnaire) {
   return [...missingItems(q).map((m) => m.length === 0), q.reviewed];
 }
