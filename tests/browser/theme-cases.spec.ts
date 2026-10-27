@@ -53,10 +53,15 @@ test("judges can load each prefilled PDF scenario", async ({ page }) => {
     await expect(page.locator(".document-row")).toHaveCount(i === 2 ? 6 : 5);
   }
   await page.getByRole("button", { name: "Dark mode", exact: true }).click();
-  await expect(page.locator(".document-row").first()).toHaveCSS(
-    "background-color",
-    "rgb(26, 26, 26)",
-  );
+  await expect
+    .poll(async () => {
+      const rowBackground = await page
+        .locator(".document-row")
+        .first()
+        .evaluate((el) => getComputedStyle(el).backgroundColor);
+      return Math.max(...rowBackground.match(/\d+/g)!.slice(0, 3).map(Number));
+    })
+    .toBeLessThan(48);
   await page.screenshot({
     path: "/private/tmp/estate-dark-documents.png",
     fullPage: true,

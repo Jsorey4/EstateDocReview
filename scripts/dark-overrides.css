@@ -1,0 +1,50 @@
+/* Hand-tuned dark-theme rules, appended after the generated overrides. */
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --dark: #e4ece6;
+  --muted: #a7b4ab;
+  --line: #2f3b35;
+  --cream: #131a16;
+  --green: #8fc7a6;
+  --green-fill: #3c7259;
+  --amber: #d9b072;
+  --track: #2b3630;
+}
+/* --green doubles as a fill in the light theme; fills need the deeper tone. */
+html[data-theme="dark"] .brand-mark,
+html[data-theme="dark"] .nav-item.active:before,
+html[data-theme="dark"] .skip-link,
+html[data-theme="dark"] .replay-step.current .replay-step-icon {
+  background: var(--green-fill);
+}
+html[data-theme="dark"] .button.primary {
+  background: var(--green-fill);
+  border-color: #4b8468;
+  color: #fff;
+}
+html[data-theme="dark"] .button.primary:hover {
+  background: #468166;
+  box-shadow: 0 3px 10px #00000055;
+}
+html[data-theme="dark"] .button.danger {
+  background: #9a4a3a;
+}
+/* The hero stays a deep brand-green panel with its cream illustration. */
+html[data-theme="dark"] .welcome-card {
+  background: #1d3a2d;
+  border-color: #2c4d3e;
+}
+html[data-theme="dark"] .button.light {
+  background: #ecebd6;
+  color: #2c4632;
+}
+html[data-theme="dark"] .button.light:hover {
+  background: #fffde9;
+}
+html[data-theme="dark"] .toast {
+  border-color: #3f6a52;
+}
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder {
+  color: #7f8c84;
+}

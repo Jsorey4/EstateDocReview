@@ -250,7 +250,7 @@ export default function Overview({
           <div
             className="readiness-ring"
             style={{
-              background: `conic-gradient(var(--green) ${progress * 3.6}deg, #ebece5 0)`,
+              background: `conic-gradient(var(--green) ${progress * 3.6}deg, var(--track, #ebece5) 0)`,
             }}
           >
             <div>

@@ -14,4 +14,4 @@ Run `.venv/bin/python -m bridge.build_case_workspaces` to regenerate the three p
 
 Missing balances use zero placeholders with an explicit asset note, not invented valuations. Unrecorded marital dates and as-of dates remain blank; living status is unknown. Questionnaire confirmation stays incomplete until reviewed. Source hashes are included. Internal provenance is preserved.
 
-Dark mode is a persistent toolbar choice, initially following the operating system. It applies to screen views; printed packets remain light. Regenerate component color overrides after stylesheet changes with `node scripts/build-dark-theme.mjs`, then format src/dark.css.
+Dark mode is a persistent toolbar choice, initially following the operating system. It applies to screen views; printed packets remain light. Regenerate component color overrides after stylesheet changes with `node scripts/build-dark-theme.mjs`, then format src/dark.css. Hand-tuned rules (brand variables, green fills, hero) live in `scripts/dark-overrides.css`; never edit src/dark.css directly.
