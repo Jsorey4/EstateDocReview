@@ -4285,13 +4285,26 @@ small.field-hint {
 .confirm-box small {
   font-size: 12px;
 }
+/* The checkbox sits over the beneficiary card's bottom edge; it stays outside the row button in the DOM. */
 .flow-row-wrap {
-  display: grid;
-  gap: 6px;
+  position: relative;
+}
+.flow-row-wrap .flow-node.beneficiary {
+  padding-bottom: 66px;
 }
 .flow-row-wrap > .confirm-box {
-  justify-self: end;
-  margin-right: 4px;
+  position: absolute;
+  right: 14px;
+  bottom: 27px;
+  max-width: 170px;
+  font-size: 12px;
+}
+.flow-row-wrap > .confirm-box small {
+  flex-basis: 100%;
+  font-size: 11px;
+}
+.modal .confirm-box {
+  margin-bottom: 14px;
 }
 .flow-row.confirmed {
   border-color: #6e8d5b;

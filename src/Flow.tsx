@@ -164,7 +164,7 @@ export default function Flow({
                         </div>
                       </button>
                       <ConfirmBox
-                        label="Route confirmed with client"
+                        label={confirmed ? "Confirmed" : "Confirm route"}
                         at={confirmed}
                         onChange={(on) => onConfirm(`asset:${a.id}`, on)}
                       />
@@ -300,6 +300,11 @@ export default function Flow({
           title={selected.name || "Asset detail"}
           onClose={() => setSelected(null)}
         >
+          <ConfirmBox
+            label="Route confirmed with client"
+            at={w.confirmations[`asset:${selected.id}`]}
+            onChange={(on) => onConfirm(`asset:${selected.id}`, on)}
+          />
           <div className="asset-detail-total">
             {selected.value ? money(selected.value) : "Not stated"}
             <small>
