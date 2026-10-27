@@ -65,6 +65,7 @@ describe("prepared PDF scenarios", () => {
     ]);
     expect(summary("case2")).toEqual([
       "discrepancy:Executor differs from questionnaire",
+      "discrepancy:Former spouse named in document",
       "unresolved:Conflicting trustee records",
     ]);
     expect(summary("case3")).toEqual([
@@ -92,5 +93,26 @@ describe("prepared PDF scenarios", () => {
     const trustee = reviewItems(load("case3"))[0];
     expect(new Set(trustee.facts.map((f) => f.documentId)).size).toBe(4);
     expect(trustee.uncertainty).not.toContain("also appears");
+  });
+  it("flags the former spouse left in the Case 2 trust copy, with the amount at stake", () => {
+    const w = load("case2");
+    const f = reviewItems(w).find((f) => f.title.startsWith("Former spouse"))!;
+    expect(f.facts[0].value).toBe("Diane Whitaker Montgomery");
+    expect(f.amount).toBe(650000);
+    expect(f.observation).toContain("2010-11-05");
+    // Case 1 also lists a former spouse, but no document names her: no finding.
+    const c1 = load("case1");
+    expect(c1.questionnaire.marriages[0].how_ended).toBe("divorce");
+    expect(
+      reviewItems(c1).some((f) => f.title.startsWith("Former spouse")),
+    ).toBe(false);
+  });
+  it("gives the two cases different alternates", () => {
+    expect(load("case1").questionnaire.executor).toBe("Graham M. Pendelton");
+    expect(
+      load("case1").packet!.documents.some((d) =>
+        d.pages.some((p) => p.text.includes("Julian")),
+      ),
+    ).toBe(false);
   });
 });

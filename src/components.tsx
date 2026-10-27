@@ -1,6 +1,8 @@
 import { ArrowUpRight, Check, X } from "lucide-react";
 import { useEffect, useRef, useId } from "react";
 import type { ReactNode } from "react";
+import { confirmedAt } from "./domain";
+import type { Fact, Packet } from "./domain";
 export function Badge({
   children,
   tone = "neutral",
@@ -157,3 +159,48 @@ export function Tick({ done }: { done: boolean }) {
   );
 }
 export const disclaimer = "Not a substitute for the advice of an attorney.";
+
+/** Checkbox that records when the advisor confirmed something with the client. */
+export function ConfirmBox({
+  at,
+  onChange,
+  label = "Confirmed with client",
+}: {
+  at?: string;
+  onChange: (on: boolean) => void;
+  label?: string;
+}) {
+  return (
+    <label className={`confirm-box ${at ? "is-confirmed" : ""}`}>
+      <input
+        type="checkbox"
+        checked={!!at}
+        onChange={(e) => onChange(e.target.checked)}
+      />
+      <span>{label}</span>
+      {at && <small>{confirmedAt(at)}</small>}
+    </label>
+  );
+}
+/** Opens the cited PDF at the quoted page, so evidence can be checked without leaving the view. */
+export function PdfLink({
+  fact,
+  packet,
+}: {
+  fact: Fact;
+  packet: Packet | null;
+}) {
+  const doc = packet?.documents.find((d) => d.id === fact.documentId);
+  if (!doc?.pdfPath) return null;
+  return (
+    <a
+      className="pdf-link"
+      href={`${import.meta.env.BASE_URL}${doc.pdfPath}#page=${fact.page}`}
+      target="_blank"
+      rel="noreferrer"
+    >
+      Open PDF, page {fact.page}
+      <ArrowUpRight size={13} />
+    </a>
+  );
+}

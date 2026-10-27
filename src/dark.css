@@ -911,6 +911,22 @@
   html[data-theme="dark"] .advisor-topic {
     background: #141a17;
   }
+  html[data-theme="dark"] .confirm-box.is-confirmed span {
+    color: #a3d7bb;
+  }
+  html[data-theme="dark"] .flow-row.confirmed {
+    border-color: #6c8b59;
+  }
+  html[data-theme="dark"] .pdf-link {
+    color: #a3d7bb;
+  }
+  html[data-theme="dark"] .name-picks button {
+    background: #0e1511;
+    color: #b5d5b8;
+  }
+  html[data-theme="dark"] .name-picks button:hover {
+    border-color: #434f39;
+  }
   /* Hand-tuned dark-theme rules, appended after the generated overrides. */
   html[data-theme="dark"] {
     color-scheme: dark;

@@ -306,6 +306,8 @@ export const workspaceSchema = z.object({
     }),
   ),
   topics: z.array(advisorTopicSchema).default([]),
+  // When the advisor confirmed an asset route or finding: key → ISO timestamp.
+  confirmations: z.record(z.string(), z.string()).default({}),
   // reconcile.py output for this packet, with the questionnaire it was computed against.
   backend: z
     .object({
@@ -344,8 +346,14 @@ export const emptyWorkspace = (): Workspace => ({
   packet: null,
   dispositions: {},
   topics: [],
+  confirmations: {},
   backend: null,
 });
+export const confirmedAt = (iso: string) =>
+  new Date(iso).toLocaleString("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
 export const normalize = (value: string) =>
   value.normalize("NFKC").replace(/\s+/g, " ").trim().toLowerCase();
 export const quoteMatches = (fact: Fact, document?: ReviewDocument) => {
@@ -598,6 +606,34 @@ export function reconcile(q: Questionnaire, packet: Packet | null): Finding[] {
       expected: subject.expected,
       subject: subject.label,
     });
+  }
+  // A verified document naming someone the questionnaire reports as a divorced spouse.
+  for (const m of q.marriages.filter(
+    (m) => m.how_ended === "divorce" && m.spouse.trim(),
+  )) {
+    for (const f of facts.filter(
+      (f) => normalize(f.value) === normalize(m.spouse),
+    )) {
+      const asset = q.assets.find((a) => a.id === f.subjectId);
+      const doc =
+        packet?.documents.find((d) => d.id === f.documentId)?.title ??
+        "A document";
+      findings.push({
+        id: `former-spouse:${f.id}:${m.spouse}`,
+        type: "discrepancy",
+        title: "Former spouse named in document",
+        observation: `${doc} (p.${f.page}) names ${f.value} as ${f.field}${asset ? ` for ${asset.name}` : ""}. The questionnaire reports a divorce from ${m.spouse}${m.ended ? ` (${m.ended})` : ""}.${asset?.value ? ` ${money(asset.value)} (hypothetical) may pass contrary to stated intent.` : ""}`,
+        uncertainty:
+          "The designation may be intended, superseded by a later record, or affected by the divorce. Legal effect has not been determined.",
+        question:
+          "Confirm the record on file, ask the client whether it is intended, and refer to an estate attorney about its effect on the trust and will.",
+        facts: [f],
+        expected: `${m.spouse}: former spouse${m.ended ? `, divorced ${m.ended}` : ""}`,
+        subject: asset?.name ?? "Household",
+        assets: asset ? [asset.id] : undefined,
+        amount: asset?.value || null,
+      });
+    }
   }
   return findings;
 }

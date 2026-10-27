@@ -17,7 +17,14 @@ import {
   routeEvidence,
   sentenceCase,
 } from "./domain";
-import { Badge, Empty, Modal, SectionHeading } from "./components";
+import {
+  Badge,
+  ConfirmBox,
+  Empty,
+  Modal,
+  PdfLink,
+  SectionHeading,
+} from "./components";
 const lane = (a: Asset) =>
   a.route === "Will / probate"
     ? "Probate"
@@ -26,9 +33,11 @@ const lane = (a: Asset) =>
       : "Non-probate · client reported";
 export default function Flow({
   workspace: w,
+  onConfirm,
   go,
 }: {
   workspace: Workspace;
+  onConfirm: (key: string, on: boolean) => void;
   go: (p: Page) => void;
 }) {
   const [filter, setFilter] = useState("All assets");
@@ -79,72 +88,87 @@ export default function Flow({
                   const names = [
                     ...new Set(beneficiaryEvidence.map((f) => f.value)),
                   ];
+                  const confirmed = w.confirmations[`asset:${a.id}`];
                   return (
-                    <button
-                      className={`flow-row ${flag ? "flagged" : ""}`}
-                      key={a.id}
-                      onClick={() => setSelected(a)}
-                      aria-label={`Inspect ${a.name || "unnamed asset"}`}
-                    >
-                      <div className="flow-node">
-                        <div className="flow-node-icon">
-                          <Landmark size={19} />
+                    <div className="flow-row-wrap" key={a.id}>
+                      <button
+                        className={`flow-row ${flag ? "flagged" : ""} ${confirmed ? "confirmed" : ""}`}
+                        onClick={() => setSelected(a)}
+                        aria-label={`Inspect ${a.name || "unnamed asset"}`}
+                      >
+                        <div className="flow-node">
+                          <div className="flow-node-icon">
+                            <Landmark size={19} />
+                          </div>
+                          <strong>{a.name || "Unnamed asset"}</strong>
+                          <small>{a.type}</small>
+                          <span>
+                            {a.value ? (
+                              <>
+                                {money(a.value)} <small>hypothetical</small>
+                              </>
+                            ) : (
+                              <small>Value not stated</small>
+                            )}
+                          </span>
                         </div>
-                        <strong>{a.name || "Unnamed asset"}</strong>
-                        <small>{a.type}</small>
-                        <span>
-                          {a.value ? (
-                            <>
-                              {money(a.value)} <small>hypothetical</small>
-                            </>
-                          ) : (
-                            <small>Value not stated</small>
-                          )}
-                        </span>
-                      </div>
-                      <div className="node-connector">
-                        <ArrowRight size={16} />
-                      </div>
-                      <div className="flow-node instrument">
-                        <FileText size={20} />
-                        <strong>
-                          {a.route === "Unknown" ? "To be confirmed" : a.route}
-                        </strong>
-                        <small>Client reported · unconfirmed</small>
-                        <span className="node-status">
-                          {evidence.length
-                            ? `${evidence.length} supporting ${evidence.length === 1 ? "fact" : "facts"}`
-                            : "Awaiting document evidence"}
-                        </span>
-                      </div>
-                      <div className="node-connector">
-                        <ArrowRight size={16} />
-                      </div>
-                      <div className="flow-node beneficiary">
-                        <Users size={20} />
-                        <strong>
-                          {names.length
-                            ? names.join(" / ")
-                            : a.beneficiary || "To be confirmed"}
-                        </strong>
-                        <small>
-                          {names.length
-                            ? "Name in verified source quote"
-                            : "Questionnaire intention"}
-                        </small>
-                        <Badge
-                          tone={
-                            flag ? "amber" : names.length ? "green" : "neutral"
-                          }
-                        >
-                          {flag
-                            ? "Needs discussion"
-                            : names.length
-                              ? "Quote verified"
-                              : "Unconfirmed"}
-                        </Badge>
-                      </div>
-                    </button>
+                        <div className="node-connector">
+                          <ArrowRight size={16} />
+                        </div>
+                        <div className="flow-node instrument">
+                          <FileText size={20} />
+                          <strong>
+                            {a.route === "Unknown"
+                              ? "To be confirmed"
+                              : a.route}
+                          </strong>
+                          <small>Client reported · unconfirmed</small>
+                          <span className="node-status">
+                            {evidence.length
+                              ? `${evidence.length} supporting ${evidence.length === 1 ? "fact" : "facts"}`
+                              : "Awaiting document evidence"}
+                          </span>
+                        </div>
+                        <div className="node-connector">
+                          <ArrowRight size={16} />
+                        </div>
+                        <div className="flow-node beneficiary">
+                          <Users size={20} />
+                          <strong>
+                            {names.length
+                              ? names.join(" / ")
+                              : a.beneficiary || "To be confirmed"}
+                          </strong>
+                          <small>
+                            {names.length
+                              ? "Name in verified source quote"
+                              : "Questionnaire intention"}
+                          </small>
+                          <Badge
+                            tone={
+                              flag
+                                ? "amber"
+                                : confirmed || names.length
+                                  ? "green"
+                                  : "neutral"
+                            }
+                          >
+                            {flag
+                              ? "Needs discussion"
+                              : confirmed
+                                ? "Confirmed"
+                                : names.length
+                                  ? "Quote verified"
+                                  : "Unconfirmed"}
+                          </Badge>
+                        </div>
+                      </button>
+                      <ConfirmBox
+                        label="Route confirmed with client"
+                        at={confirmed}
+                        onChange={(on) => onConfirm(`asset:${a.id}`, on)}
+                      />
+                    </div>
                   );
                 })}
             </section>
@@ -312,6 +336,7 @@ export default function Flow({
                   }{" "}
                   · Page {f.page}
                 </small>
+                <PdfLink fact={f} packet={w.packet} />
               </div>
             ))
           ) : (

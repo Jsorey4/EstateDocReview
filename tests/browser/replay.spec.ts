@@ -3,6 +3,9 @@ import type { Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { execFileSync } from "node:child_process";
 
+// The Sample replay tab was removed from navigation at the user's request (2026-10-26).
+test.beforeEach(() => test.skip(true, "Sample replay tab removed"));
+
 // Bundles come from bridge/build_replay_samples.py run on the placeholder unit-test fixture; nothing is written to public/.
 let files: Record<string, string> = {};
 test.beforeAll(() => {

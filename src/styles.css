@@ -4263,3 +4263,70 @@ small.field-hint {
   white-space: nowrap;
   gap: 9px;
 }
+.confirm-box {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+}
+.confirm-box input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--green);
+}
+.confirm-box.is-confirmed span {
+  color: #315a46;
+  font-weight: 600;
+}
+.confirm-box small {
+  font-size: 12px;
+}
+.flow-row-wrap {
+  display: grid;
+  gap: 6px;
+}
+.flow-row-wrap > .confirm-box {
+  justify-self: end;
+  margin-right: 4px;
+}
+.flow-row.confirmed {
+  border-color: #6e8d5b;
+}
+.finding-actions > .confirm-box {
+  align-self: end;
+  padding-bottom: 10px;
+}
+.pdf-link {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #315a46;
+}
+html[data-theme="light"] {
+  color-scheme: light;
+}
+.name-picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.name-picks button {
+  padding: 4px 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #f6f8f1;
+  color: #3d5540;
+  font-size: 12px;
+}
+.name-picks button:hover {
+  border-color: #b7c3ae;
+}

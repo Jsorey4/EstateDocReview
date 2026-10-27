@@ -87,7 +87,7 @@
     "trustee": "Alistair C. Thorne",
     "agent": "",
     "intentions": "Coordinate family business succession, multigenerational trusts, estate liquidity, and charitable giving. Confirm each trust\u2019s distinct roles and terms.",
-    "concerns": "Example household for demonstration. Answers were prepared from the supplied PDFs; marriage dates are not in the documents. Automatic comparison covers executor, trustee, beneficiary, and owner names; partnership, tax, insurance, and charitable terms in these agreements are not compared.",
+    "concerns": "Example household for demonstration. Answers were prepared from the supplied PDFs; marriage history is the client\u2019s answer and is not stated in the documents. Automatic comparison covers executor, trustee, beneficiary, and owner names; partnership, tax, insurance, and charitable terms in these agreements are not compared.",
     "reviewed": true
   },
   "packet": {

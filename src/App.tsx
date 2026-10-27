@@ -13,7 +13,6 @@ import {
   LayoutDashboard,
   Leaf,
   Menu,
-  PlayCircle,
   Settings2,
   ShieldCheck,
   X,
@@ -36,7 +35,6 @@ import Documents from "./Documents";
 import Flow from "./Flow";
 import Review from "./Review";
 import Report from "./Report";
-import Replay from "./Replay";
 
 const navigation = [
   { id: "overview", label: "Overview", icon: LayoutDashboard },
@@ -45,7 +43,6 @@ const navigation = [
   { id: "flow", label: "Estate flow", icon: GitBranch },
   { id: "review", label: "Review queue", icon: FileCheck2 },
   { id: "report", label: "Review packet", icon: BookOpen },
-  { id: "replay", label: "Sample replay", icon: PlayCircle },
 ] as const;
 const currentPage = (): Page =>
   navigation.some((n) => n.id === location.hash.slice(1))
@@ -126,6 +123,14 @@ export default function App() {
         : "Empty household started.",
     );
   };
+  // Records when the advisor confirmed an asset route or finding; unchecking clears it.
+  const confirm = (key: string, on: boolean) =>
+    setWorkspace((w) => {
+      const confirmations = { ...w.confirmations };
+      if (on) confirmations[key] = new Date().toISOString();
+      else delete confirmations[key];
+      return { ...w, confirmations };
+    });
   const exportBackup = () =>
     download(
       "estate-review-workspace.json",
@@ -198,15 +203,6 @@ export default function App() {
           ))}
         </nav>
         <div className="sidebar-bottom">
-          <div className="sidebar-note">
-            <ShieldCheck size={21} />
-            <strong>Built around evidence.</strong>
-            <p>
-              Every observation has a source.
-              <br />
-              Every uncertainty has a place.
-            </p>
-          </div>
           <button className="nav-item" onClick={() => setModal("help")}>
             <CircleHelp size={18} />
             Workspace guide
@@ -299,6 +295,7 @@ export default function App() {
           {page === "flow" && (
             <Flow
               workspace={workspace}
+              onConfirm={confirm}
               go={(next) => {
                 if (next === "questionnaire") setQuestionnaireStep(2);
                 go(next);
@@ -315,40 +312,17 @@ export default function App() {
                 }))
               }
               onTopics={(topics) => setWorkspace((w) => ({ ...w, topics }))}
+              onConfirm={confirm}
               go={go}
             />
           )}
           {page === "report" && <Report workspace={workspace} go={go} />}
-          {page === "replay" && (
-            <Replay
-              workspace={workspace}
-              onOpen={(sample, source) => {
-                setWorkspace({
-                  version: 1,
-                  questionnaire: sample.questionnaire,
-                  packet: sample.packet,
-                  dispositions: {},
-                  topics: [],
-                  backend: {
-                    source,
-                    questionnaire: sample.questionnaire,
-                    reconciliation: sample.reconciliation,
-                  },
-                });
-                setStorageBlocked(false);
-                setMessage(
-                  "Sample opened in the workspace. Its findings are in the review queue.",
-                );
-              }}
-              go={go}
-            />
-          )}
         </main>
         <footer>
           <span>
             <Leaf size={13} /> Estate Review{" "}
-            <span className="footer-divider">/</span> Clarity for the next
-            conversation.
+            <span className="footer-divider">/</span> Built around evidence.
+            Every observation has a source; every uncertainty has a place.
           </span>
           <span>{disclaimer}</span>
         </footer>

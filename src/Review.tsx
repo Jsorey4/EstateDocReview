@@ -24,16 +24,24 @@ import {
   uid,
   verifiedFacts,
 } from "./domain";
-import { Badge, Empty, SectionHeading } from "./components";
+import {
+  Badge,
+  ConfirmBox,
+  Empty,
+  PdfLink,
+  SectionHeading,
+} from "./components";
 export default function Review({
   workspace: w,
   onDisposition,
   onTopics,
+  onConfirm,
   go,
 }: {
   workspace: Workspace;
   onDisposition: (id: string, disposition: Disposition) => void;
   onTopics: (topics: AdvisorTopic[]) => void;
+  onConfirm: (key: string, on: boolean) => void;
   go: (p: Page) => void;
 }) {
   const [filter, setFilter] = useState("All items");
@@ -186,6 +194,7 @@ export default function Review({
               workspace={w}
               disposition={w.dispositions[f.id] ?? { status: "open", note: "" }}
               onChange={(d) => onDisposition(f.id, d)}
+              onConfirm={(on) => onConfirm(`finding:${f.id}`, on)}
             />
           ))}
         </div>
@@ -225,11 +234,13 @@ function FindingCard({
   workspace: w,
   disposition: d,
   onChange,
+  onConfirm,
 }: {
   finding: Finding;
   workspace: Workspace;
   disposition: Disposition;
   onChange: (d: Disposition) => void;
+  onConfirm: (on: boolean) => void;
 }) {
   const [open, setOpen] = useState(true);
   return (
@@ -300,6 +311,7 @@ function FindingCard({
                     <Check size={12} />
                     Quote verified
                   </span>
+                  <PdfLink fact={fact} packet={w.packet} />
                 </div>
               ))}
             </div>
@@ -331,6 +343,10 @@ function FindingCard({
                 <option value="attorney">Attorney follow-up</option>
               </select>
             </label>
+            <ConfirmBox
+              at={w.confirmations[`finding:${f.id}`]}
+              onChange={onConfirm}
+            />
             <label className="field note-field">
               <span>Advisor notes</span>
               <textarea

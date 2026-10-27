@@ -742,6 +742,24 @@ export default function Questionnaire({
                       onChange={(e) => update({ [role]: e.target.value })}
                       placeholder="Name or confirm later"
                     />
+                    {/* Visible picks: native suggestion popups can render unreadably in some themes. */}
+                    <span className="name-picks">
+                      {q.people
+                        .filter((p) => p.name && p.name !== q[role])
+                        .slice(0, 6)
+                        .map((p) => (
+                          <button
+                            type="button"
+                            key={p.id}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              update({ [role]: p.name });
+                            }}
+                          >
+                            {p.name}
+                          </button>
+                        ))}
+                    </span>
                   </Field>
                 ))}
               </div>

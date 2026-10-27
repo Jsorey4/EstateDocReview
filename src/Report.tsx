@@ -1,6 +1,7 @@
 import { ArrowRight, Download, Printer } from "lucide-react";
 import {
   completion,
+  confirmedAt,
   download,
   money,
   parsePercent,
@@ -150,6 +151,7 @@ export default function Report({
                     <th>Hypothetical value</th>
                     <th>Reported route</th>
                     <th>Intended beneficiary</th>
+                    <th>Confirmed with client</th>
                     <th>Notes</th>
                   </tr>
                 </thead>
@@ -160,6 +162,11 @@ export default function Report({
                       <td>{a.value ? money(a.value) : "Not stated"}</td>
                       <td>{a.route}</td>
                       <td>{a.beneficiary || "To confirm"}</td>
+                      <td>
+                        {w.confirmations[`asset:${a.id}`]
+                          ? confirmedAt(w.confirmations[`asset:${a.id}`])
+                          : "Not yet"}
+                      </td>
                       <td>{a.note}</td>
                     </tr>
                   ))}
@@ -219,6 +226,12 @@ export default function Report({
                 </p>
                 <p>
                   <strong>Next question:</strong> {f.question}
+                </p>
+                <p>
+                  <strong>Confirmed with client:</strong>{" "}
+                  {w.confirmations[`finding:${f.id}`]
+                    ? confirmedAt(w.confirmations[`finding:${f.id}`])
+                    : "Not yet"}
                 </p>
                 <p>
                   <strong>Status:</strong>{" "}
