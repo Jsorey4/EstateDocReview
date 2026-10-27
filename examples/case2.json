@@ -2,8 +2,15 @@
   "version": 1,
   "questionnaire": {
     "clientName": "Richard Sterling Montgomery",
-    "asOf": "",
-    "marriages": [],
+    "asOf": "2026-10-26",
+    "marriages": [
+      {
+        "spouse": "Eleanor Vance Montgomery",
+        "married": "",
+        "ended": "",
+        "how_ended": ""
+      }
+    ],
     "intended_beneficiaries": [],
     "documents_available": [
       "revocable_trust",
@@ -11,53 +18,61 @@
       "other"
     ],
     "household": "Montgomery household",
-    "respondent": "Document-based prefill \u2014 confirm with client",
+    "respondent": "Richard Sterling Montgomery (example client)",
     "maritalStatus": "Married",
     "spouse": "Eleanor Vance Montgomery",
     "state": "Texas",
-    "events": [],
+    "events": [
+      "Health or care needs"
+    ],
     "people": [
       {
         "id": "eleanor-vance-montgomery",
         "name": "Eleanor Vance Montgomery",
         "relationship": "spouse",
-        "status": "unknown",
-        "note": "Prefilled from PDF; confirm current status."
+        "relationshipKind": "spouse",
+        "status": "living",
+        "note": "Named in the supplied PDFs."
       },
       {
         "id": "harrison-montgomery",
         "name": "Harrison Montgomery",
         "relationship": "child",
-        "status": "unknown",
-        "note": "Prefilled from PDF; confirm current status."
+        "relationshipKind": "child",
+        "status": "living",
+        "note": "Named in the supplied PDFs."
       },
       {
         "id": "beatrice-vance",
         "name": "Beatrice Vance",
         "relationship": "stepchild",
-        "status": "unknown",
-        "note": "Prefilled from PDF; confirm current status."
+        "relationshipKind": "other",
+        "status": "living",
+        "note": "Named in the supplied PDFs."
       },
       {
         "id": "ethan-montgomery",
         "name": "Ethan Montgomery",
         "relationship": "child",
-        "status": "unknown",
-        "note": "Prefilled from PDF; confirm current status."
+        "relationshipKind": "child",
+        "status": "living",
+        "note": "Named in the supplied PDFs."
       },
       {
         "id": "julian-m.-montgomery",
         "name": "Julian M. Montgomery",
-        "relationship": "other",
-        "status": "unknown",
-        "note": "Prefilled from PDF; confirm current status."
+        "relationship": "brother",
+        "relationshipKind": "other",
+        "status": "living",
+        "note": "Named in the supplied PDFs."
       },
       {
         "id": "clara-vance",
         "name": "Clara Vance",
-        "relationship": "other",
-        "status": "unknown",
-        "note": "Prefilled from PDF; confirm current status."
+        "relationship": "sister-in-law",
+        "relationshipKind": "other",
+        "status": "living",
+        "note": "Named in the supplied PDFs."
       }
     ],
     "assets": [
@@ -127,12 +142,12 @@
         "note": "Document-based prefill. Value transcribed from the PDF inventory; not independently valued."
       }
     ],
-    "executor": "Eleanor Vance Montgomery",
+    "executor": "Julian M. Montgomery",
     "trustee": "Julian M. Montgomery",
-    "agent": "",
+    "agent": "Eleanor Vance Montgomery",
     "intentions": "Provide for the surviving spouse and the blended family, with staggered distributions and a special-needs trust for Ethan.",
-    "concerns": "Prefilled from the supplied PDFs, not an independent client interview. Confirm missing dates, living status, and current intentions.",
-    "reviewed": false
+    "concerns": "Example household for demonstration. Answers were prepared from the supplied PDFs; marriage dates are not in the documents.",
+    "reviewed": true
   },
   "packet": {
     "schemaVersion": 1,
@@ -264,7 +279,7 @@
         "subjectId": "household",
         "field": "executor",
         "value": "Eleanor Vance Montgomery",
-        "quote": "Section 5.01 Executor Designation. I nominate and appoint Eleanor Vance Montgomery as \nIndependent Executor",
+        "quote": "Section 5.01 Executor Designation. I nominate and appoint Eleanor Vance Montgomery as \nIndependent Executor of this Pour-Over Will, and Julian M. Montgomery as Successor \nIndependent Executor",
         "page": 2,
         "verification": "verified"
       },

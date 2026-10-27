@@ -2,14 +2,21 @@
   "version": 1,
   "questionnaire": {
     "clientName": "Victoria H. Thorne",
-    "asOf": "",
-    "marriages": [],
+    "asOf": "2026-10-26",
+    "marriages": [
+      {
+        "spouse": "Alistair C. Thorne",
+        "married": "",
+        "ended": "",
+        "how_ended": ""
+      }
+    ],
     "intended_beneficiaries": [],
     "documents_available": [
       "other"
     ],
     "household": "Thorne household",
-    "respondent": "Document-based prefill \u2014 confirm with client",
+    "respondent": "Victoria H. Thorne (example client)",
     "maritalStatus": "Married",
     "spouse": "Alistair C. Thorne",
     "state": "Texas",
@@ -19,52 +26,56 @@
         "id": "alistair-c.-thorne",
         "name": "Alistair C. Thorne",
         "relationship": "spouse",
-        "status": "unknown",
-        "note": "Prefilled from PDF; confirm current status."
+        "relationshipKind": "spouse",
+        "status": "living",
+        "note": "Named in the supplied PDFs."
       },
       {
         "id": "julian-thorne",
         "name": "Julian Thorne",
         "relationship": "child",
-        "status": "unknown",
-        "note": "Prefilled from PDF; confirm current status."
+        "relationshipKind": "child",
+        "status": "living",
+        "note": "Named in the supplied PDFs."
       },
       {
         "id": "clara-thorne",
         "name": "Clara Thorne",
         "relationship": "child",
-        "status": "unknown",
-        "note": "Prefilled from PDF; confirm current status."
+        "relationshipKind": "child",
+        "status": "living",
+        "note": "Named in the supplied PDFs."
       },
       {
         "id": "samuel-t.-sterling",
         "name": "Samuel T. Sterling",
-        "relationship": "other",
-        "status": "unknown",
-        "note": "Prefilled from PDF; confirm current status."
+        "relationship": "independent trustee",
+        "relationshipKind": "other",
+        "status": "living",
+        "note": "Named in the supplied PDFs."
       }
     ],
     "assets": [
       {
         "id": "case3-asset-0",
-        "name": "Thorne Holdings, L.P. interests",
+        "name": "Thorne Holdings, L.P. 39% Class B LP units",
         "type": "Business interest",
         "governing_document": "Case3_01_Family_Limited_Partnership_Thorne",
-        "value": 0,
-        "owner": "",
+        "value": 5850000,
+        "owner": "Victoria H. Thorne Revocable Trust",
         "beneficiary": "",
-        "route": "Unknown",
+        "route": "Revocable trust",
         "character": "unknown",
         "retirementKind": "retirement_401k",
-        "note": "Document-based prefill. Value not supplied; 0 is a placeholder, not a valuation."
+        "note": "Document-based prefill. Value is the contributed asset value on FLP Schedule A, not a current valuation."
       },
       {
         "id": "case3-asset-1",
-        "name": "Thorne Enterprises, Inc. shares",
+        "name": "Thorne Enterprises, Inc. shares (500 Class A, 4,500 Class B)",
         "type": "Business interest",
         "governing_document": "Case3_05_Buy_Sell_Agreement_and_Recapitalization_Thorne",
         "value": 0,
-        "owner": "",
+        "owner": "Victoria H. Thorne",
         "beneficiary": "",
         "route": "Unknown",
         "character": "unknown",
@@ -73,11 +84,11 @@
       }
     ],
     "executor": "",
-    "trustee": "",
+    "trustee": "Alistair C. Thorne",
     "agent": "",
     "intentions": "Coordinate family business succession, multigenerational trusts, estate liquidity, and charitable giving. Confirm each trust\u2019s distinct roles and terms.",
-    "concerns": "Prefilled from the supplied PDFs, not an independent client interview. Confirm missing dates, living status, and current intentions. These specialized agreements exceed the current automatic name-comparison coverage; an empty queue does not confirm cross-document consistency.",
-    "reviewed": false
+    "concerns": "Example household for demonstration. Answers were prepared from the supplied PDFs; marriage dates are not in the documents. Automatic comparison covers executor, trustee, beneficiary, and owner names; partnership, tax, insurance, and charitable terms in these agreements are not compared.",
+    "reviewed": true
   },
   "packet": {
     "schemaVersion": 1,
@@ -185,7 +196,48 @@
         "pdfPath": "examples/pdfs/Case3_06_Charitable_Remainder_Trust_Thorne.pdf"
       }
     ],
-    "facts": [],
+    "facts": [
+      {
+        "id": "case3-fact-0",
+        "documentId": "Case3_02_Irrevocable_Life_Insurance_Trust_Thorne",
+        "subjectId": "household",
+        "field": "trustee",
+        "value": "Samuel T. Sterling",
+        "quote": "SAMUEL T. STERLING (the \"Independent Trustee\")",
+        "page": 1,
+        "verification": "verified"
+      },
+      {
+        "id": "case3-fact-1",
+        "documentId": "Case3_03_SLAT_and_Dynasty_Trust_Thorne",
+        "subjectId": "household",
+        "field": "trustee",
+        "value": "Samuel T. Sterling",
+        "quote": "SAMUEL T. STERLING as Distribution Trustee",
+        "page": 1,
+        "verification": "verified"
+      },
+      {
+        "id": "case3-fact-2",
+        "documentId": "Case3_04_Grantor_Retained_Annuity_Trust_Thorne",
+        "subjectId": "household",
+        "field": "trustee",
+        "value": "Samuel T. Sterling",
+        "quote": "SAMUEL T. \nSTERLING (the \"Trustee\")",
+        "page": 1,
+        "verification": "verified"
+      },
+      {
+        "id": "case3-fact-3",
+        "documentId": "Case3_06_Charitable_Remainder_Trust_Thorne",
+        "subjectId": "household",
+        "field": "trustee",
+        "value": "Samuel T. Sterling",
+        "quote": "SAMUEL T. STERLING (Trustee)",
+        "page": 1,
+        "verification": "verified"
+      }
+    ],
     "verifiedBy": "verify_quotes.py"
   },
   "dispositions": {},
