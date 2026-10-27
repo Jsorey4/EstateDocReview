@@ -106,7 +106,7 @@ Repository organization is complete: `pipeline/`, `bridge/`, `evaluation/`, and 
 - [ ] Check FUNSD and RVL-CDIP license terms; cite every dataset used.
 - [ ] Confirm `git` history shows work started after Oct 25, 10 AM (first commit `073193b` made Oct 25, 2026).
 - [ ] Back up `ai_log/*.jsonl` (gitignored) before compiling the AI log PDF.
-- [ ] Make the repo public before enabling GitHub Pages; confirm no API key or raw logs in the public tree.
+- [x] Make the repo public before enabling GitHub Pages; confirm no API key or raw logs in the public tree. (Done 2026-10-26; history scanned clean.)
 - [ ] Video 5 minutes or less, in your own voice, uploaded to OneDrive.
 - [ ] One-page AI log PDF: decision fields completed by you, at least two checks shown.
 - [ ] Files named `Last_First_RaymondJames_Video/Deliverable/AILog`, shared with `jsomfinlab@utdallas.edu`, links tested, Microsoft Form submitted before 11:59 PM.
@@ -172,3 +172,4 @@ Repository organization is complete: `pipeline/`, `bridge/`, `evaluation/`, and 
 - Added `scripts/dark-overrides.css` for hand-tuned rules (brand variables, `--green-fill` for green backgrounds, hero, cream hero button, placeholder text); the generator appends it. `src/dark.css` remains generated output. The questionnaire progress ring track now uses `--track`.
 - Validation: TypeScript, 33 unit tests, 118 Python tests, production build (to scratch, `dist/` untouched), and five targeted browser tests passed (the dark-mode row check now asserts "dark" rather than one exact gray). A scripted contrast audit across six pages in dark mode found no text below WCAG AA except the decorative, aria-hidden hero illustration. Three `workspace.spec.ts` upload tests fail before and after this change (retired interface, already noted). Browser tests need `CHROMIUM_PATH` on macOS (e.g. Google Chrome).
 - Committed as `521cb3a`. Rebuilt `dist/`: copied the fresh CSS/JS bundles into the existing `index-B3j-c9qp.css` / `index-BMak2Y1A.js` names (index.html references unchanged) and formatted them with Prettier; fonts, examples and PDFs were byte-identical. Served `dist/` via a new `dist` launch config (vite preview, port 4174): new dark theme renders, no console errors, case payloads and PDFs load. No deployment was performed.
+- Pushed `main`. Published the `dist/` build to an orphan `gh-pages` branch (with `.nojekyll`). After a history scan found no API keys, tokens, `ai_log/*.jsonl` or competition instructions, the repository was made public and Pages set to serve `gh-pages` / root. Live at https://jsorey4.github.io/EstateDocReview/ — index, bundles, example payloads and PDFs return 200; dark theme renders with no console errors. To redeploy, rebuild `dist/` and commit its contents to `gh-pages`.
